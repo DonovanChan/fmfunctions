@@ -1,0 +1,34 @@
+/*---------------------------------------------------------------------------------------
+NAME: 
+	xml.verify( xmlResult; useNullValues )
+
+PURPOSE: 
+	Checks if xml querry returns a valid result (for use with xml.select())
+
+HISTORY: 
+	Created 2008.12.18 by DChandler
+
+INPUT: 
+	xmlResult:	Results of an xml querry (usually with xml.select())
+	useNullValues:	(Boolean) False = Empty xmlResult counted as error
+
+OUTPUT: 
+	Returns True if no errors are found in xmlResult
+
+	xml.verify( ""; True )	-> True
+	xml.verify( ""; False )	-> False
+	xml.verify( "Error 101: Invalid Path"; False )	-> False
+	xml.verity( "<child>value</child>"; False )	-> True
+---------------------------------------------------------------------------------------*/
+
+Let(
+	[
+	//xmlResult = xmlResult
+	//; useNullValues = useNullValues;
+	
+	bnError = ( Left( xmlResult; 5 ) = "Error" )
+	; bnNull = IsEmpty( xmlResult )
+	; bnInvalid = bnError or Case( Evaluate( useNullValues ); bnNull; 0 )
+	];
+	not bnInvalid
+)  

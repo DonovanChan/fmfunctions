@@ -1,0 +1,785 @@
+/*---------------------------------------------------------------------------------------
+NAME: 
+	xml.select_subA( xmlSource; path; start; end; currentPathNode )
+	Version 4.4
+
+PURPOSE: 
+	Returns XML element or attribute according to provided path
+	(Called by xml.select, but does all the heavy lifting)
+
+HISTORY: 
+	Created by Donovan Chandler (Details at bottom)
+	Please report bugs at donovan.chandler@gmail.com
+
+METHODOLOGY: 
+	Recursively iterates through each node in path finding valid occurrences within parent block from previous recursion:
+		1. Determine current path node
+		2. Determine requirements of node (vRequestType)
+		3. If predicate present, find occurrence of predicate first
+		4. Call sub-function B to locate element
+		5. Determine next recursive action
+			a. "Error"			- abort function
+			b. "ContinueA"		- find other parent element to search
+			c. Else				- proceed to next path node
+
+	If the current xml block proves invalid for the node criteria, this function returns to the previous path node to find another parent block that fits the criteria.
+	This process continues until a terminal error or the last path node is found.
+
+INPUT: 
+	xmlSource: Block of XML 
+	path:	Identifies desired node. Syntax is similar to XPath, but limited 
+			(see xml.select comments).
+			(Path must also be transformed for searching by parent function if it contains spaces)
+	start:	Character position in vSearchBlock at which to start searching.
+	end:	Character position in vSearchBlock marking end of current element being searched
+	currentPathNode:  Integer representing node in path that is currently being searched for
+
+OUTPUT: 
+	Full XML element ("block") or attribute fulfilling path parameter (in transformed format!)
+
+DEPENDENCIES:
+	Custom Functions: xml.select (v4.1), xml.select_subB (v3.3), var.assign, var.update, xml.transform
+	Reserved Variables: 
+		$$xml.subA_eCurrentBlock_[n], $$xml.subA_nodeName_[n], $$xml_recursiveExpression
+	Reserved Variables (shared with other sibling functions):
+		$$xml.select_log, $$xml.select_errorLog, $$xml.select_numPathNodeCurrent, $$xml.select_nodeRecursion, 
+	Reserved Characters: ‡, <, >, "
+
+NOTES: 
+	"[*]" predicate still lacks proper error checking, so be careful of duplicate tags, etc.
+	Currently only supports one "[*]" predicate within a path
+	
+TO DO:
+	supply subB with starting position of VALUES to be searched? - requestType "any" needs to verify node name, requestType "integer" needs to verify node value
+	FIX... sBlockA supplying wrong start position to subB in type "any"... subB looks for the parent node and doesn't find it
+	
+	Double-check how start and end positions are returned for regressive path functions
+	Add error handling for bnWildInteger 
+		(e.g., check nesting of nodes - <node><node>ab</node></node> returns "<node>ab"
+		
+---------------------------------------------------------------------------------------*/
+
+Let(
+	[
+	//	Parameters (for use in data viewer)
+	xmlSource= xmlSource;
+	path = path; 
+	start = start; 
+	end = end; 
+	currentPathNode = currentPathNode; 
+		
+	//=================================================================
+	//			SETTINGS and PREP
+	//=================================================================
+	//	Transform text for searching
+	//		Replaces spaces with reserved character
+	vSearchBlock = xml.transform( xmlSource; True );
+		//Substitute( xmlSource; [" "; "‡"]; ["‡>"; ">"]; [">"; "‡>"]; ["</"; "≤/"] );
+	$$xml.select_searchBlock = vSearchBlock;
+	vBlockCurrent = Middle( vSearchBlock; start; end - start ); 
+	vPathRaw = path; //Now transformed in vPathNodeCurrent - Substitute( path; [" "; "‡"]; [">"; "‡>"]; ["</"; "≤/"] );
+	
+	bnVerboseLogging = False;
+	sValues = If( start > 1; Position( vSearchBlock; "‡"; start; 1 ); start );
+	numPathNodeCurrent = 
+		Case( 
+			IsEmpty( currentPathNode );
+				1;
+			currentPathNode < 1;
+				1;
+			currentPathNode
+		);
+	$$xml.select_numPathNodeCurrent = numPathNodeCurrent;
+	$$xml.select_nodeRecursion = $$xml.select_nodeRecursion + 1;
+
+	vRecursionIndent = 
+		Substitute(
+			Left("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"; 
+				$$xml.select_nodeRecursion );
+			"|"; "| "
+		);
+	
+	//	Log recursion
+	$$xml.select_log = 
+		$$xml.select_log & "¶¶" &
+		vRecursionIndent & "xml.select_subA( vSearchBlock; \"" & path & "\"; " & start & "; " & end & "; " &  currentPathNode & " )";
+
+	//=================================================================
+	//			PARSE PATH NODES
+	//=================================================================
+	//	Path Values
+	vPath = 
+		Case( 
+			Right( vPathRaw; 1 ) = "/"; 
+				Left( vPathRaw; Length( vPathRaw ) - 1); 
+			vPathRaw
+		);
+	vPathNodeCount = PatternCount( vPath; "/" ) + 1 - PatternCount( vPath; "//" );
+	
+	lisPath = Substitute( vPath; "/"; "¶" );
+	
+	//	Check for "any" descendent expression (empty node - "//")
+	vPathNodeCurrentA = GetValue( lisPath; numPathNodeCurrent );
+	bnAnyDescendent = If( Length( vPathNodeCurrentA ); False; True );
+	
+	//	Update node counter if current node empty
+	numPathNodeCurrent = 
+		If( 
+			bnAnyDescendent; 
+				numPathNodeCurrent + 1 & 
+				Let( $$xml.select_numPathNodeCurrent = numPathNodeCurrent; "" );
+			numPathNodeCurrent 
+		);
+	numPathNodeNext = 
+		Case( 
+			numPathNodeCurrent + 1 > vPathNodeCount;
+				"end"; 
+			numPathNodeCurrent + 1 
+		);
+		
+	//	Identify path value of current node to find
+	vPathNodeCurrent = GetValue( lisPath; numPathNodeCurrent );
+	
+	//		Adjust for wild integers in predicate
+	//			Predicate of "[*]" initiates recursive replacement of integers
+	//			Subsequent integers for recursion are indicated with "_" (e.g. "[_1]")
+	bnIntegerWild = PatternCount( vPathNodeCurrent; "[*]" );
+	sIntegerVar = Position( vPathNodeCurrent; "[_"; 1; 1 );
+	eIntegerVar = Position( vPathNodeCurrent; "]"; sIntegerVar; 1 );
+	bnWildInteger = bnIntegerWild + sIntegerVar;
+	vIntegerNxt = GetAsNumber( Middle( vPathNodeCurrent; sIntegerVar; eIntegerVar - sIntegerVar + 1 )) + 1;
+	vPathPostInteger = Middle( vPathNodeCurrent; eIntegerVar + 1; Length( vPathNodeCurrent ) );
+	vPathNodeCurRaw = 
+		Case( 
+			bnIntegerWild; Substitute( vPathNodeCurrent; "[*]"; "[_1]" );
+			sIntegerVar; Left( vPathNodeCurrent; sIntegerVar - 1 ) & "[_" & vIntegerNxt & "]" & vPathPostInteger;
+			vPathNodeCurrent
+		);
+	vPathNew = Substitute( vPath; vPathNodeCurrent; vPathNodeCurRaw );
+		//Substitute( vPath; [vPathNodeCurrent; vPathNodeCurRaw]; ["‡"; " "]; ["‡>"; ">"]; ["≤/"; "</"] );
+	vPathNodeCurrent = 
+		If( bnWildInteger; 
+			Substitute( vPathNodeCurRaw; ["[_"; "["]; 
+				//Transform for searching
+				[" "; "‡"]; [">"; "‡>"]; ["</"; "≤/"] ); 
+			vPathNodeCurrent 
+		);
+
+	//	Isolate Predicate
+	sPathPredicate = Position( vPathNodeCurrent; "["; 1; 1 );
+	lisPathNode = 
+		Case( 
+			sPathPredicate = 0; vPathNodeCurrent; 
+			Replace( vPathNodeCurrent; sPathPredicate; 1; "¶" )
+		);
+	vNodeName = GetValue( lisPathNode; 1 );
+	lisPathNode_2 = GetValue( lisPathNode; 2 );
+	ePathPredicate = Position( lisPathNode_2; "]"; Length( lisPathNode_2 ); -1) - 1;
+	vPathPredicate = Left( lisPathNode_2; ePathPredicate );
+	
+	vPathNodePrevious = GetValue( lisPath; numPathNodeCurrent - 1 );
+	vNodeNamePrevious = Evaluate( "$$xml.subA_nodeName_" & numPathNodeCurrent - 1 );
+	vAttributeName = Middle( vNodeName; 2; Length( vNodeName ) );
+	
+	//	Determine request type
+	//		Node name begins with "@" -> return attribute value
+	//		Predicate empty -> find first node by name provided
+	//		Predicate contains only number N -> find Nth occurrence of node by given name
+	//		Predicate begins with @ -> find node with attribute matching vPathPredicate
+	//		Predicate contains "=" -> find node with corresponding tag name and value
+	vRequestType = 
+		Case( 
+			//	Error parsing path
+			IsEmpty( vPathNodeCurrent ) and currentPathNode ≠ "end"; 
+				"Error 101: Missing path node " & numPathNodeCurrent;
+			Left( vNodeName; 1 ) = "‡" or
+			Right( vNodeName; 1 ) = "‡"; 
+				"Error 102: Tag Name Contains Extra Space (\"" & Substitute( vNodeName; "‡"; " ") & "\")";
+			Left( vPathPredicate; 1 ) = "‡" or
+			Right( vPathPredicate; 1 ) = "‡";
+				"Error 103: Predicate Name Contains Extra Space (\"" & Substitute( vPathPredicate; "‡"; " ") & "\")";
+			vNodeName = "." and not IsEmpty(vPathPredicate); "Error 104: Predicate Not Allowed for Context Node Expression (\".\")";
+			Length( lisPathNode_2 ) and ePathPredicate = 0; "Error 1040: Predicate Missing Bracket (\"" & lisPathNode_2 & "\")";
+			vNodeName = vNodeNamePrevious; "Error 1041: Path Contains Identical Parent-Child Tags";
+			vNodeName = "@" and vPathPredicate = "*"; "Error 1042: Recursive Call ([\"" & vPathPredicate & "]\" Not Supported for Attributes";
+			
+			//	Request types
+			//vPathPredicate = "*" or Left( vPathPredicate; 1 )="_"; "replace integer";
+			Left( vNodeName; 1 ) = "@"; "attribute";
+			vNodeName = "*"; "any";
+			vNodeName = "."; "context";
+			Trim(vNodeName) = "name()"; "name";
+			IsEmpty( vPathPredicate ); "first";
+			PatternCount( vPathPredicate; "=" ) = 0 and GetAsNumber( vPathPredicate ) > 0;
+				If( bnIntegerWild; "integer all"; "integer" );
+			Left( vPathPredicate; 1 ) = "@"; "match attribute";
+			PatternCount( vPathPredicate; "=" ); "match content";
+			"Error 1042: Invalid predicate (" & vPathPredicate & ")"
+		);
+	//		Flag this querry so other xml functions know it is recursive
+	$$xml_recursiveExpression = Case( PatternCount( "¶any¶integer all¶"; ¶ & vRequestType & ¶ )
+		; True
+		; $$xml_recursiveExpression);
+	
+	//=================================================================
+	//			FIND PREDICATE VALUE
+	//=================================================================	  
+	//	Locate first occurrence of predicate value
+	sPredicate = 
+		Case(
+			// Search by attribute
+			vRequestType = "match attribute"; 
+				Let(
+					[
+					vAttrExpression = Middle( vPathPredicate; 2; Length( vPathPredicate ) );
+					vSearchAttr = 
+						Case(
+							//	Match specified value
+							PatternCount( vPathPredicate; "=" );
+								"‡" & vAttrExpression & "‡";
+							//	Default: Match attribute name (value not necessary)
+							"‡" & vAttrExpression & "="
+						);
+					sAttribute = Position( vSearchBlock; vSearchAttr; sValues; 1 )
+					];
+					sAttribute
+				);
+				
+			//	Search by content
+			vRequestType = "match content";
+				Let(
+					[
+					//	Parse predicate values
+					sDelim = Position( vPathPredicate; "="; 1; 1 );
+					vPreNodeName = Left( vPathPredicate; sDelim - 1 );
+					vPreNodeValA = Middle( vPathPredicate; sDelim + 1; Length( vPathPredicate ));
+					vPreNodeVal = If( Evaluate( vPreNodeValA ) = "?"; vPreNodeValA; Evaluate( vPreNodeValA ));
+					
+					//	Validate values
+					vPreError = 
+						Case(
+							IsEmpty( vPreNodeName );
+								"Error 105: Missing name in predicate (\"" & vPathPredicate & "\")";
+							IsEmpty( vPreNodeVal );
+								"Error 106: Missing value in predicate (\"" & vPathPredicate & "\")"
+						);
+					
+					//	Find first occurrence of node value (adjusted for wildcards)
+					vPreSearchVal = Substitute( ">" & vPreNodeVal & "≤"; [">*"; ""]; ["*≤"; ""]);
+					sPreNode = 
+						Case(
+							not IsEmpty( vPreError );
+								vPreError;
+							xml.select_subB( vSearchBlock; sValues; end; vPreSearchVal; vPreNodeName )
+						)
+					];
+					sPreNode
+				)
+		);
+		
+	//=================================================================
+	//			FIND PATH NODE ELEMENT
+	//=================================================================
+	//	Locate element by name of vNodeName
+	//		Returns either error or start position of element (in first value of result)
+	//		subB may return "ContinueA¶(integer)¶(Hidden error)", 
+	//		telling this function to keep searching from the position of (integer).
+		 
+	sBlockA = 
+		Case( 
+			//	Error parsing path
+			Left( vRequestType; 5 ) = "Error";
+				vRequestType;
+				
+			//	sPredicate returned error - pass on error msg
+			Left( sPredicate; 5 ) = "Error";
+				sPredicate;
+				
+			//	sPredicate unsusccessful - continue to next recursion
+			sPredicate = "ContinueA";
+				sPredicate;
+				
+			//	RequestType "attribute" - Skip (there's no child elements to locate)
+			vRequestType = "attribute";
+				Position( vSearchBlock; "‡"; start; 1 ) + 1;
+				
+			//	RequestType = "context"
+			vRequestType = "context";
+				Case( 
+					GetAsNumber( vPathPredicate ) > PatternCount( vBlockCurrent; "≤/" );
+						"Error 140: Exceeded number of available nodes in " & Quote( vNodeNamePrevious );
+					start & ¶ & vNodeNamePrevious
+				);
+				
+			//	RequestType = "name"
+			vRequestType = "name";
+				start;
+				
+			//	RequestType = "any"
+			vRequestType = "any";
+				Let(
+					[
+					vPredicate = GetAsNumber( vPathPredicate );
+					numNode = If( vPredicate < 1; 1; vPredicate );
+					eParentTag = Position( vSearchBlock; ">"; sValues; 1 );
+					sOccur = Position( vSearchBlock; "<"; eParentTag; numNode );
+					eNodeName = Position( vSearchBlock; "‡"; sOccur; 1 );
+					//sBlockContent = Position( vSearchBlock; ">"; sOccur; 1 ) + 1;
+					vNodeNameAny = Middle( vSearchBlock; sOccur + 1; eNodeName - sOccur - 1 );
+					bnOutOfBounds = sOccur = 0 or sOccur > end;
+					sOccurDirect = 
+						Case( 
+							not bnOutOfBounds;
+								xml.select_subB( vSearchBlock; sOccur - 1; end; "<" & vNodeNameAny & "‡"; vNodeNamePrevious );
+							0
+						);	//for direct descendent
+					//"xml.select_subB( " & vSearchBlock & "; " & sOccur - 1 & "; " & end & "; " & "<" & vNodeNameAny & "‡" & "; " & vNodeNamePrevious  & " )";
+					vResultAny = 
+						Case(
+							eParentTag = 0;
+								"Error 161 (Internal): eParentTag not found";
+							bnOutOfBounds;
+								Case( bnWildInteger and numPathNodeCurrent > 1; "end recursion";
+								"Error 160: \"" & numNode & "\" Exceeds Number of Nodes in Element	\"" & vNodeNamePrevious & "\"");
+							sOccurDirect = 0 or sOccurDirect > end;
+								"Error 101: " & sOccurDirect;
+							bnAnyDescendent;
+								sOccur;
+							sOccurDirect
+						)
+					];
+					vResultAny & ¶ & 
+					vNodeNameAny
+				);
+		
+			//	RequestType "first": pathPredicate is empty (no added criteria specified for node)
+			vRequestType = "first";
+				Let( 
+					[
+					vNodeTag = "<" & vNodeName & "‡";
+					sFirstOccurrence = 
+						Case(
+							//	Skip subB validation if looking for root node or any descendent
+							numPathNodeCurrent = 1 or bnAnyDescendent;
+								Position( vSearchBlock; vNodeTag; start; 1 );
+							//	Find via subB
+							xml.select_subB( vSearchBlock; sValues; end; vNodeTag; vNodeNamePrevious )
+						);
+					vResultFirst = 
+						Case(
+							sFirstOccurrence = 0;
+								"Error 110: Invalid Tag (\"" & vNodeName & "\")";
+							sFirstOccurrence
+						)
+					];
+					vResultFirst
+				);	  //end Let
+				
+			//	RequestType "integer": vPathPredicate specifies node number
+			vRequestType = "integer" or vRequestType = "integer all";
+				Let( 
+					[
+					vNodeNum = GetAsNumber( vPathPredicate );
+					vSearchTag = "<" & vNodeName & "‡";
+					vOccurrenceCount = PatternCount( vBlockCurrent; vSearchTag );
+					sFirstOccurrence = Position( vSearchBlock; vSearchTag; 1; 1);
+					sNthOccurrence = Position( vSearchBlock; vSearchTag; sValues; vNodeNum );
+					vResultInteger = 
+						Case( 
+							sFirstOccurrence = 0;
+								"Error 120: Invalid Tag (\"" & vNodeName & "\")";
+							//	vNodeName occurrence outside of parent block
+							vOccurrenceCount < vNodeNum or sNthOccurrence = 0;
+								"Error 121: Invalid Index (\"" & vNodeName & "[" & vNodeNum & "]\")";
+							//	Default
+							sNthOccurrence
+						)
+					];
+					vResultInteger
+				);
+			
+			//	RequestType "match attribute"
+			vRequestType = "match attribute";
+				Let(
+					[
+					sParentNode = xml.select_subB( vSearchBlock; sValues; end; "{" & sPredicate & "}"; vNodeName );
+					sParentNodeB = Position( vSearchBlock; "<" & vNodeName & "‡"; sPredicate; -1 );
+					vResultMA = 
+						Case(
+							sPredicate = 0;
+								"Error 130: Invalid predicate (" & vPathPredicate & ")";
+							bnAnyDescendent;
+								sParentNodeB;
+							sParentNode
+						)
+					];
+					vResultMA
+				);
+			
+			//	Request Type "match content"
+			vRequestType = "match content";
+				Let(
+					[
+					sParentNode = xml.select_subB( vSearchBlock; sValues; end; "{" & sPredicate & "}"; vNodeName );
+					sParentNodeB = Position( vSearchBlock; "<" & vNodeName & "‡"; sPredicate; -1 );
+					vResultMC = 
+						Case(
+							GetValue( sPredicate; 1 ) = "ContinueA";
+								"Continue";
+							bnAnyDescendent;
+								sParentNodeB;
+							sParentNode
+						)
+					];
+					vResultMC
+				)	
+		);	//end Case {sBlockA}
+	
+	//=================================================================
+	//			EXTRACT ELEMENT TEXT
+	//=================================================================
+	//	Extract XML between currentPathNode tags (container of sPredNode)
+	sBlock = GetAsNumber( GetValue( sBlockA; 1 ) );
+	sBlockContent = 
+		Case(
+			vRequestType = "attribute";
+				Position( vSearchBlock; vAttributeName; sBlock; 1 ) + Length( vAttributeName ) + 2;
+			Position( vSearchBlock; ">"; sBlock; 1 ) + 1
+		);
+	vNodeNameActual = 
+		Case(
+			vRequestType = "any" or vRequestType = "context"; GetValue( sBlockA; 2 );
+			vRequestType = "name"; vNodeNamePrevious;
+			vNodeName
+		);
+	sv = var.assign( "xml.subA_nodeName_" & numPathNodeCurrent; vNodeNameActual; 1 );
+	sCloseTag = Position( vSearchBlock; "≤/" & vNodeNameActual & "‡>"; sBlockContent; 1 );
+	eBlockContent = Case( sCloseTag > 0; sCloseTag - 1; 0 );
+	eBlock = eBlockContent + Length( "≤/" & vNodeNameActual & "‡>" );
+	lenBlockContent = eBlockContent - sBlockContent + 1;
+
+	vBlockRaw = 
+		Case(
+			//	Request type is "attribute"
+			vRequestType = "attribute";
+				Let(
+					[
+					//	Locate tag containing attribute
+					sTag = start;
+					sAttributes = sBlock;
+					eAttributes = Position( vSearchBlock; "‡>"; sTag; 1 );
+					vAttributes = Middle( vSearchBlock; sAttributes; eAttributes - sAttributes );
+					exAttributes =
+						Substitute( vAttributes;
+							["\\\""; "\Ú"];	   //preserves inner quotations
+							["\"‡"; "\";"];	   //adds semi-colons
+							["\Ú"; "\\\""]	   //restores inner quotations
+						);
+					vAttributeVal = Evaluate( "Let([" & exAttributes & "];" & vAttributeName & ")" );
+					vErrorAttr = ( vAttributeVal = "?" );
+						//(IsEmpty( vAttributeVal ) or vAttributeVal = "?" );
+					vResultAttr = 
+						Case(
+							//	Wildcard used
+							vAttributeName = "*";
+								vAttributes;
+
+							//	Errors
+							vErrorAttr and Position( vSearchBlock; vAttributeName; sValues; 1 );
+								"Error 150: Invalid path to attribute (\"" & vAttributeName & "\")";
+							vErrorAttr;
+								"Error 151: Invalid attribute name (\"" & vAttributeName & "\")";
+								
+							//	Default
+							vAttributeVal
+						)
+					];
+					vResultAttr 
+				);	//end Let
+			
+			//	Request refers to previously processed node (types "context", "name")
+			vRequestType = "context";
+				Middle( vSearchBlock; start; end - start + 1 );
+			vRequestType = "name";
+				vNodeNameActual; //vNodeNamePrevious;
+				
+			//	Default: all other request types (containing XML content or elements)
+			Middle( vSearchBlock; sBlockContent; lenBlockContent )
+			
+		);	//end Case {vBlockRaw}
+	
+	//=================================================================
+	//			VALIDATE OCCURRENCE
+	//=================================================================
+	//	Parse subB commands from sBlock
+	bnContinueSearching = 
+		Case(
+			GetValue( sBlockA; 1 ) = "ContinueA";
+				True
+		);
+	vContinueStart = GetValue( sBlockA; 2 );
+	vErrorHidden = GetValue( sBlockA; 3 );
+		
+	//	Error checking
+	sNextNode = Position( vSearchBlock; "<" & vNodeNameActual & "‡"; eBlock; 1 );
+	vErrorNoRoot = 
+		Case( 
+			//	For first path node, check if it is a root node
+			numPathNodeCurrent = 1 and sBlock > 1; 
+				Let( 
+					[
+					vPreBlock = Left( vSearchBlock; sBlock - 1 );
+					vTagOpenCount = PatternCount( vPreBlock; "<" ) / 2;
+					vTagCloseCount = PatternCount( vPreBlock; "≤/" );
+					vWrongBlock = Abs( vTagCloseCount - vTagOpenCount )
+					];
+					If( vWrongBlock; 1; 0 )
+				);	  //end let
+			0
+		);	//end case 
+	
+	//	Check for unlogged errors
+	vErrorA = 
+		Case(
+			//	Unlogged error from sBlock or sPredicate
+			Left( sBlock; 7 ) = "Error 1";
+				sBlock;
+				
+			//	Occurrence not within parent element (for "//" command)
+			sBlock < start;
+				"Error 107: Invalid Path To Element \"" & vNodeNameActual & "\""
+		);	 
+	vErrorATerminal = 
+		Case(
+			//	First node is NOT root element - Disabled
+			//vErrorNoRoot;
+			//	  "Error 108: Invalid Path (missing root)";
+			
+			//	Closing tag not found
+			eBlockContent = 0 and 
+			PatternCount( "¶attribute¶replace integer¶"; vRequestType ) = 0;
+				"Error 109: Invalid XML (Close Tag \"" & vNodeNameActual & "\" Not Found)";
+				
+		    //  Name() has no previous node name
+		    vRequestType = "name" and IsEmpty( vNodeNamePrevious );
+		    	"Error 1090: name() command cannot find previous node name";
+			
+			//	Result is an invalid block (tags got confused)
+			Abs( PatternCount( vBlockRaw; "≤/" ) - PatternCount( vBlockRaw; "<" ) ) <> 0;
+				If( PatternCount( vBlockRaw; "<" & vNodeName & "‡" )
+				; "Error 1091: XML Contains Identical Parent-Child Tags"
+				; "Error 1092: Returned Block is Invalid - Check that XML is valid and that no duplicate parent-child tags are used" )
+		);
+		
+	//	Compile ALL errors for deciding result
+	vErrorTerminal = 
+		Case(
+			//	Request refers to previously processed node (types "context", "name")
+			vRequestType = "name";
+				"";
+				
+			//	Terminal error returned from sBlockA or subB
+			Left( sBlockA; 5 ) = "Error";
+				GetValue( sBlockA; 1 );
+
+			//	Other subA errors
+			Length( vErrorATerminal );
+				vErrorATerminal;
+		);
+	
+	//	Remove search characters from message
+	vErrorMsg = Trim( Substitute( vErrorTerminal; "‡"; " " ) );
+/*
+	//	Update Logs
+	vErrorContext = "on subA( vSearchBlock; " & path & "; " & start & "; " & end & "; " & currentPathNode & " )";
+	vLogErrorEntry = Case( Length( vErrorA ); $$xml.select_numPathNodeCurrent & "_" & vErrorA );
+	vLogVerbose = vRecursionIndent &
+		"bnWildInteger = " & bnWildInteger & "; vRequestType = " & vRequestType &
+		"; numPathNodeCurrent = " & numPathNodeCurrent &
+		"; numPathNodeNext = " & numPathNodeNext &
+		"; vNodeNameActual = " & Quote( vNodeNameActual ) &
+		"; vNodeNamePrevious = " & Quote( vNodeNamePrevious ) &
+		"; sPredicate = " & Quote( sPredicate ) &
+		"; sValues = " & sValues &
+		"; sBlockA = " & Quote( sBlockA ) & "; sBlock = " & Quote( sBlock ) & 
+		"; sBlockContent = " & sBlockContent & "; eBlockContent = " & eBlockContent & 
+		"; eBlock = " & eBlock;
+	sv = var.update( "xml.select_errorLog"; vLogErrorEntry; 1 )
+	     & var.update( "xml.select_log"; vLogErrorEntry; 0 )
+	     & Case( bnVerboseLogging; var.update( "xml.select_log"; vLogVerbose; 0 ));
+*/
+	 
+	//=================================================================
+	//			DETERMINE RECURSION RESULT
+	//=================================================================
+	sNextStart = If( IsEmpty( sBlock ); end; sBlock );
+	
+	//	Determine text result or command for next function
+	//		Also initiates nested recursions for branching of function
+	//		Returns empty result if xml is ready to be written to the result variable
+	vRecursionResult = 
+		Case(				 
+			//	Error messages
+			Length( vErrorTerminal ) > 0;
+				vErrorMsg;
+				
+			//	Recursive call for wild integer
+			bnWildInteger;
+				Case( 
+					//	Last Recursion - stop
+					GetValue( sBlockA; 1 ) = "end recursion" or bnContinueSearching; 
+						"end recursion";
+					//	Evaluate rest of path for current integer
+					numPathNodeNext ≠ "end";
+						xml.select_subA( xmlSource; vPathNew; sBlock; eBlock; numPathNodeNext )
+				);
+			
+			//	Current vNodeNameActual element not valid 
+			bnContinueSearching;
+				Case( 
+					//	No further occurrences of vNodeNameActual in vSearchBlock
+					Position( vSearchBlock; vNodeNameActual; sValues; 2 ) = 0;
+						Case( Length( vErrorHidden ); vErrorHidden; 
+						"Error 191: Valid Element For \"" & vPathNodeCurrent & "\" Not Found");
+						
+					//	Find new parent element
+					Position( vSearchBlock; vNodeNameActual; sValues; 2 ) > end;
+						xml.select_subA( 
+							vSearchBlock; 
+							path; 
+							vContinueStart;
+							//Case( numPathNodeCurrent ≤ 2; sBlockContent; end ); 
+							Evaluate( "$$xml.subA_eCurrentBlock_" & numPathNodeCurrent - 1 ); 
+							currentPathNode - 1
+						);
+					
+					//	Default: Find next occurrence of vNodeNameActual in current element
+					xml.select_subA( 
+						vSearchBlock; 
+						path; 
+						vContinueStart;
+						//Case( numPathNodeCurrent ≤ 2; sBlockContent; end ); 
+						Evaluate( "$$xml.subA_eCurrentBlock_" & numPathNodeCurrent ); 
+						currentPathNode
+					)
+				);	  //end Case
+				
+			//	Path completed - Return block of XML
+			numPathNodeNext = "end";
+				""; //vBlockRaw;
+				
+			//	Element found successfully 
+			GetAsNumber( sBlock ) > 0 and vPathNodeCount > 1;
+				var.assign( "xml.subA_eCurrentBlock_" & numPathNodeCurrent; end; 1 ) &
+				"NextOrig";
+
+			//	Return error from previous recursion
+			Length( $$xml.select_errorLog );
+				GetValue( $$xml.select_errorLog; 1 );
+			
+			//	Default: Unexpected, show subB result
+			"Error 199: result finding node \"" & vNodeNameActual & "\" is \"" & sBlockA & "\""
+			
+		);	 //end Case {vRecursionResult}
+	//vProcessSiblings = (removed at v4.2.2)
+
+	vNextStart = 
+		Case(
+			//	Grab start value from child recursions
+			GetValue( vRecursionResult; 1 ) = "Next";
+				GetValue( vRecursionResult; 2 );
+			sBlock
+		)
+/*
+	; vLogEntry = vRecursionIndent & "subA -> vRecursionResult = " & Quote(vRecursionResult) &
+	    "; sBlock = " & Quote(sBlock) & "; sBlockContent = " & sBlockContent
+	; exLogEntryResA = Quote( vRecursionIndent ) & " & \"$$xml.select_result = \" & 
+		Quote($$xml.select_result)"
+	; exLogEntryRes = Quote( exLogEntryResA)
+*/
+	];	//end variable declaration
+	
+//	var.update( "xml.select_log"; vLogEntry; 0 ) &
+	var.assign( "xml.select_nodeRecursion"; $$xml.select_nodeRecursion - 1; 1 ) &
+
+	//	Return Error message or write result to global variable
+	//		Note, may be nested recursion if called from vRecursionResult
+	Case(
+		//	Success - Move on to next path node
+		vRecursionResult = "NextOrig" or 
+		GetValue( vRecursionResult; 1 ) = "Next";
+			Case(
+				//	Move on if initial recursion for this node
+				$$xml.select_nodeRecursion + 1 = 1; //readjusted after previous Let statement
+					xml.select_subA( 
+						vSearchBlock; 
+						path; 
+						vNextStart; 
+						eBlock; 
+						numPathNodeNext
+					);
+				//	Default: Return to initial recursion
+				"Next¶" & vNextStart
+			);
+			
+		//	Error - Return first error message encountered for this recursion
+		Left( vRecursionResult; 5 ) = "Error" and not bnWildInteger;
+			Case( Length( vErrorTerminal ); vErrorTerminal; vRecursionResult );
+			
+		//	Recursive call for wild integer
+		bnWildInteger;
+			Case(
+				//	Last Recursion - Return empty result to parent function
+				vRecursionResult = "end recursion" or Left( vRecursionResult; 5 ) = "Error"; "";
+
+				//	Store result in variable if on last node
+				Case( numPathNodeNext = "end"; 
+					var.update( "xml.select_result"; vBlockRaw; 0 )
+//					& var.update( "xml.select_log"; Evaluate(Evaluate( exLogEntryRes )); 0 )
+				) &
+				//	Process siblings
+				//	Process 
+				xml.select_subA( xmlSource; vPathNew; start; end; currentPathNode )
+			);
+			
+		//	Success (vRecursionResult is empty)
+		//		Store XML result and tell xml.select to retrieve it
+		IsEmpty( vRecursionResult ) and numPathNodeNext = "end";
+			var.update( "xml.select_result"; vBlockRaw; 0 )
+			& Let($$xml_sTargetBlockA= sBlockContent - Case( IsEmpty( vBlockRaw ); 1 );"")
+//			& var.update( "xml.select_log"; Evaluate(Evaluate( exLogEntryRes )); 0 )
+		
+		//	Default
+		; vRecursionResult
+	)	//end Case
+
+)	 //end Let
+
+/*---------------------------------------------------------------------------------------
+HISTORY:
+	v1.1 Created 2008apr18 by Donovan Chandler
+		The concept was taken from Scott Love of Soliant Consulting and has been modified to work recursively through multiple blocks within vSearchBlock, relying on the starting character position rather than the count of parent tags
+	v2.3 - v3.4 Notes deleted at v4.4
+	v4 Created 2008.09.11 by DC
+		• Fixed sFirstOccurrence in "integer" type of sBlock
+		• Disabled Error 108 (first node not root)
+		• Fixed vResultAttr
+		• Fixed sOccurDirect 
+		• Moved xmlSource transformation into subA from xml.select
+	v4.1 Created 2008.09.22 by DC
+		• Removed fnCustomList (it doesn't support custom functions) and enhanced bnWildInteger
+	v4.2 Created 2008.09.22 by DC
+		• Added var.assign() and var.update()
+	v4.2.1 Created 2008.09.25 by DC
+		• Fixed recursion nesting of bnWildInteger searches
+	v4.2.2 Created 2008.12.11 by DC
+		• Commented out logging function
+		• Enhanced initial error handling, vPathNodeCount now accounts for "//"
+	v4.3 Created 2008.12.12 by DC
+		• Now supplies subB with start position of element values (not the element itself)
+	v4.4 Created 2008.12.16 by DC
+		• Now sets $$xml_recursiveExpression for use by xml.update() v2.0
+		• Now uses xml.transform()
+		• Now sets beginning position of block to $$xml_sTargetBlockA
+		• Now supplies beginning position of attribute nodes
+---------------------------------------------------------------------------------------*/

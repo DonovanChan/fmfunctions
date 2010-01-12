@@ -1,0 +1,38 @@
+/*---------------------------------------------------------------------------------------
+NAME: 
+    var.update( name; value; global; prepend )
+    Version 1.1
+
+PURPOSE: 
+    Prepends or Appends text to global variable designated in parameters
+
+HISTORY: 
+    Created 2008.09.25 by Donovan Chandler
+
+INPUT: 
+    name:  Name of variable (text string)
+    value:  Value of variable (text string)
+    global:  (Boolean) - True causes global varialbe, False causes local var
+    prepend:  (Boolean) - True causes prepend, False causes append
+
+OUTPUT: 
+    Global variable with added text on its own return-delimited line
+    (without leading or trailing "¶")
+    
+---------------------------------------------------------------------------------------*/
+
+Let([
+	_S = If( Evaluate( global ); "$$"; "$" )
+	
+	];	
+	
+	Evaluate( 
+	    "Let([ origVal = " & _S & name & 
+	    "; val = " & Quote( value ) & 
+	    "; rt = Case( Length( origVal ) and Length( val ); \"\¶\")" &
+	    "; pre = " & prepend &
+	    "; newVal = If( pre; val & rt & origVal; origVal & rt & val ) " &
+	    "; " & _S & name & "= newVal ]; \"\" )"
+	)
+	
+)

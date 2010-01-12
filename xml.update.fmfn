@@ -1,0 +1,106 @@
+/*---------------------------------------------------------------------------------------
+NAME: 
+	xml.update( xmlSource; path; value )
+	Version 2.1
+
+PURPOSE: 
+	Locates first valid XML element in xmlSource according to path and replaces its value
+
+DEPENDENCIES: 
+	Custom Functions:	xml.select()
+	Variables:	$
+		$xml_sTargetBlock and $$xml_eTargetBlock - mark pos of target content
+		$$xml_recursiveExpression - Boolean indicator if request is not supported
+
+HISTORY: 
+	Created by Donovan Chandler (See details below)
+
+INPUT: 
+	xmlSource:	Basic XML text (Requires full open and close tag pairs)
+	path:		Text string defining path to node into which text is to be inserted.
+					Syntax is similar to XPath but is different and strict. 
+					See xml.select for more detail on syntax options and examples.
+	value:		Text string to replace element/attribute value indicated by path
+	
+OUTPUT: 
+	xmlSource text with new value in designated element 
+---------------------------------------------------------------------------------------*/
+
+Let(
+	[
+	//xmlSource = xmlSource;
+	//path = path;
+	//value = value;
+	
+	$$xml_sTargetBlock = 0;
+	$$xml_eTargetBlock = 0;
+	$$xml_recursiveExpression = "";
+	
+	//	Parse parameters
+	sLastNode = Position( path; "/"; Length( path ); -1 ) + 1;
+	vLastNode = Middle( path; sLastNode; Length( path ) - sLastNode + 1 );
+	isAttribute = ( Left( vLastNode; 1 ) = "@" );
+	
+	//	Locate target block
+	vBlockTrimmed = xml.select( xmlSource; path );
+	bnNoVal = IsEmpty( vBlockTrimmed );
+	sBlock = $$xml_sTargetBlock + Case( bnNoVal; 1 );
+	eBlock = $$xml_eTargetBlock + Case( bnNoVal; 1 );
+	lenBlock = 
+		Case(
+			//	No existing value
+			bnNoVal; 0;
+			//	Value is one char
+			sBlock = eBlock; 1;
+			//	Default
+			eBlock - sBlock + 1
+		);
+
+	vRecursiveExp = $$xml_recursiveExpression;
+	
+	vNewBlock = Replace( xmlSource; sBlock; lenBlock; value );
+	
+	vError = 
+		Case( 
+			//	Incompatible xml querry (recursive, etc)
+			vRecursiveExp;
+				"Error: Unsupported Command in Path (\"" & path & "\")";
+			
+			//	Error completing querry
+			sBlock = 0 or eBlock = 0 or Left( vBlockTrimmed; 5 ) = "Error";
+				vBlockTrimmed;
+		);
+
+	vErrorMsg = 
+		Case( 
+			//	Path not found in xmlSource: Append error message to xmlSource
+			not IsEmpty( vError );
+				"<ERROR>" & ¶ & 
+				"	 <type>" & vError & "</type>" & ¶ & 
+				"	 <path>" & path & "</path>" & ¶ & 
+				"	 <date>" & GetAsDate( Get( CurrentTimeStamp ) ) & "</date>" & ¶ & 
+				"	 <time>" & GetAsTime( Get( CurrentTimeStamp ) ) & "</time>" & ¶ & 
+				"</ERROR>" & ¶;
+			//	Default: Empty 
+			""
+		);
+
+	vResult = 
+		Case(
+			//	Error
+			Length( vError ); xmlSource & ¶ & vErrorMsg; 
+			
+			//	Default: Return result
+			vNewBlock
+		)
+	];
+	vResult
+)	
+
+/*---------------------------------------------------------------------------------------
+HISTORY:
+v1.0 Created 2008.09.04 by Donovan Chandler
+v2.0 Created 2008.12.16 by DC
+v2.1 Created 2009.01.06 by DC
+	• Corrected lenBlock values
+---------------------------------------------------------------------------------------*/
