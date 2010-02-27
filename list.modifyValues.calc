@@ -1,0 +1,42 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    list.modifyValues( text; varName; expression )
+
+PURPOSE:
+    Applies expression to each return-delimited value in text
+
+HISTORY:
+    Created 2010.02.10 by Donovan Chandler
+    Compliments to Fabrice Nordmann of BH&A for example of this expression evaluation technique
+
+INPUT:
+    text:  Return-delimited list
+    varName:  Text string in expression that represents the value being tested
+    expression:  Calculation to be evaluated on each value in text
+    
+    E.g., list.modifyValues( "dog¶cat¶mouse"; "[v]"; "Left( [v]; 2 )" ) = "do¶ca¶mo"
+    
+---------------------------------------------------------------------------------------*/
+
+Case(
+ValueCount( text ) > 0;
+
+Let([
+    vValueCur = LeftValues( Substitute( text ; [ "\“" ; "\"" ] ; [ "\”" ; "\"" ] ; [ "\"" ; "\\\""] ); 1);
+    exComplete = 
+        Substitute( expression 
+          ; [varName; "\"" & Substitute( vValueCur ; ¶; "") & "\""]
+        );
+    vValEvaluated = Evaluate( exComplete );
+    numValuesRem = ValueCount( text ) - 1
+    ];
+    Substitute( vValEvaluated; "\\\""; "\"" )
+    & If( numValuesRem > 0; ¶ )
+    & list.modifyValues(
+        RightValues( text; numValuesRem )
+        ; varName
+        ; expression
+    )
+)
+
+) //end Case

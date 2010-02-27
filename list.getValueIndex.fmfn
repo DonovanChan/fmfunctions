@@ -1,0 +1,46 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    list.getValueIndex( valueList; searchValue; matchCase )
+    Version 1.0
+
+PURPOSE:
+    Searches a return-delimited list for the first occurrence of the given value
+
+HISTORY:
+    Created 2008jun16 by Donovan Chandler based on function by Theo Ross
+
+INPUT:
+    valueList: the return-delimited list to search
+    searchValue: the string to look for in each item
+    matchCase: Boolean switch - 1/True makes search case sensitive
+ 
+OUTPUT:
+    Number indicating first list value containing searchValue
+---------------------------------------------------------------------------------------*/
+
+Let(
+    [
+    vOrigList = If( Left( valueList; 1 ) <> "¶"; "¶" & valueList; valueList) & "¶";
+    posMatch =
+        Case(
+            //-- Case-Sensitive PatternCount
+            matchcase;
+                Let([
+                    marker = "%!Match!%";
+                    vSearchList = Substitute( vOrigList; searchValue; marker )
+                    ];
+                    Position( vSearchList; marker; 1; 1 )
+                );  
+            
+            //-- Normal Case-Insensitive PatternCount
+            Position( vOrigList; searchValue; 1; 1 )
+        )   
+    ];  
+    If( posMatch; PatternCount( Left( vOrigList; posMatch ); "¶" ); 0 )
+)
+
+/*---------------------------------------------------------------------------------------
+EXAMPLE:
+    list.getValueIndex( "John¶Paul¶George¶Ringo"; "ringo"; False ) --> 4
+    list.getValueIndex( "John¶Paul¶George¶Ringo"; "ringo"; True )  --> 0
+---------------------------------------------------------------------------------------*/

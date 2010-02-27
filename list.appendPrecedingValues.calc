@@ -1,0 +1,24 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    list.appendPrecedingValues( text; searchString )
+
+PURPOSE:
+    Returns searchString and all values preceding it in text
+
+HISTORY:
+    Created 2010.02.10 by Donovan Chandler
+
+DEPENDENCIES:
+    list.getValueIndex()
+    
+---------------------------------------------------------------------------------------*/
+//Show checked value as well as preceding values//
+
+Let([
+    lisValues = text;
+    vValueSel = searchString;
+    indexValueSel = list.getValueIndex( lisValues; vValueSel; False );
+    lisValuesResult = LeftValues( lisValues; indexValueSel )
+    ];
+    lisValuesResult
+)
