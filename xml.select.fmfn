@@ -1,229 +1,229 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	xml.select( xmlSource; path )
-	Version 4.1.3
+    xml.select( xmlSource; path )
+    Version 4.1.3
 
 PURPOSE: 
-	Controls sub functions to return a block of XML according to provided path
-	Also used to locate XML element for other XML functions (with global variables)
+    Controls sub functions to return a block of XML according to provided path
+    Also used to locate XML element for other XML functions (with global variables)
 
 HISTORY: 
-	Created by Donovan Chandler (Details at bottom)
-	Please report bugs at donovan.chandler@gmail.com
+    Created by Donovan Chandler (Details at bottom)
+    Please report bugs at donovan.chandler@gmail.com
 
 METHODOLOGY: 
-	1. Validate parameters
-	2. Transform xml for searching purposes
-	3. Call sub-function to extract desired element
-	4. Clean up variables
+    1. Validate parameters
+    2. Transform xml for searching purposes
+    3. Call sub-function to extract desired element
+    4. Clean up variables
 
 INPUT: 
-	xmlSource: Block of simple XML 
-		• All elements must have an open and close tag
-		• Values cannot contain reserved characters (see dependencies below)
-		• HTML-style attributes are supported, but syntax is strict 
-			• Attribute values must be enclosed in quotation marks (see examples at bottom)
-		• Be careful to not leave any unnecessary spaces in tags
-		• Spaces and line breaks outside of tags are fine
-	path: Identifies desired node. Syntax is similar to XPath but not completely 
-		(see examples at bottom)
-		(path must contain 6 nodes or less)
+    xmlSource: Block of simple XML 
+        • All elements must have an open and close tag
+        • Values cannot contain reserved characters (see dependencies below)
+        • HTML-style attributes are supported, but syntax is strict 
+            • Attribute values must be enclosed in quotation marks (see examples at bottom)
+        • Be careful to not leave any unnecessary spaces in tags
+        • Spaces and line breaks outside of tags are fine
+    path: Identifies desired node. Syntax is similar to XPath but not completely 
+        (see examples at bottom)
+        (path must contain 6 nodes or less)
 
 OUTPUT: 
-	Child element or attribute of XML satisfying parameter requirements. 
-		Returns element text unless otherwise specified (i.e., self or attribute)
-	If bnTrimOn is set to True, leading space characters of first line will be stripped from beginning of ALL lines of text.
-	Sets global variables pointing to beginning and ending position of XML element 
-		($$xml_sTargetBlock, $$xml_eTargetBlock )
+    Child element or attribute of XML satisfying parameter requirements. 
+        Returns element text unless otherwise specified (i.e., self or attribute)
+    If bnTrimOn is set to True, leading space characters of first line will be stripped from beginning of ALL lines of text.
+    Sets global variables pointing to beginning and ending position of XML element 
+        ($$xml_sTargetBlock, $$xml_eTargetBlock )
 
 DEPENDENCIES:
-	Custom Functions: xml.select_subA (v4.2), xml.select_subB (v3.3), text.trim, xml.transform
-	Reserved Variables: 
-		$$xml_sTargetBlock, $$xml_eTargetBlock, $$xml_recursiveExpression, $$xml.select_searchBlock
-	Reserved Variables (shared with child functions): 
-		$$xml.select_log, $$xml.select_errorLog, $$xml.select_nodeRecursion
-	Reserved Characters (Do not use in XML values!): ‡, <, >, "
+    Custom Functions: xml.select_subA (v4.2), xml.select_subB (v3.3), text.trim, xml.transform
+    Reserved Variables: 
+        $$xml_sTargetBlock, $$xml_eTargetBlock, $$xml_recursiveExpression, $$xml.select_searchBlock
+    Reserved Variables (shared with child functions): 
+        $$xml.select_log, $$xml.select_errorLog, $$xml.select_nodeRecursion
+    Reserved Characters (Do not use in XML values!): ‡, <, >, "
 
 NOTES: 
-	Sets global variables $$xml_sTargetBlock and $$xml_eTargetBlock for related update, insert and delete XML custom functions. Any function depending on these variables must initialize them to 0. 
-	Global pointers are relative to xmlSource, so scripts using these global variables must similarly transform their xmlSource. 
-	See bottom of script for example and more detail.
-	
+    Sets global variables $$xml_sTargetBlock and $$xml_eTargetBlock for related update, insert and delete XML custom functions. Any function depending on these variables must initialize them to 0. 
+    Global pointers are relative to xmlSource, so scripts using these global variables must similarly transform their xmlSource. 
+    See bottom of script for example and more detail.
+    
 TO DO:
-	Optimize for better speed
-	Make accomodations and comments for using insert/update/delete with recursive results
+    Optimize for better speed
+    Make accomodations and comments for using insert/update/delete with recursive results
 ---------------------------------------------------------------------------------------*/
 
 
 Let(
-	[
-	bnTrimOn = True;
-	bnLoggingOn = True;
-	lenSourceBlock = Length( xmlSource );
-	
-	//	Validate parameters	   
-	vError =
-		Case(
-			//	Error messages
-			IsEmpty( xmlSource ) and IsEmpty( path ); 
-				"Error 001: Missing Parameters ( xmlSource; path )";
-			IsEmpty( xmlSource ); 
-				"Error 002: Missing Parameter ( xmlSource )";
-			IsEmpty( path ); 
-				"Error 003: Missing Parameter ( path )"
-		); 
-	
-	// Set variables
-	$$xml.select_result = "";
-	$$xml.select_log = 
-		If( PatternCount( $$xml.select_log; "¶¶¶" ) > 10; ""; $$xml.select_log & "¶¶¶" ) &
-		"xml.select( xmlSource; \"" & path & "\" )";
-	$$xml.select_errorLog = "";
-	$$xml.select_searchBlock = xmlSource;
-	$$xml.select_nodeRecursion = 0;
-	
-	//	Extract desired element
-	vSubAResult = 
-		Case( IsEmpty( vError ); 
-			xml.select_subA( xmlSource; path; 1; Length( xmlSource ); "" )
-		);
+    [
+    bnTrimOn = True;
+    bnLoggingOn = True;
+    lenSourceBlock = Length( xmlSource );
+    
+    //    Validate parameters       
+    vError =
+        Case(
+            //    Error messages
+            IsEmpty( xmlSource ) and IsEmpty( path ); 
+                "Error 001: Missing Parameters ( xmlSource; path )";
+            IsEmpty( xmlSource ); 
+                "Error 002: Missing Parameter ( xmlSource )";
+            IsEmpty( path ); 
+                "Error 003: Missing Parameter ( path )"
+        ); 
+    
+    // Set variables
+    $$xml.select_result = "";
+    $$xml.select_log = 
+        If( PatternCount( $$xml.select_log; "¶¶¶" ) > 10; ""; $$xml.select_log & "¶¶¶" ) &
+        "xml.select( xmlSource; \"" & path & "\" )";
+    $$xml.select_errorLog = "";
+    $$xml.select_searchBlock = xmlSource;
+    $$xml.select_nodeRecursion = 0;
+    
+    //    Extract desired element
+    vSubAResult = 
+        Case( IsEmpty( vError ); 
+            xml.select_subA( xmlSource; path; 1; Length( xmlSource ); "" )
+        );
 
-	vBlockResult = 
-		Case( 
-			Length( vError ); vError;
-			
-			//	Success - Return XML block
-			IsEmpty( vSubAResult );
-				Let( 
-					[
-					vBlockRaw = $$xml.select_result;
-					//	Remove search transformation
-					vBlockResult = xml.transform( vBlockRaw; False );
-						//Substitute( vBlockRaw; ["‡>"; ">"]; ["‡"; " "]; ["≤/"; "</"] );
-					
-					//	Trim excess ¶ and space chars by excluding all but the block itself
-					lenLeadingChars = Length( vBlockResult ) - Length( text.trim( vBlockResult; 1 ) );
-					vLeadingChars = Left( vBlockResult; lenLeadingChars );
-					vAdjustmentText = 
-						Substitute( 
-							vLeadingChars; 
-							Left( vLeadingChars; Position( vLeadingChars; "¶"; Length( vLeadingChars ); -1 ) );
-							""
-						);						  
-	
-					vBlockTrimmed = text.trim( vBlockResult; 3 );
-					vBlockFormatted = Substitute( vBlockTrimmed; "¶" & vAdjustmentText; "¶" );
-	
-					//	Update global pointers 
-					sBlockA = Position( xmlSource; vBlockResult; 1; 1 );
-					sBlock = 
-						Case( sBlockA = 0 or sBlockA < $$xml_sTargetBlockA; 
-							Let([
-								sBlockSearched = $$xml_sTargetBlockA;
-								vBlockLeft = Left( $$xml.select_searchBlock; sBlockSearched );
-								lenSearched = Length( vBlockLeft );
-								lenCleaned = Length( xml.transform( vBlockLeft; False ) );
-								numAddedChars = lenSearched - lenCleaned
-								]; sBlockSearched - numAddedChars 
-							);
-							sBlockA
-						);
-					lenBlock = Length( vBlockResult );
-					$$xml_sTargetBlock = sBlock; 
-					$$xml_eTargetBlock = $$xml_sTargetBlock + lenBlock - Case( lenBlock; 1 );
-					
-					vErrorA = Case( IsEmpty( vBlockRaw ) 
-						; ""
-						//; "Error 004 (Internal): Result not found in global variable" 
-						);
-					vResultTxt = If( bnTrimOn; vBlockFormatted; vBlockResult )
-					];
-					If( vErrorA; vErrorA; vResultTxt )
-				);	//end let	
-				
-			//	Return Error message
-			Left( vSubAResult; 5 ) = "Error"; 
-				Let( 
-					[
-					//	Update global pointers 
-					$$xml_sTargetBlock = 0;
-					$$xml_eTargetBlock = 0 
-					];
-					vSubAResult
-				);
-				
-			//	Default: Unknown error
-			"Error 099 (Unknown): " & vSubAResult
-			//"Error 099: Unknown"
-		);	 //end case {vBlockResult}
-		
-	//	Update log
-	$$xml.select_log = 
-		$$xml.select_log & ¶ & 
-		"$$..sTargetBlock = " & $$xml_sTargetBlock & 
-		"; $$..eTargetBlock = " & $$xml_eTargetBlock;
-	
-	//	Clear temporary variables
-	$$xml.subA_eCurrentBlock_1 = "";
-	$$xml.subA_eCurrentBlock_2 = "";
-	$$xml.subA_eCurrentBlock_3 = "";
-	$$xml.subA_eCurrentBlock_4 = "";
-	$$xml.subA_eCurrentBlock_5 = "";
-	$$xml.subA_eCurrentBlock_6 = "";
-	$$xml.subA_nodeName_1 = "";
-	$$xml.subA_nodeName_2 = "";
-	$$xml.subA_nodeName_3 = "";
-	$$xml.subA_nodeName_4 = "";
-	$$xml.subA_nodeName_5 = "";
-	$$xml.subA_nodeName_6 = "";
-	$$xml.select_log = If( bnLoggingOn; $$xml.select_log; "" ); 
-	$$xml.select_errorLog = If( bnLoggingOn; $$xml.select_errorLog; "" ); 
-	$$xml.select_numPathNodeCurrent = "", 
-	$$xml.select_nodeRecursion = "";
-	$$xml.select_result = "";
-	$$xml.subB_rep = "";
-	$$xml_sTargetBlockA = "";
-	$$xml.select_searchBlock = ""
-	];	  //end variable declaration
-	
-	vBlockResult
+    vBlockResult = 
+        Case( 
+            Length( vError ); vError;
+            
+            //    Success - Return XML block
+            IsEmpty( vSubAResult );
+                Let( 
+                    [
+                    vBlockRaw = $$xml.select_result;
+                    //    Remove search transformation
+                    vBlockResult = xml.transform( vBlockRaw; False );
+                        //Substitute( vBlockRaw; ["‡>"; ">"]; ["‡"; " "]; ["≤/"; "</"] );
+                    
+                    //    Trim excess ¶ and space chars by excluding all but the block itself
+                    lenLeadingChars = Length( vBlockResult ) - Length( text.trim( vBlockResult; 1 ) );
+                    vLeadingChars = Left( vBlockResult; lenLeadingChars );
+                    vAdjustmentText = 
+                        Substitute( 
+                            vLeadingChars; 
+                            Left( vLeadingChars; Position( vLeadingChars; "¶"; Length( vLeadingChars ); -1 ) );
+                            ""
+                        );                          
+    
+                    vBlockTrimmed = text.trim( vBlockResult; 3 );
+                    vBlockFormatted = Substitute( vBlockTrimmed; "¶" & vAdjustmentText; "¶" );
+    
+                    //    Update global pointers 
+                    sBlockA = Position( xmlSource; vBlockResult; 1; 1 );
+                    sBlock = 
+                        Case( sBlockA = 0 or sBlockA < $$xml_sTargetBlockA; 
+                            Let([
+                                sBlockSearched = $$xml_sTargetBlockA;
+                                vBlockLeft = Left( $$xml.select_searchBlock; sBlockSearched );
+                                lenSearched = Length( vBlockLeft );
+                                lenCleaned = Length( xml.transform( vBlockLeft; False ) );
+                                numAddedChars = lenSearched - lenCleaned
+                                ]; sBlockSearched - numAddedChars 
+                            );
+                            sBlockA
+                        );
+                    lenBlock = Length( vBlockResult );
+                    $$xml_sTargetBlock = sBlock; 
+                    $$xml_eTargetBlock = $$xml_sTargetBlock + lenBlock - Case( lenBlock; 1 );
+                    
+                    vErrorA = Case( IsEmpty( vBlockRaw ) 
+                        ; ""
+                        //; "Error 004 (Internal): Result not found in global variable" 
+                        );
+                    vResultTxt = If( bnTrimOn; vBlockFormatted; vBlockResult )
+                    ];
+                    If( vErrorA; vErrorA; vResultTxt )
+                );    //end let    
+                
+            //    Return Error message
+            Left( vSubAResult; 5 ) = "Error"; 
+                Let( 
+                    [
+                    //    Update global pointers 
+                    $$xml_sTargetBlock = 0;
+                    $$xml_eTargetBlock = 0 
+                    ];
+                    vSubAResult
+                );
+                
+            //    Default: Unknown error
+            "Error 099 (Unknown): " & vSubAResult
+            //"Error 099: Unknown"
+        );     //end case {vBlockResult}
+        
+    //    Update log
+    $$xml.select_log = 
+        $$xml.select_log & ¶ & 
+        "$$..sTargetBlock = " & $$xml_sTargetBlock & 
+        "; $$..eTargetBlock = " & $$xml_eTargetBlock;
+    
+    //    Clear temporary variables
+    $$xml.subA_eCurrentBlock_1 = "";
+    $$xml.subA_eCurrentBlock_2 = "";
+    $$xml.subA_eCurrentBlock_3 = "";
+    $$xml.subA_eCurrentBlock_4 = "";
+    $$xml.subA_eCurrentBlock_5 = "";
+    $$xml.subA_eCurrentBlock_6 = "";
+    $$xml.subA_nodeName_1 = "";
+    $$xml.subA_nodeName_2 = "";
+    $$xml.subA_nodeName_3 = "";
+    $$xml.subA_nodeName_4 = "";
+    $$xml.subA_nodeName_5 = "";
+    $$xml.subA_nodeName_6 = "";
+    $$xml.select_log = If( bnLoggingOn; $$xml.select_log; "" ); 
+    $$xml.select_errorLog = If( bnLoggingOn; $$xml.select_errorLog; "" ); 
+    $$xml.select_numPathNodeCurrent = "", 
+    $$xml.select_nodeRecursion = "";
+    $$xml.select_result = "";
+    $$xml.subB_rep = "";
+    $$xml_sTargetBlockA = "";
+    $$xml.select_searchBlock = ""
+    ];      //end variable declaration
+    
+    vBlockResult
 
-)	 //Let
+)     //Let
 
 
 /*---------------------------------------------------------------------------------------
 FURTHER DETAILS: 
 ----------------------------
-	"For those familiar with XPath, think of the right-most element of your path to be the 'context node' for an XPath. This function doesn't support even a fraction of XPath capabilities, but it was inspired from it."
-	- See "FileMaker 8 Functions and Scripts Desk Reference" by Love, Lane and Bowers, p. 250ff
-	
-Supported Expression Elements:	  
-	Path Operators (axes/node tests):
-		/		direct child node
-		//		any descending node
-		@		attribute
-		*		wildcard
-		
-	Predicates:
-		[*]				- Creates path for EVERY instance of that element
-		[4]				- 4th element
-		[tag=foo]		- Element containing child with tag "tag" and EXACT value "foo"
-		[tag=*foo]		- Element containing child "tag" BEGINNING WITH "foo"
-		[tag=*foo*]		- Element containing child "tag" CONTAINING "foo"
-		[tag=foo*]		- Element containing child "tag" ENDING WITH "foo"
-		[@name="foo"]	- Element containing "name" attribute with value "foo"
-		
-	Functions (used only at end of path):
-		.		returns full element (included open/close tags)
-		name()	returns name of passed element
+    "For those familiar with XPath, think of the right-most element of your path to be the 'context node' for an XPath. This function doesn't support even a fraction of XPath capabilities, but it was inspired from it."
+    - See "FileMaker 8 Functions and Scripts Desk Reference" by Love, Lane and Bowers, p. 250ff
+    
+Supported Expression Elements:      
+    Path Operators (axes/node tests):
+        /        direct child node
+        //        any descending node
+        @        attribute
+        *        wildcard
+        
+    Predicates:
+        [*]                - Creates path for EVERY instance of that element
+        [4]                - 4th element
+        [tag=foo]        - Element containing child with tag "tag" and EXACT value "foo"
+        [tag=*foo]        - Element containing child "tag" BEGINNING WITH "foo"
+        [tag=*foo*]        - Element containing child "tag" CONTAINING "foo"
+        [tag=foo*]        - Element containing child "tag" ENDING WITH "foo"
+        [@name="foo"]    - Element containing "name" attribute with value "foo"
+        
+    Functions (used only at end of path):
+        .        returns full element (included open/close tags)
+        name()    returns name of passed element
 
 Node Test Examples:
-	Node tests:
-		/tag		- Direct descendent named "tag"
-		//tag		- Any descendent named "tag"
-		/ *			- Any direct descendent (takes first valid element) [w/out space]
-		// *		- Any descendent	[w/out space]
-		/.			- Returns entire context node (result for previous node with enclosing tags)
+    Node tests:
+        /tag        - Direct descendent named "tag"
+        //tag        - Any descendent named "tag"
+        / *            - Any direct descendent (takes first valid element) [w/out space]
+        // *        - Any descendent    [w/out space]
+        /.            - Returns entire context node (result for previous node with enclosing tags)
 ----------------------------
 EXAMPLE:
 ----------------------------
@@ -232,26 +232,26 @@ source XML =
 
 <root>
    <branch>
-	  <num>100</num>
-	  <text font="Times">foo</text>
+      <num>100</num>
+      <text font="Times">foo</text>
    </branch>
    <branch name="fig">
-	  <num>200</num>
-	  <text font="Times">xyz</text>
+      <num>200</num>
+      <text font="Times">xyz</text>
    </branch>
 </root>
 
 Results:
 for path "root/branch":
 "<num>100</num>
-	  <text>foo</text>"
+      <text>foo</text>"
 
 for path "root/branch[2]/num":
 "200"
 
 for path "root/branch[num=200]":
 "<num>200</num>
-	  <text>xyz</text>"
+      <text>xyz</text>"
 
 for path "root/branch/text/@font":
 "Times"

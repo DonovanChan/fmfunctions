@@ -22,17 +22,17 @@ OUTPUT:
 ---------------------------------------------------------------------------------------*/
 
 Let([
-	_S = If( Evaluate( global ); "$$"; "$" )
-	
-	];	
-	
-	Evaluate( 
-	    "Let([ origVal = " & _S & name & 
-	    "; val = " & Quote( value ) & 
-	    "; rt = Case( Length( origVal ) and Length( val ); \"\¶\")" &
-	    "; pre = " & prepend &
-	    "; newVal = If( pre; val & rt & origVal; origVal & rt & val ) " &
-	    "; " & _S & name & "= newVal ]; \"\" )"
-	)
-	
+    _S = If( Evaluate( global ); "$$"; "$" )
+    
+    ];    
+    
+    Evaluate( 
+        "Let([ origVal = " & _S & name & 
+        "; val = " & Quote( value ) & 
+        "; rt = Case( Length( origVal ) and Length( val ); \"\¶\")" &
+        "; pre = " & prepend &
+        "; newVal = If( pre; val & rt & origVal; origVal & rt & val ) " &
+        "; " & _S & name & "= newVal ]; \"\" )"
+    )
+    
 )

@@ -1,161 +1,161 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	json.getVal ( text; path )
-	Version 1.02
+    json.getVal ( text; path )
+    Version 1.02
 
 PURPOSE: 
-	Parses JSON text like JSONPath (an adaptation of XPath's concepts)
+    Parses JSON text like JSONPath (an adaptation of XPath's concepts)
 
 HISTORY: 
-	Created: 2009.07.17 by Donovan Chandler
+    Created: 2009.07.17 by Donovan Chandler
 
 INPUT: 
-	path:	JSONPath to desired node/value
-	
+    path:    JSONPath to desired node/value
+    
 DEPENDENCIES:
-	Custom Functions: text.getClosePosition()
+    Custom Functions: text.getClosePosition()
 
 NOTES:
-	For JSONPath, see http://goessner.net/articles/JsonPath/
-	
+    For JSONPath, see http://goessner.net/articles/JsonPath/
+    
 ---------------------------------------------------------------------------------------*/
 
 Let([
-	//---- Retrieve variables ----
-	vNodeNumCurrent = $$fn_json_nodePrevious + 1;
-	sPairParent = If( not IsEmpty( $$fn_json_pairParentStart ); $$fn_json_pairParentStart; 1 );
-	ePairParent = If( not IsEmpty( $$fn_json_pairParentEnd ); $$fn_json_pairParentEnd; Length( text ) );
-	
-	//---- Parse path ----
-	vPath = path;
-	lisPath = Substitute( path; "."; ¶ );
-	vPathNodeCurrent = GetValue( lisPath; vNodeNumCurrent );
-	vPathNodeDisplay = "\"" & vPathNodeCurrent & "\"";
-	lisNode = Substitute( vPathNodeCurrent; [ "["; ¶ ]; [ "]"; ¶ ] );
-	vTag = GetValue( lisNode; 1);
-	vSubscript = GetValue( lisNode; 2 );
-	
-	//---- Determine path node type ----
-	vNodeType = 
-		Case(
-			//--Simple child element name--
-			Position( vPathNodeCurrent; "["; 1; 1 ) = 0;
-				"child";
-			
-			//--Array value occurrence index---
-			Length( Filter( vSubscript; "0123456789" ) ) = Length( subscript );
-				"arrayIndex"
-			
-		);
-	
-	//---- Locate current element ----
-	vPairTag = "\"" & vTag & "\"";
-	sPair = Position( text; vPairTag; sPairParent; 1 );
-	sPairValue = Position( text; ":"; sPair; 1 ) + 1;
-	
-	sNextArray = Position( text; "["; sPairValue; 1 );
-	sNextObject = Position( text; "{"; sPairValue; 1 );
-	eNextObject = text.getClosePosition( text; "{"; "}"; sPairValue );
-	sNextValue = Position( text; ":"; sPairValue; 1 );
-	
-	isArray = If( sNextArray > 0 and sNextObject > 0 and sNextValue > 0
-		; sNextArray < sNextObject and sNextArray < sNextValue
-		; ""
-		);
-	
-	sPairResult = 
-		Case(	
-			//--Searching for Array entry--
-			vNodeType = "arrayIndex";
-				Case(
-					//--Value is an array--
-					isArray;
-						Let([ res = text.getNthNodePosition( text; "{"; "}"; sPairValue; GetAsNumber( vSubscript) )
-							; $fn_json_error = If( Left( res; 5 ) = "Error"
-								; "Error 100: Invalid Path at " & vPathNodeDisplay
-								; "" 
-							)
-							]; res 
-						);
-					
-					//--Default: Error - Not Array--
-					0 & Let([ $fn_json_error = "Error 101: Array Does Not Exist for " & vPathNodeDisplay];"")
-				);
-			
-			//-- Searching for entire Array--
-			isArray;
-				text.getNthNodePosition( text; "["; "]"; sPairValue; 1 );
-			
-			//--Searching for Object--
-			sNextObject < eNextObject and sNextObject < sNextValue
-			and sNextObject > 0 and sNextValue > 0;
-				sNextObject;
-				
-			//--Default: Searching for Simple Pair--
-			sPairValue
-			& Let($fn_json_isPair = 1; "")
-		);
-		
-	sNextCloseBracket = Position( text; "}"; sPairValue; 1 );
-	sNextComma = Position( text; ","; sPairValue; 1 );
-	ePairResult = 
-		Case(
-			$fn_json_isPair; 
-				If( sNextComma < sNextCloseBracket and sNextComma > 0; sNextComma; sNextCloseBracket ) - 1;
-			isArray and vNodeType ≠ "arrayIndex";
-				text.getClosePosition( text; "["; "]"; sPairResult );
-			text.getClosePosition( text; "{"; "}"; sPairResult )
-		);
-	
-	vError =
-		Case(
-			Length( $fn_json_error ); $fn_json_error;
-			sPair = 0;
-				"Error 200: Invalid Path at " & vPathNodeDisplay;
-			sPairValue = 0;
-				"Error 201: Unable to Find Value for " & vPathNodeDisplay;
-			sPairResult = 0; 
-				"Error 202: Unable to Parse Value for " & vPathNodeDisplay;
-			ePairResult = 0;
-				"Error 203: Closing Character Missing for " & vPathNodeDisplay
-		)
-	];
-	
-	Case(
-		//-- Debugging --
-		/*
-		True;
-			"sPair=" & sPair & ", sPairResult=" & sPairResult & ", ePairResult=" & ePairResult
-			& "¶sNextObject=" & sNextObject & ", eNextObject=" & eNextObject 
-			& ", sNextArray=" & sNextArray & ", sNextValue=" & sNextValue;
-		*/
-		//-- Error Encountered --
-		Length( vError );
-			Let([ $$fn_json_nodePrevious = ""
-				; $$fn_json_pairParentStart = ""
-				; $$fn_json_pairParentEnd = ""
-				; $fn_json_isPair = ""
-				; $fn_json_error = ""
-				]; "" 
-			) & vError;		
-		
-		//-- End of Path - Return result --
-		vNodeNumCurrent ≥ ValueCount( lisPath );
-			Let([ $$fn_json_nodePrevious = ""
-				; $$fn_json_pairParentStart = ""
-				; $$fn_json_pairParentEnd = ""
-				; $fn_json_isPair = ""
-				; $fn_json_error = ""
-				]; "" 
-			) & Trim( Middle( text; sPairResult; ePairResult - sPairResult + 1 ) );
-			
-		//-- Default: Continue to next node --
-		Let([ $$fn_json_nodePrevious = vNodeNumCurrent
-			; $$fn_json_pairParentStart = sPairResult
-			; $$fn_json_pairParentEnd = ePairResult
-			; $fn_json_isPair = ""
-			]; "" 
-		) & json.getVal( text; path )
-	)
-		
+    //---- Retrieve variables ----
+    vNodeNumCurrent = $$fn_json_nodePrevious + 1;
+    sPairParent = If( not IsEmpty( $$fn_json_pairParentStart ); $$fn_json_pairParentStart; 1 );
+    ePairParent = If( not IsEmpty( $$fn_json_pairParentEnd ); $$fn_json_pairParentEnd; Length( text ) );
+    
+    //---- Parse path ----
+    vPath = path;
+    lisPath = Substitute( path; "."; ¶ );
+    vPathNodeCurrent = GetValue( lisPath; vNodeNumCurrent );
+    vPathNodeDisplay = "\"" & vPathNodeCurrent & "\"";
+    lisNode = Substitute( vPathNodeCurrent; [ "["; ¶ ]; [ "]"; ¶ ] );
+    vTag = GetValue( lisNode; 1);
+    vSubscript = GetValue( lisNode; 2 );
+    
+    //---- Determine path node type ----
+    vNodeType = 
+        Case(
+            //--Simple child element name--
+            Position( vPathNodeCurrent; "["; 1; 1 ) = 0;
+                "child";
+            
+            //--Array value occurrence index---
+            Length( Filter( vSubscript; "0123456789" ) ) = Length( subscript );
+                "arrayIndex"
+            
+        );
+    
+    //---- Locate current element ----
+    vPairTag = "\"" & vTag & "\"";
+    sPair = Position( text; vPairTag; sPairParent; 1 );
+    sPairValue = Position( text; ":"; sPair; 1 ) + 1;
+    
+    sNextArray = Position( text; "["; sPairValue; 1 );
+    sNextObject = Position( text; "{"; sPairValue; 1 );
+    eNextObject = text.getClosePosition( text; "{"; "}"; sPairValue );
+    sNextValue = Position( text; ":"; sPairValue; 1 );
+    
+    isArray = If( sNextArray > 0 and sNextObject > 0 and sNextValue > 0
+        ; sNextArray < sNextObject and sNextArray < sNextValue
+        ; ""
+        );
+    
+    sPairResult = 
+        Case(    
+            //--Searching for Array entry--
+            vNodeType = "arrayIndex";
+                Case(
+                    //--Value is an array--
+                    isArray;
+                        Let([ res = text.getNthNodePosition( text; "{"; "}"; sPairValue; GetAsNumber( vSubscript) )
+                            ; $fn_json_error = If( Left( res; 5 ) = "Error"
+                                ; "Error 100: Invalid Path at " & vPathNodeDisplay
+                                ; "" 
+                            )
+                            ]; res 
+                        );
+                    
+                    //--Default: Error - Not Array--
+                    0 & Let([ $fn_json_error = "Error 101: Array Does Not Exist for " & vPathNodeDisplay];"")
+                );
+            
+            //-- Searching for entire Array--
+            isArray;
+                text.getNthNodePosition( text; "["; "]"; sPairValue; 1 );
+            
+            //--Searching for Object--
+            sNextObject < eNextObject and sNextObject < sNextValue
+            and sNextObject > 0 and sNextValue > 0;
+                sNextObject;
+                
+            //--Default: Searching for Simple Pair--
+            sPairValue
+            & Let($fn_json_isPair = 1; "")
+        );
+        
+    sNextCloseBracket = Position( text; "}"; sPairValue; 1 );
+    sNextComma = Position( text; ","; sPairValue; 1 );
+    ePairResult = 
+        Case(
+            $fn_json_isPair; 
+                If( sNextComma < sNextCloseBracket and sNextComma > 0; sNextComma; sNextCloseBracket ) - 1;
+            isArray and vNodeType ≠ "arrayIndex";
+                text.getClosePosition( text; "["; "]"; sPairResult );
+            text.getClosePosition( text; "{"; "}"; sPairResult )
+        );
+    
+    vError =
+        Case(
+            Length( $fn_json_error ); $fn_json_error;
+            sPair = 0;
+                "Error 200: Invalid Path at " & vPathNodeDisplay;
+            sPairValue = 0;
+                "Error 201: Unable to Find Value for " & vPathNodeDisplay;
+            sPairResult = 0; 
+                "Error 202: Unable to Parse Value for " & vPathNodeDisplay;
+            ePairResult = 0;
+                "Error 203: Closing Character Missing for " & vPathNodeDisplay
+        )
+    ];
+    
+    Case(
+        //-- Debugging --
+        /*
+        True;
+            "sPair=" & sPair & ", sPairResult=" & sPairResult & ", ePairResult=" & ePairResult
+            & "¶sNextObject=" & sNextObject & ", eNextObject=" & eNextObject 
+            & ", sNextArray=" & sNextArray & ", sNextValue=" & sNextValue;
+        */
+        //-- Error Encountered --
+        Length( vError );
+            Let([ $$fn_json_nodePrevious = ""
+                ; $$fn_json_pairParentStart = ""
+                ; $$fn_json_pairParentEnd = ""
+                ; $fn_json_isPair = ""
+                ; $fn_json_error = ""
+                ]; "" 
+            ) & vError;        
+        
+        //-- End of Path - Return result --
+        vNodeNumCurrent ≥ ValueCount( lisPath );
+            Let([ $$fn_json_nodePrevious = ""
+                ; $$fn_json_pairParentStart = ""
+                ; $$fn_json_pairParentEnd = ""
+                ; $fn_json_isPair = ""
+                ; $fn_json_error = ""
+                ]; "" 
+            ) & Trim( Middle( text; sPairResult; ePairResult - sPairResult + 1 ) );
+            
+        //-- Default: Continue to next node --
+        Let([ $$fn_json_nodePrevious = vNodeNumCurrent
+            ; $$fn_json_pairParentStart = sPairResult
+            ; $$fn_json_pairParentEnd = ePairResult
+            ; $fn_json_isPair = ""
+            ]; "" 
+        ) & json.getVal( text; path )
+    )
+        
 )

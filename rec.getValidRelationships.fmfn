@@ -1,43 +1,43 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	rec.getValidRelationships( constantFieldName )
+    rec.getValidRelationships( constantFieldName )
 
 PURPOSE: 
-	Determines which TO's have records related directly to the current record
+    Determines which TO's have records related directly to the current record
 
 HISTORY: 
-	Created 2009.12.03 by Donovan Chandler
+    Created 2009.12.03 by Donovan Chandler
 
 INPUT: 
-	constantFieldName:	Name of field containing values in all possible related tables
+    constantFieldName:    Name of field containing values in all possible related tables
 
 OUTPUT: 
-	Return-delimited list of all table occurrences containing related records
-	
+    Return-delimited list of all table occurrences containing related records
+    
 DEPENDENCIES:
-	Custom Functions: dic.getCustom(), text.trimCR()
+    Custom Functions: dic.getCustom(), text.trimCR()
 ---------------------------------------------------------------------------------------*/
 
 Let([
-	dicRelationInfo = RelationInfo( Get( FileName ) ; Get( LayoutTableName ) );
-	vRec = GetAsNumber( $$fn_table.hasR_rec ) + 1;
-	vTable = dic.getCustom( dicRelationInfo; "Table"; ":"; "¶"; vRec );
-	vField = vTable & "::" & constantFieldName;
-	hasRelation = IsValid( Evaluate( vField ) );
-	
-	$$fn_table.hasR_rec = vRec;
-	$$fn_table.hasR_result = $$fn_table.hasR_result 
-		& If( hasRelation; ¶ & vTable )
-	];
-	Case(
-		//- At End: Return result -
-		vRec ≥ PatternCount( dicRelationInfo; "Table" )
-			; text.trimCR( $$fn_table.hasR_result )
-			& Let([ $$fn_table.hasR_result = ""
-				; $$fn_table.hasR_rec = "" ]; ""
-				)
+    dicRelationInfo = RelationInfo( Get( FileName ) ; Get( LayoutTableName ) );
+    vRec = GetAsNumber( $$fn_table.hasR_rec ) + 1;
+    vTable = dic.getCustom( dicRelationInfo; "Table"; ":"; "¶"; vRec );
+    vField = vTable & "::" & constantFieldName;
+    hasRelation = IsValid( Evaluate( vField ) );
+    
+    $$fn_table.hasR_rec = vRec;
+    $$fn_table.hasR_result = $$fn_table.hasR_result 
+        & If( hasRelation; ¶ & vTable )
+    ];
+    Case(
+        //- At End: Return result -
+        vRec ≥ PatternCount( dicRelationInfo; "Table" )
+            ; text.trimCR( $$fn_table.hasR_result )
+            & Let([ $$fn_table.hasR_result = ""
+                ; $$fn_table.hasR_rec = "" ]; ""
+                )
 
-		//- Else, Continue through other relationships -
-		; rec.getValidRelationships( constantFieldName )
-	) //Case
+        //- Else, Continue through other relationships -
+        ; rec.getValidRelationships( constantFieldName )
+    ) //Case
 ) //Let

@@ -1,46 +1,46 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	rec.hasValidRelationships( constantFieldName )
-	v1.01
+    rec.hasValidRelationships( constantFieldName )
+    v1.01
 
 PURPOSE: 
-	Determines if the current record has any directly related records 
+    Determines if the current record has any directly related records 
 
 HISTORY: 
-	Created 2009.12.03 by Donovan Chandler
+    Created 2009.12.03 by Donovan Chandler
 
 INPUT: 
-	constantFieldName:	Name of field containing values in all possible related tables
+    constantFieldName:    Name of field containing values in all possible related tables
 
 OUTPUT: 
-	(Boolean) 1 if current record has related records
-	
+    (Boolean) 1 if current record has related records
+    
 DEPENDENCIES:
-	Custom Functions: dic.getCustom()
-	
+    Custom Functions: dic.getCustom()
+    
 NOTES:
-	This function is not optimized. Try passing the relationInfo through to each recursion if performance becomes an issue.
+    This function is not optimized. Try passing the relationInfo through to each recursion if performance becomes an issue.
 ---------------------------------------------------------------------------------------*/
 
 Let([
-	dicRelationInfo = RelationInfo( Get( FileName ) ; Get( LayoutTableName ) );
-	vRec = GetAsNumber( $$fn_table.hasR_rec ) + 1;
-	vTable = dic.getCustom( dicRelationInfo; "Table"; ":"; "¶"; vRec );
-	vField = vTable & "::" & constantFieldName;
-	hasRelation = IsValid( Evaluate( vField ) );
-	
-	$$fn_table.hasR_rec = vRec;
-	$$fn_table.hasR_result = $$fn_table.hasR_result & hasRelation
-	];
-	Case(
-		//- At End: Return result -
-		vRec ≥ PatternCount( dicRelationInfo; "Table" )
-			; PatternCount( $$fn_table.hasR_result; "1" ) > 0
-			& Let([ $$fn_table.hasR_result = ""
-				; $$fn_table.hasR_rec = "" ]; ""
-				)
+    dicRelationInfo = RelationInfo( Get( FileName ) ; Get( LayoutTableName ) );
+    vRec = GetAsNumber( $$fn_table.hasR_rec ) + 1;
+    vTable = dic.getCustom( dicRelationInfo; "Table"; ":"; "¶"; vRec );
+    vField = vTable & "::" & constantFieldName;
+    hasRelation = IsValid( Evaluate( vField ) );
+    
+    $$fn_table.hasR_rec = vRec;
+    $$fn_table.hasR_result = $$fn_table.hasR_result & hasRelation
+    ];
+    Case(
+        //- At End: Return result -
+        vRec ≥ PatternCount( dicRelationInfo; "Table" )
+            ; PatternCount( $$fn_table.hasR_result; "1" ) > 0
+            & Let([ $$fn_table.hasR_result = ""
+                ; $$fn_table.hasR_rec = "" ]; ""
+                )
 
-		//- Else, Continue through other relationships -
-		; rec.hasValidRelationships( constantFieldName )
-	) //Case
+        //- Else, Continue through other relationships -
+        ; rec.hasValidRelationships( constantFieldName )
+    ) //Case
 ) //Let

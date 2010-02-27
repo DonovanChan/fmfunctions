@@ -1,273 +1,273 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	xml.select_subB( searchBlock; start; end; searchString; parentNodeName )
-	Version 3.4
+    xml.select_subB( searchBlock; start; end; searchString; parentNodeName )
+    Version 3.4
 
 PURPOSE: 
-	Locates searchString within specified text and checks if it is contained by parent tags by name of parentNodeName
-	Also works with supplied character position in place of searchString
-	
+    Locates searchString within specified text and checks if it is contained by parent tags by name of parentNodeName
+    Also works with supplied character position in place of searchString
+    
 METHODOLOGY: 
-	If searchString is not a character position, finds first occurrence of searchString between start and end of searchBlock.
-	Then checks if occurrence is between open and close tags by the name of parentNodeName. 
-	If the current occurrence is found to be invalid, it recursively searches for valid sibling elements until an error or no more occurrences are found. 
+    If searchString is not a character position, finds first occurrence of searchString between start and end of searchBlock.
+    Then checks if occurrence is between open and close tags by the name of parentNodeName. 
+    If the current occurrence is found to be invalid, it recursively searches for valid sibling elements until an error or no more occurrences are found. 
 
 HISTORY: 
-	Created by Donovan Chandler (Details at bottom)
-	Please report bugs at donovan.chandler@gmail.com
+    Created by Donovan Chandler (Details at bottom)
+    Please report bugs at donovan.chandler@gmail.com
 
 INPUT: 
-	searchBlock:	Full block of simple XML transformed (see xml.select_subA details)
-	start:			Character position at which to start searching for searchString
-	end:			Character position marking end of block currently being searched
-	searchString:	Text to find within searchBlock. 
-						Can supply character position between curly braces (e.g., "{23}")
-	parentNodeName: Name of element containing searchString
-	
+    searchBlock:    Full block of simple XML transformed (see xml.select_subA details)
+    start:            Character position at which to start searching for searchString
+    end:            Character position marking end of block currently being searched
+    searchString:    Text to find within searchBlock. 
+                        Can supply character position between curly braces (e.g., "{23}")
+    parentNodeName: Name of element containing searchString
+    
 OUTPUT: 
-	Returns character position relative to searchBlock, a continue message, or an error message
-	
-	If vSearchType="Node", returns starting character position of searchString (sString)
-	If vSearchType="Position" or "Predicate", returns starting position of parent element (sBlock)
-	If unsuccessful but no terminal error, returns "ContinueA¶(integer)", which tells subA to continue searching for sibling elements that might contain searchString (starting at position (integer))
+    Returns character position relative to searchBlock, a continue message, or an error message
+    
+    If vSearchType="Node", returns starting character position of searchString (sString)
+    If vSearchType="Position" or "Predicate", returns starting position of parent element (sBlock)
+    If unsuccessful but no terminal error, returns "ContinueA¶(integer)", which tells subA to continue searching for sibling elements that might contain searchString (starting at position (integer))
 
 DEPENDENCIES: 
-	Reserved variables: 
-		$$xml.subB_rep
-	Reserved variables (shared with sibling functions): 
-		$$xml.select_log, $$xml.select_errorLog, $$xml.select_nodeRecursion, $$fnXML_numPathNodeCurrent
-	Custom Functions:
-		xml.transform
+    Reserved variables: 
+        $$xml.subB_rep
+    Reserved variables (shared with sibling functions): 
+        $$xml.select_log, $$xml.select_errorLog, $$xml.select_nodeRecursion, $$fnXML_numPathNodeCurrent
+    Custom Functions:
+        xml.transform
 
 NOTE: 
-	See bottom of function for further detail
-	
+    See bottom of function for further detail
+    
 TO DO:
-	FIX... Doesn't show error if parent node isn't found
+    FIX... Doesn't show error if parent node isn't found
 
 ---------------------------------------------------------------------------------------*/
 
 Let( 
-	[
-	searchBlock = searchBlock; 
-	start = start;
-	end = end;
-	searchString = If( PatternCount( searchString; " " ); xml.transform( searchString; True )
-		; searchString ); //if has not been transformed already
-	parentNodeName = parentNodeName;
-	
-	//=================================================================
-	//			SETTINGS and PREP
-	//=================================================================
-	bnVerboseLogging = False; 
-	
-	//	Update logs and variables
-	$$xml.subB_rep = $$xml.subB_rep + 1;
-	rep = $$xml.subB_rep;
-	$$xml.select_nodeRecursion = $$xml.select_nodeRecursion + 1;
-	vRecursionIndent = 
-		Substitute(
-			Left("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"; 
-				$$xml.select_nodeRecursion );
-			"|"; "| "
-		);
-	$$xml.select_log = 
-		$$xml.select_log & ¶ & 
-		vRecursionIndent & "subB( searchBlock; " & start & "; " & end & "; \"" & searchString & "\"; \"" & parentNodeName & "\" )";
-		
-	//	Prepare parameters
-	vSearchType = 
-		Case(
-			Left( searchString; 1 ) = "{" and Right( searchString; 1 ) = "}";
-				"Position";
-			Left( searchString; 1 ) = "<" and Right( searchString; 1 ) = "‡";
-				"Node";
-			"Predicate"
-		);
-	vStart = If( IsEmpty( start ); 1; start );
-	vEnd = If( IsEmpty( end ); Length( searchBlock ); end );
-	sValues = start; //Position( searchBlock; "‡"; vStart; 1 );
-	sString = 
-		Case(
-			//	Position provided
-			vSearchType = "Position";
-				GetAsNumber( Substitute( searchString; ["{"; ""]; ["}"; ""] ) );
-			//	Find position
-			Position( searchBlock; searchString; sValues; 1 )
-		);
-	
-	//=================================================================
-	//			SEARCH and VALIDATE
-	//=================================================================
-	//	Find boundaries of element enclosing string occurrence
-	vOpenTag = "<" & parentNodeName & "‡";
-	vCloseTag = "≤/" & parentNodeName & "‡";
-	sBlockA = Position( searchBlock; vOpenTag; sString - 1; -1 );
-	sBlock = sBlockA; // - If( sBlockA > 1; 1; 0 );
-	sBlockContent = sBlock + Length( vOpenTag ) - 1;
-	eBlockContent = Position( searchBlock; vCloseTag; sBlock; 1 ) - 1;
-	eBlock = eBlockContent + Length( vCloseTag );
-	
-	//	Error Checking
-	//		Result has multiple values (1 = error msg, 2 = recursion cmd, 3 = new start pos)
-	vSearchStringDisplay = Trim( Substitute( searchString; ["≤"; ""]; [">"; ""]; ["‡"; " "] ));
-	vStringParentText = Middle( searchBlock; sBlockContent; sString - sBlockContent );
-	vLastError = GetValue( $$xml.select_errorLog; 1 );
-	vLastErrorApplies = ( Left( vLastError; 1 ) = $$fnXML_numPathNodeCurrent and Length(vLastError) );
-	vErrorTerminal = 
-		Case(
-			//	Invalid parameters
-			IsEmpty( searchBlock );
-				"Error 200 (Internal): Missing Parameter (searchBlock)";
-			IsEmpty( searchString );
-				"Error 200 (Internal): Missing Parameter (searchString)";
-			IsEmpty( start );
-				"Error 200 (Internal): Missing Parameter (start)";
-			IsEmpty( end );
-				"Error 200 (Internal): Missing Parameter (end)";
-			IsEmpty( sString );
-				"Error 200 (Internal): Invalid searchString Parameter (\"" & searchString & "\")";
-			 
-			//	searchString not in current element
-			sString = 0;
-				"Error 210: Valid " & vSearchType & " Not Found (\"" & vSearchStringDisplay & "\")";
-			//	parentNodeName not in current element
-			sBlock = 0 and Length( parentNodeName );
-				"Error 211: Valid " & vSearchType & " Not Found (\"" & parentNodeName & "\")"
-		);
-	vErrorRecursion = 
-		Case(					 
-			//	vSearchType is NOT position - Node or Predicate value provided
-			vSearchType ≠ "position" and Length( parentNodeName ) and not vErrorTerminal;
-				Case(
-					//	searchString not within boundaries provided
-					sString < vStart or sString > vEnd;
-						"ContinueA" & ¶ &
-						eBlock + 1 & ¶ &
-						"Error 220: Invalid Path to Value \"" & vSearchStringDisplay & "\"";
-				
-					//	searchString not within parent node
-					sString < sBlockContent or sString > eBlockContent;
-						"ContinueB" & ¶ &
-						eBlock & ¶ & 
-						"Error 221: Invalid Path to Value \"" & vSearchStringDisplay & "\"";
-					
-					//	searchString not direct child of parent node
-					Abs( PatternCount( vStringParentText; "≤/" ) - PatternCount( vStringParentText; "<" ) ) <> 0;
-						"ContinueB" & ¶ & 
-						sString + Length( searchString ) + 1 & ¶ & 
-						"Error 222: Invalid Path to Value \"" & vSearchStringDisplay & "\" (not direct child)"
-				);
-						
-			//	searchString (position) not within boundaries provided
-			sString > vEnd;
-				"ContinueA" & ¶ &
-				¶ &
-				"Error 200 (Internal): searchString \"" & searchString & "\" not within provided boundaries";
-				
-		);	//end Case {vErrorRecursion}
-	
-	//	Update error log
-	vErrorContext = " on subB( searchBlock; " & start & "; " & end & "; " & searchString & "; " & parentNodeName & " )";
-	
-	vNextAction = GetValue( vErrorRecursion; 1 );
-	vNextStart = GetValue( vErrorRecursion; 2 );
-	vErrorHidden = GetValue( vErrorRecursion; 3 );
-	
-	vErrorPrefix = $$xml.select_nodeRecursion & "_";
-	vLogErrorTxt = 
-		vErrorTerminal & Case( Length( vErrorTerminal ) and Length( vErrorHidden ); "¶" ) &
-		vErrorHidden;
-	vLogErrorEntry = vErrorPrefix & Substitute( vLogErrorTxt; "¶"; "¶" & vErrorPrefix );
-	  $$xml.select_errorLog = 
-		Case( Length( vLogErrorTxt ); Quote( vLogErrorEntry ) ) &
-		Case( Length( $$xml.select_errorLog ) and Length( vLogErrorTxt ); "¶" ) &
-		$$xml.select_errorLog;
+    [
+    searchBlock = searchBlock; 
+    start = start;
+    end = end;
+    searchString = If( PatternCount( searchString; " " ); xml.transform( searchString; True )
+        ; searchString ); //if has not been transformed already
+    parentNodeName = parentNodeName;
+    
+    //=================================================================
+    //            SETTINGS and PREP
+    //=================================================================
+    bnVerboseLogging = False; 
+    
+    //    Update logs and variables
+    $$xml.subB_rep = $$xml.subB_rep + 1;
+    rep = $$xml.subB_rep;
+    $$xml.select_nodeRecursion = $$xml.select_nodeRecursion + 1;
+    vRecursionIndent = 
+        Substitute(
+            Left("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"; 
+                $$xml.select_nodeRecursion );
+            "|"; "| "
+        );
+    $$xml.select_log = 
+        $$xml.select_log & ¶ & 
+        vRecursionIndent & "subB( searchBlock; " & start & "; " & end & "; \"" & searchString & "\"; \"" & parentNodeName & "\" )";
+        
+    //    Prepare parameters
+    vSearchType = 
+        Case(
+            Left( searchString; 1 ) = "{" and Right( searchString; 1 ) = "}";
+                "Position";
+            Left( searchString; 1 ) = "<" and Right( searchString; 1 ) = "‡";
+                "Node";
+            "Predicate"
+        );
+    vStart = If( IsEmpty( start ); 1; start );
+    vEnd = If( IsEmpty( end ); Length( searchBlock ); end );
+    sValues = start; //Position( searchBlock; "‡"; vStart; 1 );
+    sString = 
+        Case(
+            //    Position provided
+            vSearchType = "Position";
+                GetAsNumber( Substitute( searchString; ["{"; ""]; ["}"; ""] ) );
+            //    Find position
+            Position( searchBlock; searchString; sValues; 1 )
+        );
+    
+    //=================================================================
+    //            SEARCH and VALIDATE
+    //=================================================================
+    //    Find boundaries of element enclosing string occurrence
+    vOpenTag = "<" & parentNodeName & "‡";
+    vCloseTag = "≤/" & parentNodeName & "‡";
+    sBlockA = Position( searchBlock; vOpenTag; sString - 1; -1 );
+    sBlock = sBlockA; // - If( sBlockA > 1; 1; 0 );
+    sBlockContent = sBlock + Length( vOpenTag ) - 1;
+    eBlockContent = Position( searchBlock; vCloseTag; sBlock; 1 ) - 1;
+    eBlock = eBlockContent + Length( vCloseTag );
+    
+    //    Error Checking
+    //        Result has multiple values (1 = error msg, 2 = recursion cmd, 3 = new start pos)
+    vSearchStringDisplay = Trim( Substitute( searchString; ["≤"; ""]; [">"; ""]; ["‡"; " "] ));
+    vStringParentText = Middle( searchBlock; sBlockContent; sString - sBlockContent );
+    vLastError = GetValue( $$xml.select_errorLog; 1 );
+    vLastErrorApplies = ( Left( vLastError; 1 ) = $$fnXML_numPathNodeCurrent and Length(vLastError) );
+    vErrorTerminal = 
+        Case(
+            //    Invalid parameters
+            IsEmpty( searchBlock );
+                "Error 200 (Internal): Missing Parameter (searchBlock)";
+            IsEmpty( searchString );
+                "Error 200 (Internal): Missing Parameter (searchString)";
+            IsEmpty( start );
+                "Error 200 (Internal): Missing Parameter (start)";
+            IsEmpty( end );
+                "Error 200 (Internal): Missing Parameter (end)";
+            IsEmpty( sString );
+                "Error 200 (Internal): Invalid searchString Parameter (\"" & searchString & "\")";
+             
+            //    searchString not in current element
+            sString = 0;
+                "Error 210: Valid " & vSearchType & " Not Found (\"" & vSearchStringDisplay & "\")";
+            //    parentNodeName not in current element
+            sBlock = 0 and Length( parentNodeName );
+                "Error 211: Valid " & vSearchType & " Not Found (\"" & parentNodeName & "\")"
+        );
+    vErrorRecursion = 
+        Case(                     
+            //    vSearchType is NOT position - Node or Predicate value provided
+            vSearchType ≠ "position" and Length( parentNodeName ) and not vErrorTerminal;
+                Case(
+                    //    searchString not within boundaries provided
+                    sString < vStart or sString > vEnd;
+                        "ContinueA" & ¶ &
+                        eBlock + 1 & ¶ &
+                        "Error 220: Invalid Path to Value \"" & vSearchStringDisplay & "\"";
+                
+                    //    searchString not within parent node
+                    sString < sBlockContent or sString > eBlockContent;
+                        "ContinueB" & ¶ &
+                        eBlock & ¶ & 
+                        "Error 221: Invalid Path to Value \"" & vSearchStringDisplay & "\"";
+                    
+                    //    searchString not direct child of parent node
+                    Abs( PatternCount( vStringParentText; "≤/" ) - PatternCount( vStringParentText; "<" ) ) <> 0;
+                        "ContinueB" & ¶ & 
+                        sString + Length( searchString ) + 1 & ¶ & 
+                        "Error 222: Invalid Path to Value \"" & vSearchStringDisplay & "\" (not direct child)"
+                );
+                        
+            //    searchString (position) not within boundaries provided
+            sString > vEnd;
+                "ContinueA" & ¶ &
+                ¶ &
+                "Error 200 (Internal): searchString \"" & searchString & "\" not within provided boundaries";
+                
+        );    //end Case {vErrorRecursion}
+    
+    //    Update error log
+    vErrorContext = " on subB( searchBlock; " & start & "; " & end & "; " & searchString & "; " & parentNodeName & " )";
+    
+    vNextAction = GetValue( vErrorRecursion; 1 );
+    vNextStart = GetValue( vErrorRecursion; 2 );
+    vErrorHidden = GetValue( vErrorRecursion; 3 );
+    
+    vErrorPrefix = $$xml.select_nodeRecursion & "_";
+    vLogErrorTxt = 
+        vErrorTerminal & Case( Length( vErrorTerminal ) and Length( vErrorHidden ); "¶" ) &
+        vErrorHidden;
+    vLogErrorEntry = vErrorPrefix & Substitute( vLogErrorTxt; "¶"; "¶" & vErrorPrefix );
+      $$xml.select_errorLog = 
+        Case( Length( vLogErrorTxt ); Quote( vLogErrorEntry ) ) &
+        Case( Length( $$xml.select_errorLog ) and Length( vLogErrorTxt ); "¶" ) &
+        $$xml.select_errorLog;
 
-	//	Update log
-	vLogVerboseEntry =
-		"vSearchType = " & vSearchType & " | " & "sValues = " & sValues & " | " &
-		"sString = " & sString & " | " &
-		"sBlock = " & sBlock & ", sBlockContent = " & sBlockContent & ", eBlockContent = " & eBlockContent & ", eBlock = " & eBlock; 
-	$$xml.select_log = 
-		$$xml.select_log & 
-		Case( Length( vLogErrorTxt ); Substitute( ¶ & vLogErrorEntry; "¶"; ¶ & vRecursionIndent )) &
-		Case( bnVerboseLogging; ¶ & vRecursionIndent & Quote( vLogVerboseEntry ));
-	
-	//=================================================================
-	//			SHOW RESULT
-	//--------------------------------------------------------------------
-	//	Returns start position of named containing element if successful
-	//	Otherwise, returns error message or "ContinueA" command
-	//=================================================================
-	
-	//	Result
-	//		Returns start position of named containing element if successful
-	//		Otherwise, returns error message or "ContinueA¶(vNextStart)" command
-	vRecursionResult = 
-		Case( 
-			//	Existing error message
-			Length( vErrorTerminal ) > 0;
-				Case( 
-					vLastErrorApplies; 
-						Middle( vLastError; Position( vLastError; "_"; 1; 1 ) + 1; 9999 );
-					vErrorTerminal
-				);
-			
-			//	Continue searching remaining text for valid element
-			vNextAction = "ContinueB";
-				xml.select_subB( 
-					searchBlock;
-					vNextStart;
-					vEnd;
-					searchString;
-					parentNodeName
-				);
-				
-			//	Continue searching for next valid parent node
-			vNextAction = "ContinueA";
-				vNextAction & ¶ & vNextStart & ¶ & vErrorHidden;
-			
-			//	Found next node
-			vSearchType = "Node";
-				sString;
-				
-			//	Valid predicate element found
-			sBlock > 0;
-				sBlock;
-				
-			//	Default: Unexpected error
-			"Error 200: Internal Error Encountered"
-			
-		);	//end Case {vRecursionResult}
-		
-	vResult = 
-		Case(
-			//	Return original error message encountered in this recursion
-			Left( vRecursionResult; 5 ) = "Error";
-				Case( Length( vErrorHidden ); vErrorHidden; vRecursionResult );
-				
-			//	Default
-			vRecursionResult
-		);
+    //    Update log
+    vLogVerboseEntry =
+        "vSearchType = " & vSearchType & " | " & "sValues = " & sValues & " | " &
+        "sString = " & sString & " | " &
+        "sBlock = " & sBlock & ", sBlockContent = " & sBlockContent & ", eBlockContent = " & eBlockContent & ", eBlock = " & eBlock; 
+    $$xml.select_log = 
+        $$xml.select_log & 
+        Case( Length( vLogErrorTxt ); Substitute( ¶ & vLogErrorEntry; "¶"; ¶ & vRecursionIndent )) &
+        Case( bnVerboseLogging; ¶ & vRecursionIndent & Quote( vLogVerboseEntry ));
+    
+    //=================================================================
+    //            SHOW RESULT
+    //--------------------------------------------------------------------
+    //    Returns start position of named containing element if successful
+    //    Otherwise, returns error message or "ContinueA" command
+    //=================================================================
+    
+    //    Result
+    //        Returns start position of named containing element if successful
+    //        Otherwise, returns error message or "ContinueA¶(vNextStart)" command
+    vRecursionResult = 
+        Case( 
+            //    Existing error message
+            Length( vErrorTerminal ) > 0;
+                Case( 
+                    vLastErrorApplies; 
+                        Middle( vLastError; Position( vLastError; "_"; 1; 1 ) + 1; 9999 );
+                    vErrorTerminal
+                );
+            
+            //    Continue searching remaining text for valid element
+            vNextAction = "ContinueB";
+                xml.select_subB( 
+                    searchBlock;
+                    vNextStart;
+                    vEnd;
+                    searchString;
+                    parentNodeName
+                );
+                
+            //    Continue searching for next valid parent node
+            vNextAction = "ContinueA";
+                vNextAction & ¶ & vNextStart & ¶ & vErrorHidden;
+            
+            //    Found next node
+            vSearchType = "Node";
+                sString;
+                
+            //    Valid predicate element found
+            sBlock > 0;
+                sBlock;
+                
+            //    Default: Unexpected error
+            "Error 200: Internal Error Encountered"
+            
+        );    //end Case {vRecursionResult}
+        
+    vResult = 
+        Case(
+            //    Return original error message encountered in this recursion
+            Left( vRecursionResult; 5 ) = "Error";
+                Case( Length( vErrorHidden ); vErrorHidden; vRecursionResult );
+                
+            //    Default
+            vRecursionResult
+        );
 
-	$$xml.select_log = $$xml.select_log & ¶ & vRecursionIndent & "subB -> " & Quote( vResult );
-	$$xml.select_nodeRecursion = $$xml.select_nodeRecursion - 1
-	];	//end variable declaration
-	
-	vResult
-				
-)	 //end Let
+    $$xml.select_log = $$xml.select_log & ¶ & vRecursionIndent & "subB -> " & Quote( vResult );
+    $$xml.select_nodeRecursion = $$xml.select_nodeRecursion - 1
+    ];    //end variable declaration
+    
+    vResult
+                
+)     //end Let
 
 /*---------------------------------------------------------------------------------------
 HISTORY:
-	v1.1 Created 2008apr17 by Donovan Chandler
-	v2.3 Created 2008may15 by Donovan Chandler
-	v3.0 Created 2008.08.17 by Donovan Chandler
-		• Added support for XML attributes
-		• Added testing mode
-	v3.3 Created 2008.12.12 by DC
-		• Fixed vStart and sBlockA
-	v3.4 Created 2009.01.21 by DC
-		• Fixed bug with vLastErrorApplies
+    v1.1 Created 2008apr17 by Donovan Chandler
+    v2.3 Created 2008may15 by Donovan Chandler
+    v3.0 Created 2008.08.17 by Donovan Chandler
+        • Added support for XML attributes
+        • Added testing mode
+    v3.3 Created 2008.12.12 by DC
+        • Fixed vStart and sBlockA
+    v3.4 Created 2009.01.21 by DC
+        • Fixed bug with vLastErrorApplies
 ---------------------------------------------------------------------------------------*/

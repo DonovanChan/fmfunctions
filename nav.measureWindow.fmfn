@@ -1,29 +1,29 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	nav.measureWindow( clearMeasurements )
+    nav.measureWindow( clearMeasurements )
 
 PURPOSE: 
-	Measures location and dimensions of current window for use by nav.setWindowSettings()
+    Measures location and dimensions of current window for use by nav.setWindowSettings()
 
 HISTORY: 
-	Created 2009.08.13 by Donovan Chandler
+    Created 2009.08.13 by Donovan Chandler
 
 INPUT: 
-	clearMeasurements:	"False" or Null will set measurements.  "True" will clear all variables instantiated by this function.
+    clearMeasurements:    "False" or Null will set measurements.  "True" will clear all variables instantiated by this function.
 
 OUTPUT: 
-	Global Variables
+    Global Variables
 ---------------------------------------------------------------------------------------*/
 
 Let([
-	clear = Evaluate( clearMeasurements ) = 1 ;
-	
-	$$origWindowHeight	= If( clear; "" ; Get( WindowHeight ) ) ;
-	$$origWindowWidth	= If( clear; "" ; Get( WIndowWidth ) ) ;
-	$$origWindowTop	= If( clear; "" ; Get( WIndowTop ) ) ;
-	$$origWindowLeft	= If( clear; "" ; Get( WindowLeft ) ) 
-	] ;
-	
-	""
-	
+    clear = Evaluate( clearMeasurements ) = 1 ;
+    
+    $$origWindowHeight    = If( clear; "" ; Get( WindowHeight ) ) ;
+    $$origWindowWidth    = If( clear; "" ; Get( WIndowWidth ) ) ;
+    $$origWindowTop    = If( clear; "" ; Get( WIndowTop ) ) ;
+    $$origWindowLeft    = If( clear; "" ; Get( WindowLeft ) ) 
+    ] ;
+    
+    ""
+    
 )

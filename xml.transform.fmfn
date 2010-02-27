@@ -9,19 +9,19 @@ HISTORY:
     Created 2008.12.16 by DChandler
 
 INPUT: 
-    xmlSource:	Text string in XML format
-    addCharacters:	Boolean - True adds transformation, False removes it
+    xmlSource:    Text string in XML format
+    addCharacters:    Boolean - True adds transformation, False removes it
 
 OUTPUT: 
     xmlSource with ">" characters replaced with "‡>". This allows tags to be parsed easily with or without the presence of attributes
 ---------------------------------------------------------------------------------------*/
 
 Case(
-	Evaluate( addCharacters ); 
-	
-	//	Add search characters
-	Substitute( xmlSource; [" "; "‡"]; ["‡>"; ">"]; [">"; "‡>"]; ["</"; "≤/"] );
+    Evaluate( addCharacters ); 
+    
+    //    Add search characters
+    Substitute( xmlSource; [" "; "‡"]; ["‡>"; ">"]; [">"; "‡>"]; ["</"; "≤/"] );
 
-	//	Remove search characters
-	Substitute( xmlSource; ["‡>"; ">"]; ["‡"; " "]; ["≤/"; "</"] )
+    //    Remove search characters
+    Substitute( xmlSource; ["‡>"; ">"]; ["‡"; " "]; ["≤/"; "</"] )
 )
