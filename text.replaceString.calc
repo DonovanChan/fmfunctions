@@ -1,0 +1,53 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    text.replaceString( text; searchString; replaceExpression; caseSensitive )
+
+PURPOSE:
+    Applies replaceExpression to all occurrences of searchString in text.
+    Useful for highlighting words or phrases.
+
+HISTORY:
+    Created 2010.02.27 by Donovan Chandler
+
+INPUT:
+    replaceExpression: 
+        Calculation to be evaluated against searchString, which is
+        represented in the calc by "[string]"
+
+EXAMPLE:
+    text.replaceString(
+        "Dog, Mouse, Cat, mouse";
+        "Mouse";
+        "TextColor( [string]; RGB( 255; 0; 0 ))";
+        False
+    ) --> Returns "Dog, Mouse, Cat, mouse" with both occurrences of "mouse" in red
+
+DEPENDENCIES:
+    Custom Functions: text.replaceString_sub()
+---------------------------------------------------------------------------------------*/
+Let([
+    //-- Create case sensitive replacement string
+    _ex = Substitute( replaceExpression; "[string]"; Quote( searchString ) );
+    _newString = Evaluate( _ex )
+    
+    ];
+    
+    Case(
+       //-- Invalid expression
+       _newString = "?";
+           "Error: Invalid replaceExpression parameter (\"" & replaceExpression & "\")";
+           
+        //-- Case Sensitive --
+        Evaluate( caseSensitive );
+            Substitute( text; searchString; _newString );
+            
+        //-- Case Insensitive --
+        text.replaceString_sub(
+            text;
+            searchString;
+            replaceExpression;
+            0
+        )
+    )
+    
+) //Let
