@@ -1,0 +1,37 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+	text.wrapString( text; searchString; displayLength )
+
+PURPOSE:
+	Returns text surrounding searchString
+
+HISTORY:
+	Created 2010.03.04 by Donovan Chandler
+
+INPUT:
+	
+
+OUTPUT: 
+	
+---------------------------------------------------------------------------------------*/
+
+Let([
+    _lenDisplay = GetAsNumber( displayLength );
+    _lenString = Length( searchString );
+    _sString = Position( text; searchString; 1; 1 );
+    _sDisplay = _sString + _lenString/2 - _lenDisplay/2
+    ];
+    Case(
+        //-- displayLength is empty or larger than text
+        _lenDisplay > Length( text )
+        or _lenDisplay < 1;
+            text;
+        
+        //-- displayLength is less than searchString
+        _lenDisplay < _lenString;
+            Left( searchString; _lenDisplay );
+        
+        //-- default: crop text
+        Middle( text; _sDisplay; _lenDisplay)
+    )
+)
