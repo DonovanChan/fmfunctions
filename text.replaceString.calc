@@ -33,14 +33,18 @@ Let([
     ];
     
     Case(
-       //-- Invalid expression
-       _newString = "?";
+        //-- Debug
+        False;
+            text & "|-|" & searchString & "|-|" & replaceExpression;
+        
+        //-- Invalid expression
+        _newString = "?";
            "Error: Invalid replaceExpression parameter (\"" & replaceExpression & "\")";
-           
+
         //-- Case Sensitive --
         Evaluate( caseSensitive );
             Substitute( text; searchString; _newString );
-            
+
         //-- Case Insensitive --
         text.replaceString_sub(
             text;

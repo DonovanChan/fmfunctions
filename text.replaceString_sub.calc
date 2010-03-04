@@ -20,11 +20,15 @@ Let([
     //-- Replace current matching string
     _ex = Substitute( replaceExpression; "[string]"; Quote( _matchString ) );
     _newString = Evaluate( _ex );
-	_newText = Replace( text; _sMatch; Length( _matchString ); _newString )
+    _newText = Replace( text; _sMatch; Length( _matchString ); _newString )
 
     ];
 
     Case(
+        //-- Debug
+        False;
+            _ex;
+            
         //-- No further occurrences
         _sMatch = 0;
             text;

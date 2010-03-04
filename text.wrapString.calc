@@ -1,37 +1,54 @@
 /*---------------------------------------------------------------------------------------
 NAME:
-	text.wrapString( text; searchString; displayLength )
+	text.wrapString( text; searchString; displayLength; collapseLines )
 
 PURPOSE:
-	Returns text surrounding searchString
+	Returns characters from text surrounding searchString
 
 HISTORY:
 	Created 2010.03.04 by Donovan Chandler
 
-INPUT:
-	
-
-OUTPUT: 
+EXAMPLE:
+	FilterWrapStringRev(
+        “Let([¶foo = 200¶];¶\“Animal Count: \“ & foo¶)”
+        ; “foo”
+        ; 30
+        ; True
+    ) --> "...Let([ foo = 200 ]; \“Anim..."
 	
 ---------------------------------------------------------------------------------------*/
 
 Let([
-    _lenDisplay = GetAsNumber( displayLength );
+    //---- Settings ----
+    _wrapText = "...";
+    
+    //---- Logic ----
+    _lenDisplay = GetAsNumber( displayLength ) - Length( _wrapText )*2;
     _lenString = Length( searchString );
     _sString = Position( text; searchString; 1; 1 );
-    _sDisplay = _sString + _lenString/2 - _lenDisplay/2
+    _sDisplay = _sString + _lenString/2 - _lenDisplay/2;
+    _textDisplay =
+        Case(
+            Evaluate( collapseLines );
+                Substitute( text; "¶"; "\¶");
+                text
+        )
     ];
     Case(
+        //-- searchString not found
+        _sString = 0;
+            _textDisplay;
+        
         //-- displayLength is empty or larger than text
-        _lenDisplay > Length( text )
+        _lenDisplay > Length( _textDisplay )
         or _lenDisplay < 1;
-            text;
+            _wrapText & _textDisplay & _wrapText;
         
         //-- displayLength is less than searchString
         _lenDisplay < _lenString;
-            Left( searchString; _lenDisplay );
+            Left( searchString; _lenDisplay + Length( _wrapText ) ) & _wrapText;
         
         //-- default: crop text
-        Middle( text; _sDisplay; _lenDisplay)
+        _wrapText & Middle( _textDisplay; _sDisplay; _lenDisplay) & _wrapText
     )
 )
