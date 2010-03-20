@@ -1,0 +1,39 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+	text.repeatWithIncrement( text; matchString; startValue; endValue )
+
+PURPOSE:
+	Repeats text, incrementing matchString from startNumber to endNumber.
+
+HISTORY:
+	 Created 2010-Mar-20 16h02 donovan_c@beezwax.net
+
+INPUT:
+	
+
+OUTPUT: 
+	
+---------------------------------------------------------------------------------------*/
+
+Let([
+	_text = text;
+	_matchString = matchString;
+	_numStart = startValue;
+	_numEnd = endValue;
+	
+	_sMatch = Position( _text; _matchString; 1; 1 );
+	_textNew = Replace( _text; _sMatch; Length( _matchString ); _numStart )
+	];
+	Case(
+		//-- Invalid matchString
+		_sMatch = 0;
+			_text;
+			
+		//-- More values to add
+		_numStart < _numEnd;
+			_textNew & text.repeatWithIncrement( _text; _matchString; _numStart + 1; _numEnd );
+		
+		//-- Default	
+		_textNew
+	)
+)

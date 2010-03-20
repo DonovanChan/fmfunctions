@@ -1,0 +1,48 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    text.filterResult_subA( text; searchString; replaceExpression; startPosition )
+
+PURPOSE:
+    Performs case insensitive replacements for parent function.
+
+HISTORY:
+    Created 2010.03.04 by Donovan Chandler
+
+INPUT:
+    (See parent function for details)
+---------------------------------------------------------------------------------------*/
+
+Let([
+    //-- Isolate next occurrence
+    _sMatch = Position( text; searchString; startPosition; 1 );
+    _matchString = Middle( text; _sMatch; Length( searchString ));
+    
+    //-- Replace current matching string
+    _ex = Substitute( replaceExpression; "[string]"; Quote( _matchString ) );
+    _newString = Evaluate( _ex );
+    _newText = Replace( text; _sMatch; Length( _matchString ); _newString )
+
+    ];
+
+    Case(
+        //-- Debug
+        False;
+            _ex;
+            
+        //-- No further occurrences
+        _sMatch = 0;
+            text;
+        
+        //-- Invalid expression
+        _newString = "?";
+            "Error: Invalid replaceExpression parameter (\"" & replaceExpression & "\")";
+        
+        //-- Continue
+        text.replaceString_sub(
+            _newText;
+            searchString;
+            replaceExpression;
+            _sMatch + Length( searchString )
+        )
+    )
+)

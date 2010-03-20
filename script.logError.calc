@@ -1,0 +1,47 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+	script.logError( resultText; errorPrefix; variableName; comments )
+
+PURPOSE:
+	Checks for errorPrefix at beginning of resultText.
+	Appends new line to log in variableName if error exists.
+	
+DEPENDENCIES:
+	Custom Functions: var.update()
+
+HISTORY:
+	 Created 2010-Mar-12 15h51 donovan_c@beezwax.net
+
+EXAMPLE:
+
+NOTES:
+	NOT YET USED OR TESTED... development aborted until further notice
+	
+---------------------------------------------------------------------------------------*/
+
+Let([
+	//---- SETUP ---- (for use in Data Viewer)
+	_text = resultText;
+	_prefix = errorPrefix;
+	_varName = variableName;
+	_comments = comments;
+	
+	//---- SETTINGS ----
+	_logDelim = "|";
+	_logEntry = _text & _logDelim & _comments;
+	_logEntryVerbose = Get( ScriptName ) & _logDelim & Get( CurrentTimeStamp ) & _logDelim & _logEntry
+	
+	//---- UPDATE LOG ----
+	_exUpdateLog = 
+		"Let(["
+		& _varName & "=" & Quote( _logEntry )
+		& "]; \"\" )"
+	
+	];
+	Case(
+		//-- Error encountered
+		Left( _text; Length( _prefix ) ) = _prefix;
+		var.update( _varName; _logEntry; True; True )
+	)
+	& _text
+)
