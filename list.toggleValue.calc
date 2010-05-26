@@ -1,0 +1,28 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+	list.toggleValue( listOfValues ; valueAddOrRemove )
+
+PURPOSE:
+	Adds or removes value from theList
+
+HISTORY:
+	Created 2010-Mar-31 by Donovan Chandler
+	
+---------------------------------------------------------------------------------------*/
+
+Let([
+	_list = listOfValues;
+	_string = valueAddOrRemove
+	
+	];
+	
+	Case(
+		//-- If value exists, remove it
+		ValueCount( FilterValues( _list; _string )) > 0;
+			list.remove( _list; _string );
+			
+		//-- Else, append value
+		If( IsEmpty( _list ); ""; _list & ¶ ) & _string
+	)
+
+)

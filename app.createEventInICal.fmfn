@@ -1,0 +1,113 @@
+/*---------------------------------------------------------------------------------------
+app.createICalEvent( calendarName; summary; location; description; startDate; startTime; endDate; endTime; isAllDay; showEvent )
+v1.01
+
+PURPOSE:
+	Creates new event in iCal calendar based on specified criteria.
+	
+DEPENDENCIES:
+	Only tested on MacOS X 10.6 running FileMaker 10
+
+HISTORY: 
+	Created 2008.12.17 by Donovan Chandler.
+	Compliments to Jonathan Stark for providing base AppleScript file (www.jonathanstark.com).
+	
+NOTES:
+	New calendar will be created if none exist in iCal by provided name.
+---------------------------------------------------------------------------------------*/
+
+Let([
+	//-- Defaults --//
+	durationDefault = 2400;  //in seconds
+	
+	//-- Modify parameters here if necessary --//
+	_calendarName = calendarName;
+	_summary = summary;
+	_location = location;
+	_description = description;
+	_startDate = 
+		Case(
+			IsEmpty( startDate ) and IsEmpty( endDate )
+				; Get( CurrentDate )
+			; IsEmpty( startDate )
+				; endDate
+			; startDate
+		);
+	_startTime = 
+		Case( 
+			IsEmpty( startTime ) and IsEmpty( endTime )
+				; Get( CurrentTime )
+			; IsEmpty( startTime )
+				; endTime - durationDefault
+			; startTime
+		);
+	_endDate = 
+		Case( 
+			IsEmpty( endDate )
+				; _startDate
+			; endDate 
+		);
+	_endTime = 
+		Case( 
+			IsEmpty( endTime )
+				; _startTime + durationDefault
+			; endTime
+		);
+	_isAllDay = isAllDay;
+	_showEvent = showEvent
+	
+	];
+
+"-- grab the data from Filemaker¶
+tell application \"FileMaker Pro Advanced\"¶
+	tell current record¶
+		-- alternate method below uses field name instead of value
+		-- set theCalendarTitle to cellValue of cell " & Quote( "Field_Name" ) & "¶
+		set theCalendarTitle to " & Quote( _calendarName ) & "¶
+		set theSummary to " & Quote( _summary ) & "¶
+		set theLocation to " & Quote( _location ) & "¶
+		set theDescription to " & Quote( _description ) & "¶
+		set theStartDateAsText to " & Quote( Timestamp( _startDate; _startTime )) & " as text¶
+		set theEndDateAsText to " & Quote( Timestamp( _endDate; _endtime )) & " as text¶
+		set theAllDay to " & GetAsBoolean( _isAllDay ) & "¶
+		set theShowEvent to " & If( GetAsBoolean(_showEvent); "1"; "0" ) & "¶
+	end tell¶
+end tell¶
+¶
+-- convert date format¶
+set theStartDate to date theStartDateAsText¶
+set theEndDate to date theEndDateAsText¶
+¶
+-- create the event in iCal¶
+tell application \"iCal\"¶
+	activate¶
+	¶
+	-- make new calendar if need be¶
+	set allCalendarTitles to the title of every calendar¶
+	if allCalendarTitles contains theCalendarTitle then¶
+		set theCalendarNumber to (first calendar whose title is theCalendarTitle)¶
+	else¶
+		set theCalendarNumber to (make calendar at end of calendars with properties {title:theCalendarTitle})¶
+	end if¶
+	¶
+	-- make event¶
+	set theEvent to make event at end of events of theCalendarNumber¶
+	¶
+	-- set the event properties¶
+	tell theEvent¶
+		set start date to theStartDate¶
+		set end date to theEndDate¶
+		set summary to theSummary¶
+		set location to theLocation¶
+		set description to theDescription¶
+		if theAllDay = \"1\" then¶
+			set allday event to true¶
+		end if¶
+	end tell¶
+	¶
+	-- show event in iCal (optional)¶
+	if theShowEvent = 1 then show theEvent¶
+	¶
+end tell¶"
+
+)

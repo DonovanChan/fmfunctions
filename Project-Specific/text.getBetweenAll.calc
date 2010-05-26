@@ -1,0 +1,38 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+	text.getBetweenAll ( text; from; to )
+
+PURPOSE:
+	Returns return-delimited list of all text strings between 'from' and 'to' in 'text'
+
+HISTORY:
+	Created 2010.04.20 by Donovan Chandler
+	
+---------------------------------------------------------------------------------------*/
+
+Let([
+	_occurrenceCount = PatternCount ( text ; from );
+	
+	_rep = $$_text.getBetween_rep + 1;
+	$$_text.getBetween_rep = _rep;
+	
+	_textBetween = text.getBetween ( text; from; to; _rep );
+	
+	_resultList = $$_text.getBetween_result;
+	$$_text.getBetween_result = 
+		If ( not IsEmpty ( _resultList ); _resultList & ¶ )
+		& _textBetween
+	];
+	Case (
+		//-- Continue
+		_rep < _occurrenceCount;
+			text.getBetweenAll ( text; from; to );
+			
+		//-- Return result
+		_resultList
+		& Let([ $$_text.getBetween_result = ""
+		; $$_text.getBetween_rep = ""
+		]; "" )
+	)
+	
+)

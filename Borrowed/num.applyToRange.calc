@@ -1,0 +1,289 @@
+/*
+CUSTOM FUNCTION: 
+ApplyToRange ( function ; start ; end ; step ; separator )
+© 2008 Debi Fuchs of Aptworks Consulting, debi@aptworks.com
+
+Speedily (and using limited recursion) apply an "inline" function across a range of up to one million numbers.
+
+EXAMPLES:
+
+  ApplyToRange ( "[n]"; 1; 1000; 1; " ") 
+  // --> "1 2 3 ... 1000"
+
+  ApplyToRange ( "[n]"; 3; -3; -1; ";") 
+  // --> "3;2;1;0;-1;-2;-3"
+
+  ApplyToRange ( "[n]^2"; 1; 4; 1; "¶") 
+  // --> "1¶4¶9¶16"
+
+  ApplyToRange ( 
+    "[i]&\":\"&GetAsDate([n])"; 
+    GetAsNumber(Date(1;1;2008)); 
+    GetAsNumber(Date(12;31;2008)); 
+    7; 
+    "; "
+  ) // --> 1:1/1/2008; 2:1/8/2008; ...; 53:12/30/2008
+
+  ApplyToRange( "case(lg([n])=int(lg([n]));1)"; 1; 1024; 1; 0) 
+  // --> "1101000100000001..."
+
+
+NOTE: See "Apply" to apply a function to a single value. See "ApplyToList" to apply a function to the elements of a list rather that a range of numbers. For example, if you want to add 2 to every item in a list:
+
+1) Don't do this (slower): 
+ApplyToRange( "GetValue(myList; [n])+2"; 1; ValueCount( myList ); 1; "¶")
+
+2) Do this (faster):
+ApplyToList( "[n]+2"; myList; "¶" )
+
+CREDITS: Thanks to Agnès Barouh for the idea of the "[n]" style function call syntax, and to Ray Cologon for ideas about local variables within custom functions.
+
+USAGE: ApplyToRange returns the results, delimited by "separator", of repeatedly evaluating the string "function", each time assigning to placeholder "[n]" one value in the range from "start" to "end", with a step between values as specified by the "step" parameter. For convenience in creating numbered lists, use placeholder "[i]" to represent the position of the element within the range, starting with an index of 1.  Also, for compatibility with "Apply" and "ApplyToRange" the placeholder "[t]" is also provided, but there is no reason it should be needed in this function, as numbers and evaluated numbers are the same thing.
+
+FYI:  While their implementations are quite different, ApplyToRange is similar in functionality to the CustomList function by Agnès Barouh: Both functions apply a function to a range of numeric values. However, ApplyToRange is all about sets, whereas while CustomList is all about building a list, so they have different focus. For example, null elements are intentionally NOT filtered from the result set of ApplyToRange, as it represents the mapping of elements to individual elements, rather than to a list at large. (To cull null values from the result set of ApplyToRange, try the CullNulls CF.) Another notable difference is that ApplyToRange does recurse (unlike CustomList, which is brilliantly non-recursive), but only minimally (see below).
+ 
+IMPLEMENTATION: ApplyToRange creates an "index list" of the values 0 through 1000, using it to create a string of 1000 Let statements, each representing one value in the range. After evaluating the result, it recurses in binary fashion (calling itself twice not once) on subsequent 1000-element batches of the range, such that the stack depth grows only logarithmically, not linearly. For example, when called on a range of one million values, ApplyToRange will be called 1000 times, but reach a stack depth of only 10 CF stack frames. This leaves room to use other custom functions (including ApplyToRange) within the "function" argument of ApplyToRange. ApplyToRange is maximized for speed. Suggestions for further optimization are welcome!
+
+LAST MODIFIED: 13-AUG-2008 by Debi Fuchs of Aptworks Consulting
+*/
+
+
+Let(
+  [
+    // Set up some sizes and limits.
+
+    range_limit = 1000000; // set a practical limit...can be higher
+    batch_size = 1000; // avoid the FM Evaluation function limit; Note that
+    // a maximum batch size of 1000 is hardcoded elsewhere into this
+    // function, so do not increase it.
+
+    // Determine what is involved, first coercing start/end to numbers.
+
+    end = GetAsNumber(end) + 0;
+    start = GetAsNumber(start) + 0;
+    step = GetAsNumber(step) + 0;
+    value_count = Int( ( end - start ) / step ) + 1;  
+    end = start + step * value_count - step;
+    has_i = Position( function; "[i]"; 0; 1 );
+    has_t = Position( function; "[t]"; 0; 1 );
+    has_n = Position( function; "[n]"; 0; 1 );
+
+    // In the top-level call to this function, if it looks like an
+    // index is made use of in the function, modify the "function"
+    // argument to track the index value by including it in comments.
+    // This way we can pass it in our recursive calls without
+    // disturbing anything.
+     
+    is_first_call = Left( function; 4 ) <> "/*##";
+
+    function =
+      Case(
+        has_i and is_first_call;
+        "/*##" & "00000000" & "##*/"
+      ) & function;
+
+    start_index = Case( has_i; Middle(function; 5; 8))
+
+  ];
+
+  Case(
+  
+    // Simulate an "out of range" error if the size parameter is huge. 
+
+    value_count > range_limit;
+    Evaluate( "Factorial( -1 )" );
+    
+    // If there is data to be processed, process one batch; Then use
+    // two recursive calls to process subsequent batches.
+    
+    value_count > 0;
+    Let(
+      [
+        // First, grow a list from 0 to batch_size-1. Allow it to persist
+        // in subsequent calls to ApplyToRange, using a counter to keep
+        // track of it so we can empty it out later.
+
+        $ATR_iL_counter = 
+          Case(
+            not(IsEmpty($ATR_indexList)) or ($ATR_iL_counter>=1);
+            $ATR_iL_counter + 1;
+             Let(
+               [
+              
+               // Create a string representing 10 substitutions (one
+               // per digit 0 through 9).
+ 
+               initial_value = "0¶1¶2¶3¶4¶5¶6¶7¶8¶9";
+ 
+               subst_string = "new_list_mod= \"\¶\" & new_list;" &              
+                "new_list=\"0\" & " &
+                "Substitute(new_list;\"\¶\";\"\¶0\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶1\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶2\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶3\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶4\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶5\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶6\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶7\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶8\") & " &
+                "Substitute(new_list_mod;\"\¶\";\"\¶9\")";
+
+               // Create a "Let" statement, starting with an inital list
+               // representing an index list of size "10", which (when
+               // evaluated) will apply the above substitution twice
+               // (once for each power additional power of 10.
+               //
+               // (The index list goes from "0...9" to 
+               // "00...99" and finally to "000...999")
+  
+               eval_string = 
+                 "Let(" &
+                    "[" & 
+                      "new_list=" & Quote(initial_value) & ";" & 
+                      subst_string & ";" & subst_string & " & \"\"" &
+                    "];" &
+                    "new_list" &
+                  ")";
+
+               // Now assign the local variable that will hold the index
+               // list.
+               
+               $ATR_indexList = Evaluate( eval_string )
+
+              ];
+              // Set the value of $ATR_iL_counter to 1
+              1          
+             )
+          );
+
+
+        // Transform the index list into a string of "Let" statements,
+        // each one mapping our function to a single element.
+        // Include an "i" value so we can access the index to each element
+        // if needed.
+
+        // Set up the "Let" statement syntax:
+        prefix = "Let(["  & Case( has_t or has_n; "atr_n="; "dummy=");
+        suffix = 
+                    "*" & step & "+" & start &
+                    Case( 
+                       has_i; 
+                       ";atr_i=$atr_c;$atr_c=$atr_c+1"
+                     ) & 
+                    "];" &
+                    Substitute( 
+                      function; 
+                      [ "[t]"; "atr_n" ]; 
+                      [ "[i]"; "atr_i" ];
+                      [ "[n]"; "atr_n" ]
+                    ) & 
+                    ")";
+        
+        // Build our huge string of "Let" statements:
+        evaluation_expression = prefix &
+        Substitute(
+          Left($ATR_indexList; 4 * value_count - 1);
+          ¶;
+          suffix & "&\¶&" & prefix
+        ) & suffix
+      ];
+
+
+      // Evaluate the "Lets" before moving on to the next set of
+      // data. Initialize and restore our local variable counter
+      // before/after the evaluation. Insert our separator into
+      // the evaluation result before moving on.
+      
+      Let( 
+        [old_atr_c = $atr_c; $atr_c = start_index + 1];
+        Substitute( Evaluate( evaluation_expression ); ¶; separator ) &
+          Let( $atr_c = old_atr_c; "" )
+      ) &
+
+      // Process the remaining data.  If there are at least two batches
+      // remaining, use two recursive calls so stack depth will grow
+      // logarithmically rather than linearly. Split the range roughly in
+      // two, updating the starting index value in the comment of the
+      // "function" argument in both calls.
+
+      Let(
+        [
+          remaining_batches = Int( ( value_count - batch_size ) / batch_size );
+          
+          range_size_A =
+            Case(
+              value_count > 2 * batch_size;
+              Ceiling( remaining_batches / 2 ) * batch_size;
+              value_count - batch_size
+            );
+            
+          range_size_B = value_count - batch_size - range_size_A
+        ];
+
+        Case(
+        
+          range_size_A >= 1;
+          
+          Let(
+              function_A =
+                Case( 
+                        has_i; 
+                        Let(
+                           index_A=Right( "00000000" & (start_index+batch_size); 8);
+                           Replace( function; 5; 8; index_A )
+                        );
+                function
+              ); 
+            
+            separator &
+              ApplyToRange( 
+                function_A;  
+                start + step * (batch_size);   
+                start + step * (batch_size  + range_size_A -1);  
+                step;  
+                separator 
+              )
+          )
+        ) &
+
+        Case(
+        
+          range_size_B >= 1;
+          
+          Let(
+              function_B =
+                Case( 
+                        has_i; 
+                        Let(
+                           index_B = 
+                             Right( 
+                               "00000000" & ( start_index+batch_size+range_size_A ); 
+                               8 
+                             );
+                           Replace( function; 5; 8; index_B )
+                        );
+                function
+              ); 
+
+            separator &
+              ApplyToRange( 
+                function_B; 
+                start + step * (batch_size  + range_size_A); 
+                end; 
+                step; 
+                separator 
+              )
+          )
+        )
+      ) &
+      
+      // Clean up our "persistent" index list if we're done with it.
+
+      Case(
+         not( $ATR_iL_counter > 1 );
+         Let( [$ATR_iL_counter = ""; $ATR_indexList = "" ]; "" );
+         Let( $ATR_iL_counter = $ATR_iL_counter - 1; "" )
+      )       
+    )
+  )
+)

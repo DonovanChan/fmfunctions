@@ -1,0 +1,33 @@
+//---- UNDER DEVELOPMENT ----
+Let([
+	_list = theList;
+	$$_uniqueList_list = 
+		If ( not IsEmpty ( $$_uniqueList_list )
+		; $$_uniqueList_list
+		; _list
+		);
+	$$_uniqueList_rep = $$_uniqueList_rep + 1;
+	
+	_list_rev = $$_uniqueList_list;
+	_rep = $$_uniqueList_rep;
+	_valueCur = GetValue ( _list)
+	
+	
+	];
+	//Replace all subsequent values with null and continue down list
+)
+
+/*---------------------------------------------------------------------------------------
+NAME:
+	list.uniqueValues ( theList )
+
+PURPOSE:
+	Returns return-delimited list containing only unique values in the order that they first appear.
+
+HISTORY:
+	Created 2010.04.27 by Donovan Chandler
+
+EXAMPLE:
+	
+	
+---------------------------------------------------------------------------------------*/

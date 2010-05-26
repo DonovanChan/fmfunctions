@@ -1,0 +1,31 @@
+Let(
+   [
+      TheDate = GetAsDate ( TheDate ) ;
+      d = Date(MonthOfYearStart; DayOfYearStart; Year(TheDate)) ;
+      dp = Date(MonthOfYearStart; DayOfYearStart; Year(TheDate) - 1) ;
+      s = d + Mod(DayOfWeekStart - DayOfWeek( d ) + 3; 7) - 3 ;
+      sp = dp + Mod(DayOfWeekStart - DayOfWeek( dp ) + 3; 7) - 3 ;
+      FY_Start = Case( TheDate >= s ; s ; sp )
+   ] ;
+   Int( (TheDate - FY_Start)/7) + 1
+) 
+
+/* —————————————————————————————— //
+NAME:
+	WeekOfYearFiscalCustom ( TheDate ; DayOfWeekStart ; MonthOfYearStart ; DayOfYearStart )
+
+PURPOSE:
+	Returns week number of fiscal year (as defined by user)
+
+EXAMPLES:
+	WeekOfYearFiscalCustom (
+		"10/01/2010" ;
+		1 ;
+		10 ;
+		7
+	) => 52
+
+HISTORY:
+	Created by Jason L. DeLooze, http://www.briandunning.com/cf/147
+	Modified: 2010-May-18 11h42 PST — Donovan A. Chandler
+*/

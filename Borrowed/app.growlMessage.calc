@@ -1,0 +1,33 @@
+/* 
+
+---- NOT USED OR TESTED! Donovan Chandler ----
+
+FMGrowl (title, description, sticky)
+
+This custom function allows you to integrate the Growl notification system for Mac OS X with FileMaker. It is formatted as an AppleScript and activated through the Perform AppleScript script step.
+
+Based on ideas and code from Michael Gaslowitz (http://www.gaslowitz.net/filemaker/blog/2008/07/video-growl-integration/)
+Many thanks to Michael and his great blog. He did all the hard work on this, I am just simplifying it for my own use and trying to share it as he has done with his work .
+
+His ideas are great, but did more than what I needed. My goal was a simple function that I could feed messages into. His system has two other custom functions to feed in the version of FileMaker being used (Pro or Advanced) and adds in the ability to do custom icons loaded from FileMaker into a Temp directory. He also has a script parameter feeding system to allow you to enter all the needed parameters when assigning a script to a button. This also used more custom functions. I cut out all that good stuff just to get it working simply. It is definitely worth a look at his sample file to see how this could be expanded, and because he has a script that checks for the presence of Growl.
+
+Parameters: Are all text fields
+      message - the name of the floating dialog box.
+      title - the title of the box.
+      description - the text in the main message of the box.
+      sticky -  text field that takes the values: {yes, no}. This determines if the Growl message hangs around on the screen or not.
+
+Applescript steps involved:
+
+      --Register the script with Growl. I am using the default FileMaker Application icon. There is a Case switch in there to deal with FileMaker Pro or Advanced, as Applescript is specific about the program name.
+      --send a notification to Growl
+
+*/
+
+"tell application \"GrowlHelperApp\"¶
+
+	register as application \"FMGrowl\" all notifications {"& Quote (message) & "} default notifications {"& Quote (message) & "} icon of application \"FileMaker Pro" & Case ( PatternCount ( Get ( ApplicationVersion ) ; "Advanced" ) ; " Advanced\"" ; "\"" ) & "¶
+
+	notify with name "& Quote (message) & " title " & Quote (title) & " description " & Quote(description) & " application name \"FMGrowl\""& " sticky "& Quote (sticky) &"¶
+
+end tell"

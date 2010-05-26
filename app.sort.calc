@@ -1,0 +1,19 @@
+"tell application" &" \""& $_application &  "\"" &¶ &
+   "tell current layout of document " &" \""& "kestenbaum DB" &"\"" & ¶ &
+      "sort by field" & "\"" & $_sort_field & "\"" & "in order ascending" &¶ &
+   "end tell" &¶ &
+"end tell"
+
+/* —————————————————————————————— //
+NAME:
+	app.sort ( )
+
+PURPOSE:
+	
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-May-25 18h16 PST — Donovan A. Chandler
+*/

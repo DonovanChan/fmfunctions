@@ -1,0 +1,47 @@
+Let([
+	_filemaker_version = "FileMaker Pro Advanced";
+	_file_name = Get ( FileName );
+	_script_name = script_name;
+	
+	_field_name_full = "Gobal::gt_AppleScriptResult";
+	_field_name_full_list = Substitute( _field_name_full; "::"; ¶ );
+	_table_name = GetValue( _field_name_full_list; 1 );
+	_field_name = GetValue( _field_name_full_list; 2 );
+	_result_default = 1
+	];
+
+	"tell application \"" & _filemaker_version & "\"" & ¶ &
+
+	//-- Perform the script
+	"	tell database \"" & _file_name & "\"" & ¶ &
+	"		do script \"" & _script_name & "\"" & ¶ &
+	"	end tell" & ¶ &
+
+	//-- Store result in global field
+	"	tell document \"" & _file_name & "\"" & ¶ &
+	"		tell table \"" & _table_name & "\"" & ¶ &
+	"			set field \"" & _field_name & "\" to " & _result_default & ¶ &
+	"		end tell" & ¶ &
+	"	end tell" & ¶ &
+
+	"end tell"
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	app.performScript ( script_name; result_field_name )
+
+PURPOSE:
+	Returns AppleScript command that performs named script in current file
+
+DEPENDENCIES:
+	Requires Mac OS to run AppleScript
+
+HISTORY:
+	Created: 2010-May-25 18h00 PST — Donovan A. Chandler
+	
+TO DO:
+	- Add test of FileMaker Pro or FileMaker Pro Advanced
+	- Add support for parameters (using name of global field?)
+*/

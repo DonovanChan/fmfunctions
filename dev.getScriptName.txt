@@ -1,0 +1,27 @@
+Let([
+	_script_prefix = scriptPrefix;
+	
+	_script_list = ScriptNames( Get( FileName ) );
+	_found_list = list.filterCustom ( _script_list; "BeginsWith"; _script_prefix; False )
+	
+	];
+	GetValue ( _found_list; 1 )
+)
+
+
+/* —————————————————————————————— //
+NAME:
+	dev.getScriptName ( scriptPrefix )
+
+PURPOSE:
+	Returns name of script based on prefix
+
+EXAMPLES:
+	dev.getScriptName ( "001" ) = "001 Script Template" (if such a script exists)
+	
+DEPENDENCIES:
+	List.filterCustom()
+
+HISTORY:
+	Created: 2010-May-25 16h33 PST — Donovan A. Chandler
+*/

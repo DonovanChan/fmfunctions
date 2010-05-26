@@ -1,0 +1,39 @@
+Let (
+	[
+		#_list = text ;
+		#_value = GetValue ( #_list ; 1 ) ;
+		#_next_values = RightValues ( #_list ; ValueCount ( #_list ) - 1 )      // all values except first to be passed in recursion
+	] ;
+
+	Case (
+		#_list = ""
+		; ""
+
+		; 	If (
+				ValueCount ( FilterValues ( #_list ; #_value ) ) > 1
+				;  ""
+				; #_value & "¶"
+			) & uniqueValues ( #_next_values ) 
+
+	)
+
+)
+
+
+
+ /* ______________________________________________
+
+ FORMULA COMMENTS
+
+ # Name:                uniqueValues ( text )
+ # Function:           Retains only unique values from list.
+ # Parameters:       <list parameter(s) and purpose here>
+ # Special Notes:    <if any>
+ # Literal Result:     <show example of result here>
+ # Created:            11-Nov-2007 0h36 NY rick@beezwax.net
+ # Modified:           11-Nov-2007 14h43 NY rick@beezwax.net: renamed variables
+ # Modified:           17-Dec-2007 03h49 SF rick@beezwax.net: calc variables follow naming convention: #_calc_variable
+ # Source:              http://www.briandunning.com/cf/596
+ # Author:             Jeroen Aarts, ClickWorks, www.clickworks.be: Takes a return-seperated list as parameter and outputs a list of the unique values from this list. This function can be used in conjunction with the FileMaker List() function to mimick the good old value list items behavior, without creating a ValueList. (very useful cf, Jeroen. Thanks!)
+
+ ______________________________________________ */
