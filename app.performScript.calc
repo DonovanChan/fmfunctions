@@ -54,4 +54,5 @@ HISTORY:
 TO DO:
 	- Add test of FileMaker Pro or FileMaker Pro Advanced
 	- Add support for parameters (using name of global field?)
+		- Consider bBox plugin instead if using parameters and returns
 */
