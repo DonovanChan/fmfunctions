@@ -1,36 +1,46 @@
 Let([
+	_script_name = script_name;
+	_field_name_full = result_field_name;
+	_callback_script_name = callback_script_name;
+	
 	_filemaker_version = "FileMaker Pro Advanced";
 	_file_name = Get ( FileName );
-	_script_name = script_name;
 	
-	_field_name_full = "Gobal::gt_AppleScriptResult";
 	_field_name_full_list = Substitute( _field_name_full; "::"; ¶ );
 	_table_name = GetValue( _field_name_full_list; 1 );
 	_field_name = GetValue( _field_name_full_list; 2 );
-	_result_default = 1
+	_result_default = 0
 	];
 
-	"tell application \"" & _filemaker_version & "\"" & ¶ &
-
 	//-- Perform the script
+	"tell application \"" & _filemaker_version & "\"" & ¶ &
 	"	tell database \"" & _file_name & "\"" & ¶ &
 	"		do script \"" & _script_name & "\"" & ¶ &
 	"	end tell" & ¶ &
+	"end tell" & ¶ &
+	"delay 1" & ¶ &
 
 	//-- Store result in global field
-	"	tell document \"" & _file_name & "\"" & ¶ &
+	"tell application \"" & _filemaker_version & "\"" & ¶ &
+	"   tell database \"" & _file_name & "\"" & ¶ &
 	"		tell table \"" & _table_name & "\"" & ¶ &
 	"			set field \"" & _field_name & "\" to " & _result_default & ¶ &
 	"		end tell" & ¶ &
 	"	end tell" & ¶ &
-
+	"end tell" & ¶ &
+	
+	//-- Perform callback script
+	"tell application \"" & _filemaker_version & "\"" & ¶ &
+	"	tell database \"" & _file_name & "\"" & ¶ &
+	"		do script \"" & _callback_script_name & "\"" & ¶ &
+	"	end tell" & ¶ &
 	"end tell"
 
 )
 
 /* —————————————————————————————— //
 NAME:
-	app.performScript ( script_name; result_field_name )
+	app.performScript ( script_name; result_field_name; callback_script_name )
 
 PURPOSE:
 	Returns AppleScript command that performs named script in current file
