@@ -1,0 +1,34 @@
+/*---------------------------------------------------------------------------------------
+•••• INCOMPLETE ••••
+
+NAME: 
+    var.assignWithLog( name; value; global; nameOfVariableLog )
+    Version 1.2
+
+PURPOSE: 
+    Instantiates local or global variable according to parameters
+
+HISTORY: 
+    Created 2010.06.04 by DChandler
+
+INPUT: 
+    name:  Name of variable (text string)
+    value:    Value of variable (text string)
+    global:     (Boolean) - True creates variable as global
+
+OUTPUT: 
+    Assigns local or global variable, returning "1" if variable is empty (else 0)
+---------------------------------------------------------------------------------------*/
+
+Let([
+	_log = nameOfVariableLog
+	; _S = Case( global; "$$"; "$" )
+	; _var = _S & name
+	; exError = "IsEmpty( " & _var & ") or " & _var & "=\"?\""
+	];
+	Evaluate( "Let([" &
+		_var & "=" & Quote(value) & ";" &
+		"$$" & _log & "= $$" & _log & " & " & Quote( _var ) & " & " & "\¶" &
+		"]; " & exError & " )"
+	)
+)

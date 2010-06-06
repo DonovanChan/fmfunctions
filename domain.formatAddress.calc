@@ -1,0 +1,17 @@
+street & ", " & unit & ", " & city & ", " & state & " " & postal_code & ", " & country
+
+/* —————————————————————————————— //
+•••• STILL UNDER DEVELOPMENT ••••
+
+NAME:
+	domain.formatAddress ( street ; unit ; city ; state ; postal_code ; country)
+
+PURPOSE:
+	Formats address
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-03 18h05 PST — Donovan A. Chandler
+*/
