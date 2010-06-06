@@ -1,0 +1,59 @@
+// fnMaskReplace ( maskText; replacementText; wildcardCharacter )
+// v1.1
+
+// replaces wildcard characters within a text string with the characters in a replacement string
+// input:
+//	maskText = text string with some number of wildcard characters
+//	replacementText = text string meant to replace wildcard characters one for one
+//	wildcardCharacter = the specific char used as a wildcard	
+// output:
+//	text string
+// note: if there are too many wildcard characters, they will be stripped out.
+// note: if there are too many replacement characters, the excess will be ignored.
+// note: recursive stack can manage up to 49,999 characters.
+
+Let ([
+	charReplaceCount = Length ( replacementText );
+         charWildcardCount = PatternCount (maskText; wildcardCharacter) ;
+	firstWildcardPosition = Position ( maskText; wildcardCharacter; 1; 1 );
+	firstReplaceChar = Left ( replacementText; 1 );
+	remainingReplaceChars = Right ( replacementText; charReplaceCount - 1 );
+	oneCharReplaced = Replace ( maskText; firstWildcardPosition; 1; firstReplaceChar );
+	returnText = 
+               Case ( charWildcardCount = 0 ;
+		             maskText;
+                         charReplaceCount > 1 and charWildcardCount > 1 ;
+                   	     fnMaskReplace ( oneCharReplaced; remainingReplaceChars;
+      	                      wildcardCharacter );
+                         oneCharReplaced
+     		 ); 
+	cleanText = Substitute ( returnText; wildcardCharacter; "" )
+	]; 
+	cleanText
+)
+
+/* Example:
+
+fnMaskReplace ( "***hello***"; "123456"; "*")
+returns: "123hello456"
+
+fnMaskReplace ( "***hello********"; "123"; "*")
+returns: "123hello"
+
+fnMaskReplace ( "***hello*"; "1234567"; "*")
+returns: "123hello4"
+
+*/
+
+
+
+
+
+
+/*
+Function created by Soliant Consulting
+www.soliantconsulting.com
+
+Released under the Creative Commons Attribution 2.5 License
+http://creativecommons.org/licenses/by/2.5/
+*/

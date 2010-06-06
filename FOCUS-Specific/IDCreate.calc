@@ -1,0 +1,18 @@
+TableName ( fullQualifiedFieldName ) & "-" & Get ( RecordID ) & "-" & FOCUS::NIC & "-" & GetAsNumber ( Get ( CurrentHostTimeStamp ) )
+
+/* —————————————————————————————— //
+NAME:
+	IDCreate ( fullQualifiedFieldName )
+
+PURPOSE:
+	Used in the primary key field in each table.  FOCUS::NIC must be set by the opening script, otherwise that portion of the ID will be missing, making it a weaker ID.  The intention is that these IDs are globally unique.  The chance of ever duplicating an ID is extremely low: the user would need to somehow create a record in two copies of the database, from the same machine, at the same time, and in the same record order, then merge those records into the same database.  We are confident that this fringe case is a non-factor, and thus assume that all IDs are unique.
+	The inclusion of the RecordID at time of creation makes the ID more readable to developers (e.g. the ID ending in -702).  However, this should not be confused with the record's true RecordID, which is managed by FileMaker.  If the record is exported, then imported as a new record (retaining its original ID), its true RecordID could conflict with the record ID component of the primary key.  For this reason, if you need to determine a record's RecordID, always use Get ( RecordID ); do NOT infer it from the primary key.
+	A performance seminar given by Matt Navarre at DevCon 2009 demonstrated that enforcing uniqueness on IDs slows down a database's performance.  For this reason, we've removed uniqueness on our IDs.  Keep this in mind when importing into the table without matching, as you could possibly import duplicate IDs without receiving an error.
+	To make the IDs more readable, we've removed the colons from the NIC.  If you need to infer the NIC from the ID, another function would be required to put the colons back in.  Likewise if you want to convert the timestamp number back into a timestamp.
+
+EXAMPLES:
+	IDCreate ( "FOCUS::ID" ) = FOCUS-002332d43572-63401238773-17
+
+HISTORY:
+	Created: 2010-Jan-29 17h00 PST — Will M. Baker
+*/

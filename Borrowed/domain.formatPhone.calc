@@ -1,0 +1,39 @@
+// fnFormatPhone ( text; style )
+// v1.0
+
+// reformats phone numbers based on a mask style
+// dependencies:
+//	fnTextColor() & fnMaskReplace()
+// input:
+//	text = text string assumed to contain at least 10 numeral digits
+//	style = specific keywords to allow for different styles (international) within the same database
+// output:
+//	text string
+// note: error returned in red if < 10 digits
+// note: strings assume no more than 20 characters
+
+Let ([
+	minimumDigits = 10;
+	digitsOnly = Filter ( text; "0123456789" );
+	digitCount = Length ( digitsOnly );
+	errorCheck = Case ( digitCount < minimumDigits; fnTextColor ( "error - too few numerals: " & text; "red" ); 0 );
+         styleMask = Case (
+		style = "usa_standard";  "(***) ***-****";
+		style = "usa_dot"; "***.***.****";
+		style = "japan_alternate";  "* ** ***-****";
+		style = "japan_standard"; "** ****-****";
+		 "*** ***-****" );
+         mask = styleMask & Case (digitCount > minimumdigits ; " x**********");
+	formatText = fnMaskReplace ( mask; digitsOnly; "*" )
+	//finalBlackText = fnTextColor ( formatText; "black" )
+	]; 
+	Case ( errorCheck ≠ 0; errorCheck; formatText )
+)
+
+/*
+Function created by Soliant Consulting
+www.soliantconsulting.com
+
+Released under the Creative Commons Attribution 2.5 License
+http://creativecommons.org/licenses/by/2.5/
+*/

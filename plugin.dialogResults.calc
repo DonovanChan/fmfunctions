@@ -1,0 +1,16 @@
+SDialog_Get ( data_selector ; optional_data )
+
+/* —————————————————————————————— //
+NAME:
+	DialogResult ( data_selector ; optional_data )
+
+PURPOSE:
+	Performs all calls to Simple Dialog function, SDialog_Get().
+	Contains plug-in references for future changes.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-May-26 14h53 PST — Donovan A. Chandler
+*/
