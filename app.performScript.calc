@@ -11,25 +11,32 @@ Let([
 	_field_name = GetValue( _field_name_full_list; 2 );
 	_result_default = 0
 	];
-
-	//-- Perform the script
+	
+	"-- Define vars" & ¶ &
+	"set _result to " & _result_default & ¶ &
+	
+	"-- Perform designated script" & ¶ &
 	"tell application \"" & _filemaker_version & "\"" & ¶ &
 	"	tell database \"" & _file_name & "\"" & ¶ &
-	"		do script \"" & _script_name & "\"" & ¶ &
+	"		try" & ¶ &
+	"			do script \"" & _script_name & "\"" & ¶ &
+	"		on error _errorText number _errorNumber" & ¶ &
+	"			set _result to _errorNumber & \": \" & _errorText" & ¶ &
+	"		end try" & ¶ &
 	"	end tell" & ¶ &
 	"end tell" & ¶ &
 	"delay 1" & ¶ &
 
-	//-- Store result in global field
+	"-- Store result in designated global field" & ¶ &
 	"tell application \"" & _filemaker_version & "\"" & ¶ &
 	"   tell database \"" & _file_name & "\"" & ¶ &
 	"		tell table \"" & _table_name & "\"" & ¶ &
-	"			set field \"" & _field_name & "\" to " & _result_default & ¶ &
+	"			set field \"" & _field_name & "\" to _result" & ¶ &
 	"		end tell" & ¶ &
 	"	end tell" & ¶ &
 	"end tell" & ¶ &
 	
-	//-- Perform callback script
+	"-- Perform callback script" & ¶ &
 	"tell application \"" & _filemaker_version & "\"" & ¶ &
 	"	tell database \"" & _file_name & "\"" & ¶ &
 	"		do script \"" & _callback_script_name & "\"" & ¶ &
@@ -52,6 +59,7 @@ HISTORY:
 	Created: 2010-May-25 18h00 PST — Donovan A. Chandler
 	
 TO DO:
+	- Fix error preventing global result field from being found
 	- Add test of FileMaker Pro or FileMaker Pro Advanced
 	- Add support for parameters (using name of global field?)
 		- Consider bBox plugin instead if using parameters and returns
