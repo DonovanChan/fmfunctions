@@ -1,0 +1,29 @@
+Let([
+	_field = relatedFieldContainingLists ;
+	_ex = "list.aggregateNthRecordValues ( " & GetFieldName(_field) & "; [n]; " & Quote ( aggregationType ) & " )"
+	];	
+	CustomList (
+		1 ;
+		ValueCount ( _field ) ;
+		_ex
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	list.aggregateRelatedSets ( relatedFieldContainingLists ; aggregationType )
+
+PURPOSE:
+	If a related field has lists of values, this function will take value one from each list and aggregate it (see list.aggregateNthRecordValues).  Then it will do the same for the second value, etc.
+
+EXAMPLES:
+	list.aggregateNthRecordValues (
+		"STUDENT_CLASS::ListOfMonthlyTotals";
+		"Average"
+	) 
+	= "80.345¶90¶75¶60¶78.113456¶80¶90.09875¶75¶60¶78¶50¶90.01"
+	= Average totals for January thru December
+
+HISTORY:
+	Created: 2010-Jun-11 15h02 PST — Donovan A. Chandler
+*/

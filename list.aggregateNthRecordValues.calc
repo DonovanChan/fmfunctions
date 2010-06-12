@@ -1,0 +1,52 @@
+Let([
+
+	_field = relatedFieldContainingLists ;
+	_value = valueToAggregate ;
+	_type = aggregationType ;
+	
+	_count = Count ( _field ) ;
+	_function = 
+		Case (
+			_type = "Average" ; "Average" ;
+			_type = "Min" ; "Min" ;
+			_type = "Max" ; "Max" ;
+			_type = "StDev" ; "StDev" ;
+			_type = "Variance" ; "Variance"
+		) ;
+	_value_ex = 
+		"GetValue( 
+			GetNthRecord( " & GetFieldName ( _field ) & " ; [n] )" &
+			"; " & _value & " )" ;
+	_value_list = CustomList ( 1 ; _count ; _value_ex ) ;
+	_agg_ex = 
+		Case ( 
+			//-- Don't aggregate unless there's more than one value
+			ValueCount ( _value_list ) < 2 ; _value_list ;
+			_function & " ( " & Substitute ( _value_list ; ¶ ; " ; " ) & " )"
+		) ;
+	_agg_result = Evaluate(  _agg_ex )
+
+	];
+	_agg_result
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	list.aggregateNthRecordValues ( relatedFieldContainingLists ; valueToAggregate ; aggregationType )
+
+PURPOSE:
+	Aggregates Nth values from series of related lists.
+
+EXAMPLES:
+	list.aggregateNthRecordValues (
+		"STUDENT_CLASS::ListOfMonthlyTotals";
+		2;
+		"Average"
+	) 
+	= "80.345"
+	= Average of totals for february
+
+HISTORY:
+	Created: 2010-Jun-11 14h13 PST — Donovan A. Chandler
+*/

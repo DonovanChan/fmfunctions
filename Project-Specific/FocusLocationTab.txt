@@ -1,0 +1,20 @@
+Case (
+	locationType = "PHONE"	; "tab_phone_entry" ;
+	locationType = "EMAIL"	; "tab_email_entry" ;
+	locationType = "ADDRESS"	; "tab_address_entry" ;
+	locationType = "WEBSITE"	; "tab_website_entry"
+)
+
+/* —————————————————————————————— //
+NAME:
+	FocusLocationTab ( locationType )
+
+PURPOSE:
+	Returns name of tab to display when record of designated locationType is focussed
+
+EXAMPLES:
+	FocusLocationTab ( "PHONE" ) = "tab_phone_entry"
+
+HISTORY:
+	Created: 2010-Jun-08 09h21 PST — Donovan A. Chandler
+*/
