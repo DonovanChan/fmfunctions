@@ -20,8 +20,11 @@ Let([
 	"	tell database \"" & _file_name & "\"" & ¶ &
 	"		try" & ¶ &
 	"			do script \"" & _script_name & "\"" & ¶ &
-	"		on error _errorText number _errorNumber" & ¶ &
-	"			set _result to _errorNumber & \": \" & _errorText" & ¶ &
+	"		on error _errorText number _errorNumber from _object partial result _partial to _to" & ¶ &
+	"			set _result to (\"Error \" & _errorNumber & \": \" & _errorText & return & ¬" & ¶ &
+	"				\"Object: \" & _object & return & ¬" & ¶ &
+	"				\"Expected Type: \" & _to & return & ¬" & ¶ &
+	"				\"Partial Result: \" & _partial) as text" & ¶ &
 	"		end try" & ¶ &
 	"	end tell" & ¶ &
 	"end tell" & ¶ &
