@@ -1,0 +1,15 @@
+If ( IsValid ( calculation ) ; calculation )
+
+/* —————————————————————————————— //
+NAME:
+	calc.hideInvalid ( calculation )
+
+PURPOSE:
+	Returns null if calculation result is invalid. Useful for hiding empty chart headers.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-11 20h31 PST — Donovan A. Chandler
+*/
