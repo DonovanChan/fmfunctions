@@ -2,9 +2,15 @@ Let([
 	_label_list = buttonList;
 	_delimiter = bubbleDelimiter;
 	_background_color = backgroundColor;
+	_img_left_path = pathToBackgroundLeft;
+	_img_right_path = pathToBackgroundRight
+	
+	/* Deprecated with new parameters
 	_temp_path = "file:/" & If(Abs(Get(SystemPlatform)) = 1; Substitute(Get(TemporaryPath); " "; "%20"); Get(TemporaryPath));
 	_img_left_path = _temp_path & "oval-orange-left.gif";
-	_img_right_path = _temp_path & "oval-orange-right.gif"
+	_img_right_path = _temp_path & "oval-orange-right.gif";
+	*/
+	
 	];
 
 	"data:text/html,<html>
@@ -70,9 +76,9 @@ Let([
 	</html>"
 )
 
-/* —————————————————————————————— //
+/* —————————————————————————————— // 
 NAME:
-	web.bubbleButtons ( buttonList ; bubbleDelimiter ; backgroundColor )
+	web.bubbleButtons ( buttonList ; pathToBackgroundLeft ; pathToBackgroundRight ; backgroundColor )
 
 PURPOSE:
 	Creates bubble backgrounds to each value supplied in buttonList, separated by bubbleDelimiter
