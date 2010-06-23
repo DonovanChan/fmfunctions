@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------------------
 NAME: 
-	file.setPath( pathType; directory ; theFileName )
+	file.setPath( pathType; directory ; file )
 	v2.3
 
 PURPOSE: 
@@ -59,7 +59,7 @@ Let([
 		Case(
 			IsEmpty( typePath ); "Error: Invalid pathType (" & Quote( pathType ) & ")";
 			IsEmpty( dirPathA ); "Error: Invalid directory (" & Quote( directory ) & ")";
-			typePath & directoryPath & theFileName
+			typePath & directoryPath & file
 		)
 	];
 	result
