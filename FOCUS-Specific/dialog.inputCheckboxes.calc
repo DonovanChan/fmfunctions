@@ -1,0 +1,38 @@
+Let([
+	_label_list = listOfLabels;
+	_value_list = listOfValues;
+	_label_cur = GetValue ( _label_list; 1 );
+	_value_cur = GetValue ( _value_list; 1 );
+	_label_count = ValueCount ( _label_list )
+	];
+	# ( "INPUT" ;
+	  # ( "TYPE" ; "checkbox" ) &
+	  # ( "LABEL" ; _label_cur ) &
+	  # ( "DEFAULT_VALUE" ; _value_cur ) &
+	  # ( "DEFAULT_IS_VALID" ; 1 )
+	)
+	& Case ( 
+		_label_count > 1; 
+		¶ & DialogInputCheckboxes (
+			RightValues ( _label_list; _label_count - 1 );
+			RightValues ( _value_list; _label_count - 1 )
+		)
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	DialogInputCheckboxes ( listOfLabels ; listOfValues )
+
+PURPOSE:
+	Constructs input parameter for creating a checkbox set within a dialog.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-23 11h04 PST — Donovan A. Chandler
+	
+NOTES:
+	listOfValues parameter may contain empty or missing values so long as the existing values correlate in position to their respective labels.
+*/

@@ -1,0 +1,88 @@
+Let([
+	_label_list = buttonList;
+	_delimiter = bubbleDelimiter;
+	_background_color = backgroundColor;
+	_temp_path = "file:/" & If(Abs(Get(SystemPlatform)) = 1; Substitute(Get(TemporaryPath); " "; "%20"); Get(TemporaryPath));
+	_img_left_path = _temp_path & "oval-orange-left.gif";
+	_img_right_path = _temp_path & "oval-orange-right.gif"
+	];
+
+	"data:text/html,<html>
+	<style type=\"text/css\">
+
+	html {
+		background-color: " & _background_color & "
+	}
+
+	/*Credits (technique and graphics): Dynamic Drive CSS Library */
+	/*URL: http://www.dynamicdrive.com/style/ */
+	
+	a.ovalbutton{
+	background: transparent url('" & _img_left_path & "') no-repeat top left;
+	display: block;
+	float: left;
+	font: normal 12px Verdana; /* Change 13px as desired */
+	line-height: 16px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
+	height: 24px; /* Height of button background height */
+	padding-left: 11px; /* Width of left menu image */
+	text-decoration: none;
+	margin-bottom: 4px;
+	}
+
+	a:link.ovalbutton, a:visited.ovalbutton, a:active.ovalbutton{
+	color: #494949; /*button text color*/
+	}
+
+	a.ovalbutton span{
+	background: transparent url('" & _img_right_path & "') no-repeat top right;
+	display: block;
+	padding: 4px 11px 4px 0; /*Set 11px below to match value of 'padding-left' value above*/
+	}
+
+	a.ovalbutton:hover{ /* Hover state CSS */
+	background-position: bottom left;
+	}
+
+	a.ovalbutton:hover span{ /* Hover state CSS */
+	background-position: bottom right;
+	color: black;
+	}
+
+	.buttonwrapper{ /* Container you can use to surround a CSS button to clear float */
+	overflow: hidden; /*See: http://www.quirksmode.org/css/clearing.html */
+	width: 100%;
+	}
+	</style>
+	
+	<script type=\"text/javascript\">
+		function add_param( txt ) {
+			window.location.search = txt
+		}
+	</script>
+
+	<div class=\"buttonwrapper\">
+	<a class=\"ovalbutton\" href=\"#\" onclick=\"add_param('" & GetValue ( _label_list; 1 ) & "')\"><span>" & GetValue ( _label_list; 1 ) & "</span></a>" &
+	list.custom ( 2; ValueCount ( _label_list );
+		Quote ( _delimiter ) & " & Let([_label = GetValue(" & Quote(_label_list) & "; [n] ) ];" &
+		"\"<a class='ovalbutton' href='#' onclick='add_param(\\\"\" & _label & \"\\\")' style='margin-left: 6px'><span>\" & _label & \"</span></a>\" )"
+	) &
+	"</div>
+	</html>"
+)
+
+/* —————————————————————————————— //
+NAME:
+	web.bubbleButtons ( buttonList ; bubbleDelimiter ; backgroundColor )
+
+PURPOSE:
+	Creates bubble backgrounds to each value supplied in buttonList, separated by bubbleDelimiter
+
+EXAMPLES:
+	
+DEPENDENCIES:
+	list.custom()
+	Button background graphics accessible in specified path.
+
+HISTORY:
+	Created: 2010-Jun-22 23h34 PST — Donovan A. Chandler
+*/

@@ -1,0 +1,30 @@
+Case (
+	accuracy = 2 ; TimeMillis / 1000 ;
+	TimeNano / 1000000000
+)
+
+/* —————————————————————————————— //
+NAME:
+	time.getMicro ( accuracy )
+
+PURPOSE:
+	Returns time in milliseconds or nanoseconds but with the decimal moved so that it can be calculated as seconds.
+
+EXAMPLES:
+	time.getMicro ( "" ) = 1276879058.526657
+	time.getMicro ( 2 ) = 1276879058.529
+
+HISTORY:
+	Created: 2010-Jun-17 20h54 PST — Donovan A. Chandler
+	
+DEPENDECIES:
+	Uses external function created with ScriptMaster plug-in by 360Works.
+	
+	To create these functions:
+		1. Register the ScriptMaster plug-in.  Download their plug-in for more details.
+		2. Set variables to the following calculations:
+		
+		RegisterGroovy( "TimeMillis" ; "System.currentTimeMillis()" )
+		
+		RegisterGroovy( "TimeNano" ; "System.nanoTime()" )
+*/

@@ -1,0 +1,26 @@
+Let([
+	_result_cur = #ValueNotFirst ( dialogResults; "RESULT"; startIndex );
+	_result_cur_text = #Value ( _result_cur; "VALUE" );
+	_result_cur_menu = #Value ( _result_cur; "MENU" );
+	
+	_result_next = #ValueNotFirst ( dialogResults; "RESULT"; startIndex + 1 )
+	];
+	If ( _result_cur_text = 1; _result_cur_menu	) &
+	If ( not IsEmpty ( _result_next ) and startIndex < endIndex; 
+		DialogResultsChecked ( dialogResults; startIndex + 1; endIndex )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	dialog.resultsChecked ( dialogResults; startIndex; endIndex )
+
+PURPOSE:
+	Returns return-delimited list of all checkboxes that were checked in the specified dialog results.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-23 11h36 PST — Donovan A. Chandler
+*/
