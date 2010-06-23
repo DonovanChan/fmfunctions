@@ -1,0 +1,66 @@
+/*---------------------------------------------------------------------------------------
+NAME: 
+	file.setPath( pathType; directory ; theFileName )
+	v2.3
+
+PURPOSE: 
+	Returns path to pre-designated directory
+
+HISTORY: 
+	Created 2008.07.29 by Donovan Chandler
+	
+DEPENDENCIES: 
+	Custom Functions:  sys.getMode() 
+
+INPUT: 
+	pathType:  Location of the directory [relative, full, network]
+	directory:	Directory found by Get() functions 
+	
+	file.setPath( "full"; "desktop" ) ->> "filemac:/Macintosh HD/Users/apu/Desktop/"
+	
+NOTES:
+	• Directory overridden to "desktop" if sys.getMode() > 2 (system mode NOT in production or testing)
+	
+	CAUTION - Function requires further testing
+---------------------------------------------------------------------------------------*/
+
+Let([
+	directory = directory ; //If( sys.getMode( False ) > 2; "desktop"; directory );
+	typeFull = 
+		Case(
+			Abs( Get( SystemPlatform ) ) = 1 ; "filemac:" ;
+			Abs( Get( SystemPlatform ) ) = 2 ; "filewin:" ;
+		);
+	typePath = 
+		Case(
+			pathType = "relative"	; "file:";
+			pathType = "full"	; typeFull;
+			pathType = "remote"	; "filewin://" & Get( HostName );
+			pathType = "network"	; "fmnet:" & Get( HostIPAddress ) & "/"
+		);
+	dirPathA = 
+		Case(
+			directory = "desktop"		; Get( DesktopPath );
+			directory = "documents"	; Get( DocumentsPath );
+			directory = "temporary"	; Get( TemporaryPath );
+			directory = "preferences"	; Get( PreferencesPath );
+			directory = "drive"		; Get( SystemDrive );
+			directory = "filemaker"	; Get( FileMakerPath );
+			directory = "file"			; Get( FilePath );
+			directory = "parentDir"	; Get( FilePath );
+		);
+	dirPathB = Substitute( dirPathA; ["file:/"; ""]; ["file:"; ""]; ["filemac:"; ""]; ["filewin:"; ""] );
+	directoryPath = 
+		Case( 
+			directory = "parentDir"; Left( dirPathB; Position( dirPathB; "/"; Length(dirPathB); -1 ));
+			dirPathB
+		);
+	result = 
+		Case(
+			IsEmpty( typePath ); "Error: Invalid pathType (" & Quote( pathType ) & ")";
+			IsEmpty( dirPathA ); "Error: Invalid directory (" & Quote( directory ) & ")";
+			typePath & directoryPath & theFileName
+		)
+	];
+	result
+)
