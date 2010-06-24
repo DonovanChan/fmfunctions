@@ -5,11 +5,14 @@ Let([
 	_value_cur = GetValue ( _value_list; 1 );
 	_label_count = ValueCount ( _label_list )
 	];
-	# ( "INPUT" ;
-	  # ( "TYPE" ; "checkbox" ) &
-	  # ( "LABEL" ; _label_cur ) &
-	  # ( "DEFAULT_VALUE" ; _value_cur ) &
-	  # ( "DEFAULT_IS_VALID" ; 1 )
+	Case (
+		not IsEmpty ( _label_cur );
+		# ( "INPUT" ;
+		  # ( "TYPE" ; "checkbox" ) &
+		  # ( "LABEL" ; _label_cur ) &
+		  # ( "DEFAULT_VALUE" ; _value_cur ) &
+		  # ( "DEFAULT_IS_VALID" ; 1 )
+		)
 	)
 	& Case ( 
 		_label_count > 1; 
