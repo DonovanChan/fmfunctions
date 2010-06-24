@@ -1,23 +1,30 @@
 Let([
+	//-- Settings --
+	_button_text_color = "#494949";
+	_button_text_color_highlight = "black";
+	_padding_side = 4;	// Space around text
+	_margin_side = 6;	// Space between bubbles
+	_always_emphasize = True;	// False causes buttons to appear highlighted on hover
+
+	//-- --
 	_label_list = buttonList;
-	_delimiter = bubbleDelimiter;
+	_label_count = ValueCount ( _label_list );
+	_label_1 = GetValue ( _label_list; 1 );
 	_background_color = backgroundColor;
-	_img_left_path = pathToBackgroundLeft;
-	_img_right_path = pathToBackgroundRight
-	
-	/* Deprecated with new parameters
-	_temp_path = "file:/" & If(Abs(Get(SystemPlatform)) = 1; Substitute(Get(TemporaryPath); " "; "%20"); Get(TemporaryPath));
-	_img_left_path = _temp_path & "oval-orange-left.gif";
-	_img_right_path = _temp_path & "oval-orange-right.gif";
-	*/
+	_mac = ( Abs( Get( SystemPlatform ) ) = 1 );
+	_img_left_path = ConvertPathForWebViewer( imgLeftPath );
+	_img_right_path = ConvertPathForWebViewer( imgRightPath )
 	
 	];
 
 	"data:text/html,<html>
 	<style type=\"text/css\">
 
-	html {
-		background-color: " & _background_color & "
+	body {
+		background-color: " & _background_color & ";
+		border:0;
+		margin:0;
+		overflow:hidden;
 	}
 
 	/*Credits (technique and graphics): Dynamic Drive CSS Library */
@@ -27,31 +34,32 @@ Let([
 	background: transparent url('" & _img_left_path & "') no-repeat top left;
 	display: block;
 	float: left;
-	font: normal 12px Verdana; /* Change 13px as desired */
-	line-height: 16px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
-	height: 24px; /* Height of button background height */
-	padding-left: 11px; /* Width of left menu image */
+	font: normal 10px Verdana;
+	line-height: " & imgHeight - _padding_side*2 & "px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background */
+	height: " & imgHeight & "px; /* Height of button background height */
+	padding-left: " & imgLeftWidth & "px; /* Width of left menu image */
 	text-decoration: none;
 	margin-bottom: 4px;
+	margin-left: " & _margin_side & "
 	}
 
 	a:link.ovalbutton, a:visited.ovalbutton, a:active.ovalbutton{
-	color: #494949; /*button text color*/
+	color: " & _button_text_color & "; /*button text color*/
 	}
 
 	a.ovalbutton span{
 	background: transparent url('" & _img_right_path & "') no-repeat top right;
 	display: block;
-	padding: 4px 11px 4px 0; /*Set 11px below to match value of 'padding-left' value above*/
+	padding: " & _padding_side & "px " & imgLeftWidth & "px " & _padding_side & "px 0; /*Set 'padding-right' to match value of 'padding-left' value above*/
 	}
 
-	a.ovalbutton:hover{ /* Hover state CSS */
+	a.ovalbutton" & If ( not _always_emphasize; ":hover" ) & "{ /* Hover state CSS */
 	background-position: bottom left;
 	}
 
-	a.ovalbutton:hover span{ /* Hover state CSS */
+	a.ovalbutton" & If ( not _always_emphasize; ":hover" ) & " span{ /* Hover state CSS */
 	background-position: bottom right;
-	color: black;
+	color: " & _button_text_color_highlight & ";
 	}
 
 	.buttonwrapper{ /* Container you can use to surround a CSS button to clear float */
@@ -66,27 +74,43 @@ Let([
 		}
 	</script>
 
-	<div class=\"buttonwrapper\">
-	<a class=\"ovalbutton\" href=\"#\" onclick=\"add_param('" & GetValue ( _label_list; 1 ) & "')\"><span>" & GetValue ( _label_list; 1 ) & "</span></a>" &
-	list.custom ( 2; ValueCount ( _label_list );
-		Quote ( _delimiter ) & " & Let([_label = GetValue(" & Quote(_label_list) & "; [n] ) ];" &
-		"\"<a class='ovalbutton' href='#' onclick='add_param(\\\"\" & _label & \"\\\")' style='margin-left: 6px'><span>\" & _label & \"</span></a>\" )"
+	<body>
+	<div class=\"buttonwrapper\">" &
+	Case (
+		not IsEmpty ( _label_1 );
+		"<a class=\"ovalbutton\" href=\"#\" onclick=\"add_param('" & _label_1 & "')\"><span>" & _label_1 & "</span></a>"
+	) &
+	Case (
+		_label_count > 1;
+		CustomList ( 2; _label_count;
+			"Let([_label = GetValue(" & Quote(_label_list) & "; [n] ) ];" &
+			"\"<a class='ovalbutton' href='#' onclick='add_param(\\\"\" & _label & \"\\\")'><span>\" & _label & \"</span></a>\" )"
+		)
 	) &
 	"</div>
+	</body>
 	</html>"
 )
 
 /* —————————————————————————————— // 
 NAME:
-	web.bubbleButtons ( buttonList ; pathToBackgroundLeft ; pathToBackgroundRight ; backgroundColor )
+	web.bubbleButtons ( buttonList ; imgLeftPath ; imgRightPath ; imgLeftWidth ; imgHeight ; backgroundColor )
 
 PURPOSE:
 	Creates bubble backgrounds to each value supplied in buttonList, separated by bubbleDelimiter
 
 EXAMPLES:
+	web.bubbleButtons ( 
+		"Button1¶Button2";
+		"file://path-to-temp-folder/button-img-left.gif";
+		"file://path-to-temp-folder/button-img-right.gif"; //This one is larger
+		10;
+		22;  //Actual image may be 44 px high.  The bottom half is visible on mouse-over.
+		"white"
+	)
 	
 DEPENDENCIES:
-	list.custom()
+	CustomList(), ConvertPathForWebViewer()
 	Button background graphics accessible in specified path.
 
 HISTORY:
