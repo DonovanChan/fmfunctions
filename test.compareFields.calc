@@ -1,0 +1,20 @@
+Let([
+	_field_cur = GetFieldName ( Self );
+	_field_comp = "UNIT_OF_INCIDENT_SELECTED::MANUF_YEAR"
+	];
+	Self ≠ Evaluate ( _field_comp )
+)
+
+/* —————————————————————————————— //
+NAME:
+	
+
+PURPOSE:
+	
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-25 13h02 PST — Donovan A. Chandler
+*/
