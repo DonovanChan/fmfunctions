@@ -1,0 +1,119 @@
+Let([
+	//-- Settings --
+	_button_text_color = "#494949";
+	_button_text_color_highlight = "black";
+	_body_margin_top = 6;	// Space above body
+	_bubble_margin_side = 6;	// Space between bubbles
+	_text_padding_side = 4;	// Space around text
+	_always_emphasize = True;	// False causes buttons to appear highlighted on hover
+
+	//-- --
+	_label_list = buttonList;
+	_label_count = ValueCount ( _label_list );
+	_label_1 = GetValue ( _label_list; 1 );
+	_background_color = backgroundColor;
+	_mac = ( Abs( Get( SystemPlatform ) ) = 1 );
+	_img_left_path = ConvertPathForWebViewer( imgLeftPath );
+	_img_right_path = ConvertPathForWebViewer( imgRightPath )
+	
+	];
+
+	"data:text/html,<html>
+	<style type=\"text/css\">
+
+	body {
+		background-color: " & _background_color & ";
+		border:0;
+		margin:" & _body_margin_top & " 0 0 0;
+		overflow:hidden;
+	}
+
+	/*Credits (technique and graphics): Dynamic Drive CSS Library */
+	/*URL: http://www.dynamicdrive.com/style/ */
+	
+	a.ovalbutton{
+	background: transparent url('" & _img_left_path & "') no-repeat top left;
+	display: block;
+	float: left;
+	font: normal 10px Verdana;
+	line-height: " & imgHeight - _text_padding_side*2 & "px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background */
+	height: " & imgHeight & "px; /* Height of button background height */
+	padding-left: " & imgLeftWidth & "px; /* Width of left menu image */
+	text-decoration: none;
+	margin-bottom: 4px;
+	margin-left: " & _bubble_margin_side & "
+	}
+
+	a:link.ovalbutton, a:visited.ovalbutton, a:active.ovalbutton{
+	color: " & _button_text_color & "; /*button text color*/
+	}
+
+	a.ovalbutton span{
+	background: transparent url('" & _img_right_path & "') no-repeat top right;
+	display: block;
+	padding: " & _text_padding_side & "px " & imgLeftWidth & "px " & _text_padding_side & "px 0; /*Set 'padding-right' to match value of 'padding-left' value above*/
+	}
+
+	a.ovalbutton" & If ( not _always_emphasize; ":hover" ) & "{ /* Hover state CSS */
+	background-position: bottom left;
+	}
+
+	a.ovalbutton" & If ( not _always_emphasize; ":hover" ) & " span{ /* Hover state CSS */
+	background-position: bottom right;
+	color: " & _button_text_color_highlight & ";
+	}
+
+	.buttonwrapper{ /* Container you can use to surround a CSS button to clear float */
+	overflow: hidden; /*See: http://www.quirksmode.org/css/clearing.html */
+	width: 100%;
+	}
+	</style>
+	
+	<script type=\"text/javascript\">
+		function add_param( txt ) {
+			window.location.search = txt
+		}
+	</script>
+
+	<body>
+	<div class=\"buttonwrapper\">" &
+	Case (
+		not IsEmpty ( _label_1 );
+		"<a class=\"ovalbutton\" href=\"#\" onclick=\"add_param('" & _label_1 & "')\"><span>" & _label_1 & "</span></a>"
+	) &
+	Case (
+		_label_count > 1;
+		CustomList ( 2; _label_count;
+			"Let([_label = GetValue(" & Quote(_label_list) & "; [n] ) ];" &
+			"\"<a class='ovalbutton' href='#' onclick='add_param(\\\"\" & _label & \"\\\")'><span>\" & _label & \"</span></a>\" )"
+		)
+	) &
+	"</div>
+	</body>
+	</html>"
+)
+
+/* —————————————————————————————— // 
+NAME:
+	web.bubbleButtons ( buttonList ; imgLeftPath ; imgRightPath ; imgLeftWidth ; imgHeight ; backgroundColor )
+
+PURPOSE:
+	Creates bubble backgrounds to each value supplied in buttonList, separated by bubbleDelimiter
+
+EXAMPLES:
+	web.bubbleButtons ( 
+		"Button1¶Button2";
+		"file://path-to-temp-folder/button-img-left.gif";
+		"file://path-to-temp-folder/button-img-right.gif"; //This one is larger
+		10;
+		22;  //Actual image may be 44 px high.  The bottom half is visible on mouse-over.
+		"white"
+	)
+	
+DEPENDENCIES:
+	CustomList(), ConvertPathForWebViewer()
+	Button background graphics accessible in specified path.
+
+HISTORY:
+	Created: 2010-Jun-22 23h34 PST — Donovan A. Chandler
+*/
