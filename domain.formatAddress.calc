@@ -1,4 +1,69 @@
-street & ", " & unit & ", " & city & ", " & state & " " & postal_code & ", " & country
+Let ([
+	_street = 
+		Substitute ( Trim ( Proper ( street ) );
+			[ "North"	; "N" ];
+			[ "South"	; "S" ];
+			[ "East"	; "E" ];
+			[ "West"	; "W" ];
+			[ "Northeast"	; "NE" ];
+			[ "Northwest"	; "NW" ];
+			[ "Southeast"	; "SE" ];
+			[ "Southwest"	; "SW" ];
+			
+			[ "Alley"	; "Aly" ];
+			[ "Annex"	; "Anx" ];
+			[ "Av"	; "Ave" ];
+			[ "Avenue"	; "Ave" ];
+			[ "Arcade"	; "Arc"];
+			[ "Boulevard"	; "Blvd" ];
+			[ "Canyon"	; "Cyn" ];
+			[ "Cnyn"	; "Cyn" ];
+			[ "Center"	; "Ctr"	];
+			[ "Cntr"	; "Ctr"	];
+			[ "Circle"	; "Cir" ];
+			[ "Circ"	; "Cir" ];
+			[ "Court"	; "Ct" ];
+			[ "Crescent"	; "Cres" ];
+			[ "Drive"	; "Dr" ];
+			[ "Glen"	; "Gln" ];
+			[ "Grove"	; "Grv"	];
+			[ "Heights"	; "Hts" ];
+			[ "Highway"	; "Hwy" ];
+			[ "Lane"	; "Ln" ];
+			[ "Mount"	; "Mt" ];
+			[ "Mnt"	; "Mt" ];
+			[ "Mountain"	; "Mtn" ];
+			[ "Parkway"	; "Pkwy" ];
+			[ "Prk"	; "Park" ];
+			[ "Road"	; "Rd" ];
+			[ "Street"	; "St" ];
+			[ "Str"	; "St" ]
+		);
+	_unit = 
+		Substitute ( Trim ( Proper ( unit ) );
+			[ "Apartment"	; "Apt" ];
+			[ "Building"	; "Bldg" ];
+			[ "Department"	; "Dept" ];
+			[ "Floor"	; "Fl" ];
+			[ "Room"	; "Rm" ];
+			[ "Suite"	; "Ste" ];
+			[ "Unit"	; "Unit" ]
+		);
+	_city = Trim ( Proper ( city ) );
+	_state = ConvertState ( state; "abbrev" );
+	_postal = postal_code;
+	_country = 
+		Case (
+			country = "USA" or "U.S.A."; "USA";
+			Proper ( country )
+		);
+	_string = _street & " " & _unit & " " & _city & " " & _state & " " & _postal & " " & _country
+	];
+	Substitute ( _string;
+		[ "   "; " " ];    //Remove double spaces
+		[ "  "; " " ]
+	)
+)
 
 /* —————————————————————————————— //
 •••• STILL UNDER DEVELOPMENT ••••
@@ -14,4 +79,12 @@ EXAMPLES:
 
 HISTORY:
 	Created: 2010-Jun-03 18h05 PST — Donovan A. Chandler
+	
+DEPENDENCIES:
+	Required Functions: ConvertState [can easily be commented out]
+	
+NOTES:
+	For USPS-preferred formats, see here: http://pe.usps.com/text/pub28/pub28c2.html
+	For USPS-preferred abbreviations, see here: http://www.usps.com/ncsc/lookups/usps_abbreviations.html
+	For more robust functionality, consider something else like a WSDL
 */
