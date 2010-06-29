@@ -1,0 +1,122 @@
+Let ([
+	_array =
+		"	AL	Ala.	Alabama	USA	" & ¶ &
+		"	AK	Alaska	Alaska	USA	" & ¶ &
+		"	AZ	Ariz.	Arizona	USA	" & ¶ &
+		"	AR	Ark.	Arkansas	USA	" & ¶ &
+		"	CA	Calif.	California	USA	" & ¶ &
+		"	CO	Colo.	Colorado	USA	" & ¶ &
+		"	CT	Conn.	Connecticut	USA	" & ¶ &
+		"	DE	Del.	Delaware	USA	" & ¶ &
+		"	FL	Fla.	Florida	USA	" & ¶ &
+		"	GA	Ga.	Georgia	USA	" & ¶ &
+		"	GU	Guam	Guam	USA	" & ¶ &
+		"	HI	Hawaii	Hawaii	USA	" & ¶ &
+		"	ID	Idaho	Idaho	USA	" & ¶ &
+		"	IL	Ill.	Illinois	USA	" & ¶ &
+		"	IN	Ind.	Indiana	USA	" & ¶ &
+		"	IA	Iowa	Iowa	USA	" & ¶ &
+		"	KS	Kan.	Kansas	USA	" & ¶ &
+		"	KY	Ky.	Kentucky	USA	" & ¶ &
+		"	LA	La.	Louisiana	USA	" & ¶ &
+		"	ME	Maine	Maine	USA	" & ¶ &
+		"	MD	Md.	Maryland	USA	" & ¶ &
+		"	MA	Mass.	Massachusetts	USA	" & ¶ &
+		"	MI	Mich.	Michigan	USA	" & ¶ &
+		"	MN	Minn.	Minnesota	USA	" & ¶ &
+		"	MS	Miss.	Mississippi	USA	" & ¶ &
+		"	MO	Mo.	Missouri	USA	" & ¶ &
+		"	MT	Mont.	Montana	USA	" & ¶ &
+		"	NE	Neb.	Nebraska	USA	" & ¶ &
+		"	NV	Nev.	Nevada	USA	" & ¶ &
+		"	NH	N.H.	New Hampshire	USA	" & ¶ &
+		"	NJ	N.J.	New Jersey	USA	" & ¶ &
+		"	NM	N.M	New Mexico	USA	" & ¶ &
+		"	NY	N.Y.	New York	USA	" & ¶ &
+		"	NC	N.C.	North Carolina	USA	" & ¶ &
+		"	ND	N.D.	North Dakota	USA	" & ¶ &
+		"	OH	Ohio	Ohio	USA	" & ¶ &
+		"	OK	Okla.	Oklahoma	USA	" & ¶ &
+		"	OR	Ore.	Oregon	USA	" & ¶ &
+		"	PA	Pa.	Pennsylvania	USA	" & ¶ &
+		"	RI	R.I.	Rhode Island	USA	" & ¶ &
+		"	SC	S.C.	South Carolina	USA	" & ¶ &
+		"	SD	S.D.	South Dakota	USA	" & ¶ &
+		"	TN	Tenn.	Tennessee	USA	" & ¶ &
+		"	TX	Texas	Texas	USA	" & ¶ &
+		"	UT	Utah	Utah	USA	" & ¶ &
+		"	VT	Vt.	Vermont	USA	" & ¶ &
+		"	VA	Va.	Virginia	USA	" & ¶ &
+		"	WA	Wash.	Washington	USA	" & ¶ &
+		"	WV	W.V.	West Virginia	USA	" & ¶ &
+		"	WI	Wis.	Wisconsin	USA	" & ¶ &
+		"	WY	Wyo.	Wyoming	USA	" & ¶ &
+		
+		"	AA	AA	Armed Forces Americas	" & ¶ &
+		"	AE	AE	Armed Forces Africa/Canada/Europe/Middle East	" & ¶ &
+		"	AP	AP	Armed Forces Pacific	" & ¶ &
+		
+		"	AS	Am. Samoa	American Samoa	USA	" & ¶ &
+		"	DC	D.C.	District of Columbia	USA" & ¶ &
+		"	FM	F.M.	Federated States of Micronesia	Federated States of Micronesia	" & ¶ &
+		"	GU	Guam	Guam	USA	" & ¶ &
+		"	MP	N. Mariana Is.	Northern Mariana Islands	USA	" & ¶ &
+		"	PW	Palau	Palau	Palau" & ¶ &
+		"	PR	Puerto Rico	Puerto Rico	USA	" & ¶ &
+		"	VI	Virgin Is.	Virgin Islands	USA	" & ¶ &
+
+		"	AB	Alberta	Alberta	Canada" & ¶ &
+		"	BC	B.C.	British Columbia	Canada" & ¶ &
+		"	MB	Man.	Manitoba	Canada" & ¶ &
+		"	NB	N.B.	New Brunswick	Canada" & ¶ &
+		"	NL	Newfoundland	Newfoundland	Canada" & ¶ &
+		"	NS	N.S.	Nova Scotia	Canada" & ¶ &
+		"	NT	N.T.	Northwest Territories	Canada" & ¶ &
+		"	ON	Ont.	Ontario	Canada" & ¶ &
+		"	PE	P.E.I.	Prince Edward Island	Canada" & ¶ &
+		"	QC	Quebec	Quebec	Canada" & ¶ &
+		"	SK	Sask.	Saskatchewan	Canada" & ¶ &
+		"	YT	Yukon Territories	Yukon Territories	Canada";
+	_delim = "	";
+	_search_pos =
+		Position ( _array;
+			_delim & stateNameOrAbbrev & _delim;
+			1;
+			1
+		);
+	_search_line =
+		PatternCount (
+			Left ( _array; _search_pos );
+			¶
+		) + 1;
+	_state_line = GetValue ( _array; _search_line );
+	_state_list = Substitute ( _state_line; _delim; ¶ );
+	_state_result_index =
+		Case (
+			desiredFormat = "abbrev"; 2;
+			desiredFormat = "short"; 3;
+			desiredFormat = "full"; 4;
+			desiredFormat = "country"; 5;
+			1
+		);
+	_state_result = GetValue ( _state_list; _state_result_index )
+	];
+	_state_result
+)
+
+/* —————————————————————————————— //
+NAME:
+	domain.convertState ( stateNameOrAbbrev; desiredFormat )
+
+PURPOSE:
+	Returns state name in desired format
+
+EXAMPLES:
+	domain.convertState ( "AB" ; "full" ) = "Alberta"
+	domain.converState ( "California" ; "abbrev" ) = "CA"
+	
+	Valid parameters for desiredFormat: abbrev, short, full, country
+
+HISTORY:
+	Created: 2010-Jun-29 14h08 PST — Donovan A. Chandler
+*/

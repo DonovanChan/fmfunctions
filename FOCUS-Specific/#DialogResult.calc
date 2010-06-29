@@ -1,0 +1,18 @@
+#Value (
+#NthResult ( "RESULT" ; resultNumber ) ;
+resultType
+)
+
+/* —————————————————————————————— //
+NAME:
+	#DialogResult ( resultNumber ; resultType )
+
+PURPOSE:
+	Retrieves result from dialog script
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-28 16h45 PST — Donovan A. Chandler
+*/
