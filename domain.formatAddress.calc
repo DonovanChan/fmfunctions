@@ -69,7 +69,7 @@ Let ([
 •••• STILL UNDER DEVELOPMENT ••••
 
 NAME:
-	domain.formatAddress ( street ; unit ; city ; state ; postal_code ; country)
+	domain.formatAddress ( street ; unit ; city ; state ; postal_code ; country ; style )
 
 PURPOSE:
 	Formats address
