@@ -10,7 +10,8 @@ Let(
 				1000000
 			);
 		
-		currentList & If( Right( currentList; 1 ) ≠ ¶; ¶ ) & value & "¶"
+		currentList & 
+		If( Right( currentList; 1 ) ≠ ¶ and Length ( currentList ); ¶ ) & value & "¶"
 	)
 )
 
@@ -24,6 +25,7 @@ PURPOSE:
 HISTORY: 
 	Created by Matt Petrowsky of ISO Productions, Inc.
 	Adapted 2008jun18 by Donovan Chandler for formatting/documentation preference
+	Modified 2010.07.13 by Donovan Chandler to test for empty currentList
 
 INPUT: 
 	currentList:  return-delimited list of values
