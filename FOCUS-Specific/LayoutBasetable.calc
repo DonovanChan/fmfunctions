@@ -1,0 +1,26 @@
+Let([
+	_to = layoutTableOccurrence;
+	_delim = "_";
+	_sName = Position ( _to; _delim; 1; 1 ) + 1;
+	_eName = Position ( _to; _delim; 1; 2 ) - 1
+	];
+	Case (
+		_sName = 0; _to;
+		_eName ≤ 0; Middle ( _to; _sName; 9999 );
+		Middle ( _to; _sName; _eName - _sName + 1 )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	LayoutBasetable ( layoutTableOccurrence )
+
+PURPOSE:
+	Returns name of basetable corresponding to current layout. Used with table array.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jul-13 13h33 PST — Donovan A. Chandler
+*/

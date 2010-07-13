@@ -1,0 +1,26 @@
+
+Let([
+	_privilege = Get ( AccountPrivilegeSetName )
+	
+	];
+	Case (
+		PatternCount ( _privilege ; "Lester" );
+			"LESTER";
+		PatternCount ( _privilege ; "Haas" );
+			"HAAS"
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	DatabaseModule ( )
+
+PURPOSE:
+	Returns name of module corresponding to the active user role
+
+EXAMPLES:
+	DatabaseModule ( ) = "LESTER"
+
+HISTORY:
+	Created: 2010-Jul-12 11h44 PST — Donovan A. Chandler
+*/
