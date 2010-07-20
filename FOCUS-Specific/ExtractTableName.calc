@@ -1,0 +1,26 @@
+Let([
+	_to = GetValue ( Substitute ( string ; "::"; ¶ ); 1 );
+	_delim = "_";
+	_sName = Position ( _to; _delim; 1; 1 ) + 1;
+	_eName = Position ( _to; _delim; 1; 2 ) - 1
+	];
+	Case (
+		_sName = 0; _to;
+		_eName ≤ 0; Middle ( _to; _sName; 9999 );
+		Middle ( _to; _sName; _eName - _sName + 1 )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ExtractTableName ( fieldName )
+
+PURPOSE:
+	Returns name of basetable corresponding to designated field or layout table occurrence. Depends on name conventions in relationship graph and FOCUS.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jul-19 16h22 PST — Donovan Chandler
+*/

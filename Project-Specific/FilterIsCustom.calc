@@ -1,0 +1,17 @@
+Left ( filterText ; 1 ) = "<" and
+Right ( filterText ; 1 ) = ">"
+
+/* —————————————————————————————— //
+NAME:
+	FilterIsCustom ( filterText )
+
+PURPOSE:
+	Returns True if filterText is a custom message intended for display rather than searching.  Used when pre-defined sets of records are placed in a filter portal.
+
+EXAMPLES:
+	FilterIsCustom ( "<new record>" ) = 1
+	FilterIsCustom ( "Roger" ) = 0
+
+HISTORY:
+	Created: 2010-Jul-19 14h19 PST — Donovan A. Chandler
+*/
