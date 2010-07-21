@@ -10,8 +10,11 @@ Let(
 				1000000
 			);
 		
+		IsEmpty ( value );
+			currentList;
+		
 		currentList & 
-		If( Right( currentList; 1 ) ≠ ¶ and Length ( currentList ); ¶ ) & value & "¶"
+		If( Right( currentList; 1 ) ≠ ¶ and Length ( currentList ); ¶ ) & value
 	)
 )
 
