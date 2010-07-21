@@ -1,0 +1,30 @@
+Let([
+	_string = dateAsText
+	];
+	Case (
+		PatternCount ( _string; "." );
+			Let([
+				_list = Substitute ( _string; ["."; ¶]; [" "; ¶] )
+				];
+				Date ( 
+					GetValue ( _list; 2 );
+					GetValue ( _list; 3 );
+					GetValue ( _list; 1 )
+				)
+			)
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	DateFromString ( dateAsString )
+
+PURPOSE:
+	Converts strings into FileMaker-recognized dates
+
+EXAMPLES:
+	DateFromString ( "2008.01.07 (1.5)" ) = 01/07/2008
+
+HISTORY:
+	Created: 2010-Jul-21 12h48 PST — Donovan A. Chandler
+*/

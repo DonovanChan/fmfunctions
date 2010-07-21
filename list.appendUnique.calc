@@ -1,0 +1,30 @@
+Let(
+	[
+	value_exists = PatternCount( "¶" & currentList & "¶"; "¶" & value & "¶" )
+	];
+	Case(
+		value_exists;
+			currentList;
+		
+		IsEmpty ( value );
+			currentList;
+			
+		currentList & 
+		If( Right( currentList; 1 ) ≠ ¶ and Length ( currentList ); ¶ ) & value
+	)
+)
+
+
+/* —————————————————————————————— //
+NAME:
+	list.appendUnique ( currentList ; value )
+
+PURPOSE:
+	Appends value to list if it does not already exist in the list
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jul-20 15h18 PST — Donovan A. Chandler
+*/
