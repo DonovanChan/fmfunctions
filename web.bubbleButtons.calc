@@ -2,8 +2,9 @@ Let([
 	//-- Settings --
 	_button_text_color = "#494949";
 	_button_text_color_highlight = "black";
-	_padding_side = 4;	// Space around text
-	_margin_side = 6;	// Space between bubbles
+	_body_margin_top = 6;	// Space above body
+	_bubble_margin_side = 6;	// Space between bubbles
+	_text_padding_side = 4;	// Space around text
 	_always_emphasize = True;	// False causes buttons to appear highlighted on hover
 
 	//-- --
@@ -23,7 +24,7 @@ Let([
 	body {
 		background-color: " & _background_color & ";
 		border:0;
-		margin:0;
+		margin:" & _body_margin_top & " 0 0 0;
 		overflow:hidden;
 	}
 
@@ -35,12 +36,12 @@ Let([
 	display: block;
 	float: left;
 	font: normal 10px Verdana;
-	line-height: " & imgHeight - _padding_side*2 & "px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background */
+	line-height: " & imgHeight - _text_padding_side*2 & "px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background */
 	height: " & imgHeight & "px; /* Height of button background height */
 	padding-left: " & imgLeftWidth & "px; /* Width of left menu image */
 	text-decoration: none;
 	margin-bottom: 4px;
-	margin-left: " & _margin_side & "
+	margin-left: " & _bubble_margin_side & "
 	}
 
 	a:link.ovalbutton, a:visited.ovalbutton, a:active.ovalbutton{
@@ -50,7 +51,7 @@ Let([
 	a.ovalbutton span{
 	background: transparent url('" & _img_right_path & "') no-repeat top right;
 	display: block;
-	padding: " & _padding_side & "px " & imgLeftWidth & "px " & _padding_side & "px 0; /*Set 'padding-right' to match value of 'padding-left' value above*/
+	padding: " & _text_padding_side & "px " & imgLeftWidth & "px " & _text_padding_side & "px 0; /*Set 'padding-right' to match value of 'padding-left' value above*/
 	}
 
 	a.ovalbutton" & If ( not _always_emphasize; ":hover" ) & "{ /* Hover state CSS */
