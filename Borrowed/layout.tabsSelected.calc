@@ -1,0 +1,41 @@
+/* FrontTabsPanelsList ( Layout ) v2.0
+  FrontTabsPanelsList () requires CustomList ( Start; End; Function )
+
+  
+Returns a list of front and visible Tabs panels on a layout. 
+
+//-------------------------------------------------------------------*/
+  // Agnès Barouh - Decembre 2007 - Bugs / Corrections Report :  barouh.agnes@wanadoo.fr
+  //-------------------------------------------------------------------*/
+
+Let ([
+          $First = "|###|"; $rc = ¶;
+          $ListObj =  LayoutObjectNames ( Get ( FileName ); Layout );
+  
+           Result = CustomList ( 1; ValueCount ( $ListObj );
+                "let ([
+Value = getValue ( $ListObj; [n] );
+Control = GetLayoutObjectAttribute ( Value; \"isFrontTabPanel\" );
+Before = GetLayoutObjectAttribute ( Value; \"enclosingObject\" );
+$First = $First & Case (
+IsEmpty ( Before ) And Control > 0; $rc & Value;
+Not IsEmpty ( Before ) And PatternCount ( $rc & $First & $rc; $rc & Before & $rc  ) And Control > 0; $rc & Value )
+   ]; \"\" )" )
+   ];
+Substitute ( $First ; ["|###|¶" ; ""] ; [ "|###|" ; "" ] )
+)
+& Let ( $First = "" ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	TabsSelected ( layoutName )
+
+PURPOSE:
+	Returns list of selected tabs on specified layout.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created by Agnes Barouh (see above)
+*/
