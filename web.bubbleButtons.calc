@@ -29,7 +29,7 @@ Let([
 	}
 
 	/*Credits (technique and graphics): Dynamic Drive CSS Library */
-	/*URL: http://www.dynamicdrive.com/style/ */
+	/*URL: http://www.dynamicdrive.com/style/csslibrary/item/css_oval_buttons/ */
 	
 	a.ovalbutton{
 	background: transparent url('" & _img_left_path & "') no-repeat top left;
