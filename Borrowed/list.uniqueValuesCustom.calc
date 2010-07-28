@@ -1,0 +1,41 @@
+/* UniqueList ( ListA ; CaseSensitive ) .v1_1  
+UniqueList () requires CustomList ( Start ; End ; Function )*/
+// Limited => ListA < 18700
+// Optional parameters : CaseSensitive : Boolean
+
+// UniqueList ( "One¶Two¶three¶Four¶five¶ONE¶two¶four¶five¶Seven"  ; "" or 0 ) -> Result = "One¶Two¶three¶Four¶five¶Seven"
+// CaseSensitive :
+// UniqueList ( "One¶Two¶three¶Four¶five¶ONE¶two¶four¶five¶Seven"  ; 1 ) -> Result = "One¶Two¶three¶Four¶five¶ONE¶two¶four¶Seven"
+
+//-------------------------------------------------------------------*/
+// Agnès Barouh - Septembre 2007 - Bugs / Corrections Report :  barouh.agnes@wanadoo.fr
+//-------------------------------------------------------------------*/
+
+Case ( 
+        ValueCount ( ListA ) > 18700 ; "Too many Values" ;
+        not ( CaseSensitive = 1 or ( GetAsNumber ( CaseSensitive + 0 ) = 0 ) ) ; "Incorrect CaseSensitive" ;
+
+      Let([
+            $Values = "" ;
+            $MyFirstList = ListA ;
+            $MyList = "|" & Substitute ( ListA ; ¶ ; "|¶|" ) & "|" ;
+            $Rc = ¶
+      ];
+            Choose ( CaseSensitive ;
+
+       CustomList ( 1 ; ValueCount ( $MyFirstList  ) ;
+       "Let( [
+TheValue = GetValue( $MyFirstList ; [n] ) ] ; 
+Case ( PatternCount ( $Rc & $Values & $Rc ; $Rc & TheValue & $Rc ) < 1 ; 
+Let ( $Values = $Values & $Rc & TheValue ; TheValue )))" ) ;
+
+        CustomList ( 1 ; ValueCount ( $MyFirstList  ) ;
+        "Let( [ 
+TheValue = GetValue( $MyList ; [n] ) ;
+Test = Substitute ( $Values ; TheValue ; \"X##X\" & TheValue ) ;
+$Values = $Values & $Rc & TheValue ] ; 
+Case ( PatternCount ( Test ; \"X##X\" & TheValue ) < 1 ; GetValue( $MyFirstList ; [n] )))" )
+              )
+        )
+& Let ( [ $Values = "" ; $MyFirstList = "" ; $MyList = "" ] ; "" )
+)
