@@ -5,7 +5,11 @@ Let(
 	Case(
 		value_exists;
 			MiddleValues(
-				Substitute( "¶" & currentList; "¶" & value & "¶"; "¶" );
+				Substitute( "¶" & currentList;
+				 	[¶; "¶|"];
+					["|" & value & "¶"; "¶"];
+					["¶|"; ¶]
+				);
 				2;
 				1000000
 			);
@@ -29,6 +33,7 @@ HISTORY:
 	Created by Matt Petrowsky of ISO Productions, Inc.
 	Adapted 2008jun18 by Donovan Chandler for formatting/documentation preference
 	Modified 2010.07.13 by Donovan Chandler to test for empty currentList
+	Modified 2010.07.27 by Donovan Chandler to fix bug whereby some values were not being removed
 
 INPUT: 
 	currentList:  return-delimited list of values
