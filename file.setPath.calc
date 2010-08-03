@@ -50,7 +50,13 @@ Let([
 			directory = "file"			; Get( FilePath );
 			directory = "parentDir"	; Get( FilePath );
 		);
-	dirPathB = Substitute( dirPathA; ["file:/"; ""]; ["file:"; ""]; ["filemac:"; ""]; ["filewin:"; ""] );
+	dirPathB = 
+		Substitute( dirPathA; 
+			["file:/"; ""];
+			["file:"; ""];
+			["filemac:"; ""];
+			["filewin:"; ""]
+		);
 	directoryPath = 
 		Case( 
 			directory = "parentDir"; Left( dirPathB; Position( dirPathB; "/"; Length(dirPathB); -1 ));
