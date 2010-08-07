@@ -1,0 +1,40 @@
+Let([
+	_month_full = 
+		Choose( Month( theDate )
+		; ""
+		; "January"
+		; "February"
+		; "March"
+		; "April"
+		; "May"
+		; "June"
+		; "July"
+		; "August"
+		; "September"
+		; "October"
+		; "November"
+		; "December"
+		);
+	_month_short = Left( _month_full; 3 );
+	_year_short = Right( Year( theDate ); 2)
+	];
+	Case (
+		//-- Future tests for format type go here
+		True;
+			_month_short & " " & _year_short
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	date.shorthand( theDate ; format )
+
+PURPOSE:
+	Returns shorthand format of date
+
+EXAMPLES:
+	date.shorthand ( "3/4/10"; "" ) = "Apr 10"
+
+HISTORY:
+	Created: 2010-Aug-04 16h27 PST — Donovan A. Chandler
+*/

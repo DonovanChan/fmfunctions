@@ -1,0 +1,41 @@
+Let([
+	_start = GetAsDate( startDate );
+	_end = GetAsDate( endDate );
+	
+	_start_month = Month( _start );
+	_start_year = Year( _start );
+	
+	//-- Adjust here for incrementations beside "month"
+	_startNext = Date( _start_month + 1; 1; Year(_start) );
+	
+	_month_short = DateMonthName( _start_month; 1 );
+	_year_short = Right( _start_year; 2 );
+	_result =
+		Case(
+			format = "short"; _month_short & " " & _year_short;
+			_month_short & " " & _year_short
+		)
+	];
+	_result &
+	Case(
+		_startNext < _end;
+		¶ & date.buildRangeHeaders( _startNext; endDate; incrementSize; format )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	date.buildRangeHeaders ( startDate; endDate; incrementSize; format )
+
+PURPOSE:
+	Builds return-delimited list of dates in designated format
+
+EXAMPLES:
+	date.buildSearchRange ( "1/1/10"; "3/8/10") = "1/ * /10¶2/ * /10¶3/ * /10" (without spaces)
+
+HISTORY:
+	Created: 2010-Aug-05 15h07 PST — Donovan A. Chandler
+	
+NOTES:
+	format parameter intended for future enhancement
+*/

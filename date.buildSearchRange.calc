@@ -1,0 +1,30 @@
+Let([
+	_start = GetAsDate( startDate );
+	_end = GetAsDate( endDate );
+	_startNext = Date( Month(_start)+1; Day(_start); Year(_start) );
+	_searchDate = Month(_start) & "/*/" & Year(_start)
+	
+	];
+	_searchDate &
+	Case(
+		_startNext < _end;
+		¶ & date.buildSearchRange( _startNext; endDate; searchType )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	date.buildSearchRange ( startDate; endDate; searchType )
+
+PURPOSE:
+	Builds return-delimited list of dates for purpose of searching
+
+EXAMPLES:
+	date.buildSearchRange ( "1/1/10"; "3/8/10") = "1/ * /10¶2/ * /10¶3/ * /10" (without spaces)
+
+HISTORY:
+	Created: 2010-Aug-05 15h07 PST — Donovan A. Chandler
+	
+NOTES:
+	searchType parameter intended for future enhancement
+*/
