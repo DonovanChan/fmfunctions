@@ -15,7 +15,7 @@ INPUT:
     matchCase: Boolean switch - 1/True makes search case sensitive
  
 OUTPUT:
-    Number indicating first list value containing searchValue
+    Number indicating first list value *containing* searchValue
 ---------------------------------------------------------------------------------------*/
 
 Let(
