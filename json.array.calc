@@ -1,0 +1,17 @@
+Case( Left( stringToEnclose; 1 ) ≠ "["; "[" ) &
+Substitute( stringToEnclose; ¶; "," ) &
+Case( Right( stringToEnclose; 1 ) ≠ "]"; "]" )
+
+/* —————————————————————————————— //
+NAME:
+	JSONArray( stringToEnclose )
+
+PURPOSE:
+	Ensures stringToEnclose is formatted as a JSON array
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Aug-18 12h21 PST — Donovan A. Chandler
+*/

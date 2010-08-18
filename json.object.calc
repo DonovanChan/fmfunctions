@@ -1,0 +1,20 @@
+Case( Left( stringToEnclose; 1 ) ≠ "{"; "{" ) &
+Substitute( stringToEnclose;
+	[ "\"\""; "\",\"" ];
+	[ "}{"; "},{"]
+) &
+Case( Right( stringToEnclose; 1 ) ≠ "}"; "}" )
+
+/* —————————————————————————————— //
+NAME:
+	JSONObject( stringToEncloseToEnclose )
+
+PURPOSE:
+	Ensures stringToEnclose is formatted as a JSON object 
+
+EXAMPLES:
+	JSONObject( "\"animal\":\"dog\"") = "{\"animal\":\"dog\"}"
+
+HISTORY:
+	Created: 2010-Aug-18 12h14 PST — Donovan A. Chandler
+*/
