@@ -1,0 +1,37 @@
+Let([
+	_delimiter = "::‡::"
+	];
+
+	Substitute( 
+		Trim(
+			Substitute( textString; 
+				[ " " ; _delimiter ]; 
+				[ ¶ ; " " ] 
+			)
+		);
+		[ " " ; ¶ ];
+		[ _delimiter ; " " ]
+	)
+)
+
+/* —————————————————————————————— //
+NAME: 
+	text.trimCR( textString )
+
+PURPOSE: 
+	Trims leading and trailing carriage returns from textString
+
+HISTORY:
+	Created by Charlie (see below)
+	Modified: 2010-Aug-09 10h17 PST — Donovan A. Chandler for formatting
+
+ORIGINAL DOCUMENTATION:
+    This function is published on FileMaker Custom Functions
+    to check for updates and provide feedback and bug reports
+    please visit http://www.fmfunctions.com/fid/185
+
+    Prototype: TrimCR( pText )
+    Function Author: Charlie (http://www.fmfunctions.com/mid/132)
+    Last updated: 13 January 2009
+    Version: 1
+*/

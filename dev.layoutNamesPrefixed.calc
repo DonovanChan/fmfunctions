@@ -1,0 +1,22 @@
+Let([
+	_layouts = LayoutNames( Get( FileName ) )
+	];
+	ListFilterCustom( _layouts; "BeginsWith"; layoutPrefix; 0 )
+)
+
+/* —————————————————————————————— //
+NAME:
+	LayoutNamesPrefixed ( layoutPrefix )
+
+PURPOSE:
+	Returns list of layouts beginning with specified prefix.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Aug-11 00h13 PST — Donovan A. Chandler
+	
+DEPENDENCIES:
+	Custom Functions: list.custom
+*/

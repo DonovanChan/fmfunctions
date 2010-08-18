@@ -1,0 +1,19 @@
+Case (
+	string = "no"; 0;
+	string = "yes"; 1;
+	GetAsBoolean( string )
+)
+
+/* —————————————————————————————— //
+NAME:
+	GetAsBooleanCustom ( string )
+
+PURPOSE:
+	Returns boolean result from text string
+
+EXAMPLES:
+	GetAsBooleanCustom ( "yes" ) = 1
+
+HISTORY:
+	Created: 2010-Aug-09 19h21 PST — Donovan A. Chandler
+*/
