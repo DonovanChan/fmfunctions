@@ -1,0 +1,34 @@
+Let([
+  _field = fieldName;
+  _isDescending = isDescending;
+
+  _table = ExtractTableName ( _field );
+  _index = TableIndex( _table );
+  _sort_field = GetRepetition( sortedFieldName; _index );
+  _sort_desc = GetRepetition( sortedDescending; _index )
+  ];
+  Case(
+    _field = _sort_field and
+    _sort_desc = GetAsBoolean( _isDescending );
+      1
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	test.sortDisplay( fieldName; isDescending; sortedFieldName; sortedDescending )
+
+PURPOSE:
+	Returns True if specified field is being sorted
+
+EXAMPLES:
+	test.sortDisplay(
+		GetFieldName( ERD_COMPANY::NAME );
+		0;
+		GetFieldName( UIN_FOCUS::GT_SORT_FIELD_NAME );
+		GetFieldName( UIN_FOCUS::GT_SORT_FIELD_DESCENGING )
+	)
+
+HISTORY:
+	Created: 2010-Aug-20 12h49 PST — Donovan A. Chandler
+*/

@@ -1,0 +1,32 @@
+Let ( ascii = Mod ( Abs ( GetAsNumber ( ascii ) ) ; 256 ) ;
+  If ( ascii = 0 ; "" ;
+    Middle ( "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕" & 
+             "‼\¶§▬↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./" &
+             "0123456789|;<=>?@ABCDEFGHIJKLMNOPQ" &
+             "RSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz" &
+             "{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø" &
+             "£Ø×ƒáíóúñÑªº¿®¬½¼¡«»░▒▓│┤ÁÂÀ©╣" & 
+             "║╗╝¢¥┐ü┴┬├─┼ãÃ╚╔╩╦╠═╬¤ðÐÊ" & 
+             "ËÈıÍÎÏ┘┌█▄¦Ì▀ÓßÔÒõÕµþÞÚÛÙýÝ¯´­±‗¾¶§" &
+             "÷¸°¨·¹³²■ " ; ascii ; 1 )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	text.ascii ( ascii )
+
+PURPOSE:
+	Returns the character for the given ascii value 0-255
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created by Theo Ros. http://www.briandunning.com/cf/285
+	Adapted: 2010-Aug-20 12h14 PST — Donovan A. Chandler
+	
+NOTE:
+	Not all fonts are able to display all characters.
+	These characters show up as square.
+*/
