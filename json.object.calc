@@ -1,7 +1,16 @@
 Case( Left( stringToEnclose; 1 ) ≠ "{"; "{" ) &
 Substitute( stringToEnclose;
+	//-- Preserve values
+	[ ":\"\""; ":‡|‡" ];
+
+	//-- Insert delimiters where needed
 	[ "\"\""; "\",\"" ];
-	[ "}{"; "},{"]
+	[ ":‡|‡\""; ":‡|‡,\""];
+	[ "]\""; "],\"" ];
+	[ "}{"; "},{"];
+
+	//-- Restore preserved values
+	[ ":‡|‡"; ":\"\""]
 ) &
 Case( Right( stringToEnclose; 1 ) ≠ "}"; "}" )
 
