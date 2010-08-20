@@ -1,6 +1,6 @@
-Case( Left( stringToEnclose; 1 ) ≠ "["; "[" ) &
-Substitute( stringToEnclose; ¶; "," ) &
-Case( Right( stringToEnclose; 1 ) ≠ "]"; "]" )
+"[" &
+Substitute( JSONArray_sub( stringToEnclose ); ¶; "," ) &
+"]"
 
 /* —————————————————————————————— //
 NAME:
