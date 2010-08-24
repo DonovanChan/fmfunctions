@@ -1,6 +1,12 @@
 Let([
 	_start = GetAsDate( startDate );
 	_end = GetAsDate( endDate );
+	_searchEnd = 
+		Case(
+			searchType = "month";
+				Date( Month(_end)+1; 0; Year(_end) );
+			_end
+		);
 	_startNext = Date( Month(_start)+1; Day(_start); Year(_start) );
 	_searchDate = Month(_start) & "/*/" & Year(_start)
 	
@@ -8,7 +14,7 @@ Let([
 	_searchDate &
 	Case(
 		_startNext < _end;
-		¶ & date.buildSearchRange( _startNext; endDate; searchType )
+		¶ & date.buildSearchRange( _startNext; _searchEnd; searchType )
 	)
 )
 
