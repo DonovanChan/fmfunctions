@@ -1,0 +1,26 @@
+Let([
+	_lis = Substitute( fieldName; "::"; ¶ );
+	_table = GetValue( _lis; 1 );
+	_table_num = contextNum - 1;
+	_table_new = _table & "_OF_" & _table & "_" & _table_num
+	];
+	_table_new & "::" & GetValue( _lis; 2 )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ConvertFieldContext( fieldName; contextNum )
+
+PURPOSE:
+	Replaces name of table occurrence in fieldName to alternative TO.
+	Applied when using GTRR to an alternative TO instead of opening a new window. (Preserves original context without the overhead of rendering a new window.)
+
+EXAMPLES:
+	ConvertFieldContext (
+		GetFieldName( CONTACT::NAME );
+		2
+	) = "CONTACT_OF_CONTACT_1::NAME"
+
+HISTORY:
+	Created: 2010-Aug-23 13h34 PST — Donovan A. Chandler
+*/
