@@ -1,0 +1,16 @@
+not IsEmpty( string ) and
+GetAsDate( string ) = string
+
+/* —————————————————————————————— //
+NAME:
+	TextIsDate( string )
+
+PURPOSE:
+	Returns True if string is a date
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Aug-26 11h20 PST — Donovan A. Chandler
+*/

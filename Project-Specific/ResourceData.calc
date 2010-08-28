@@ -1,0 +1,21 @@
+Case(
+	dataType = "text"; FOCUS::RESOURCE_TEXT[index];
+	dataType = "name"; "FOCUS::RESOURCE_TEXT[" & index & "]"
+)
+
+/* —————————————————————————————— //
+NAME:
+	ResourceData( index; dataType )
+
+PURPOSE:
+	Returns specified data from RESOURCE record.
+
+EXAMPLES:
+	Where RESOURCE record has index 1...
+	
+	ResourceData( 1; "text" ) returns record text
+	ResourceData( 1; "name" ) = "FOCUS::RESOURCE_TEXT[1]"
+
+HISTORY:
+	Created: 2010-Aug-24 12h12 PST — Donovan A. Chandler
+*/
