@@ -5,6 +5,9 @@ Let([
 			//-- Pass thru if already an array or object
 			_char1 = "[" or _char1 = "{" or _char1 = "\"";
 				value;
+			//-- If empty, return ""
+			IsEmpty( value );
+				Quote( value );
 			//-- If a number, do not quote
 			Filter( value; ".0123456789" ) = value;
 				value;
