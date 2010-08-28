@@ -10,7 +10,8 @@ Let([
 			pathType = "relative"	; "file:";
 			pathType = "full"	; typeFull;
 			pathType = "remote"	; "filewin://" & Get( HostName );
-			pathType = "network"	; "fmnet:" & Get( HostIPAddress ) & "/"
+			pathType = "network"	; "fmnet:" & Get( HostIPAddress ) & "/";
+			pathType = "web"	; "file:/"
 		);
 	dirPathA =
 		Case(
@@ -35,11 +36,21 @@ Let([
 			directory = "parentDir"; Left( dirPathB; Position( dirPathB; "/"; Length(dirPathB); -1 ));
 			dirPathB
 		);
-	result =
+	result_rough =
 		Case(
 			IsEmpty( typePath ); "Error: Invalid pathType (" & Quote( pathType ) & ")";
 			IsEmpty( dirPathA ); "Error: Invalid directory (" & Quote( directory ) & ")";
 			typePath & directoryPath & file
+		);
+	result =
+		Case(
+			pathType = "web";
+				Case(
+					//-- If Mac, encode path
+					Abs( Get( SystemPlatform ) ) = 1;
+					Substitute( result_rough; " "; "%20" )
+				);
+			result_rough
 		)
 	];
 	result
@@ -48,7 +59,7 @@ Let([
 /* —————————————————————————————— //
 NAME:
 	file.setPath( pathType; directory ; file )
-	v2.3
+	v2.4
 
 PURPOSE:
 	Returns path to pre-designated directory
