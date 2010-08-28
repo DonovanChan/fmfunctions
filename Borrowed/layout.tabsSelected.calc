@@ -9,26 +9,33 @@ Returns a list of front and visible Tabs panels on a layout.
   //-------------------------------------------------------------------*/
 
 Let ([
-          $First = "|###|"; $rc = ¶;
-          $ListObj =  LayoutObjectNames ( Get ( FileName ); Layout );
-  
-           Result = CustomList ( 1; ValueCount ( $ListObj );
-                "let ([
-Value = getValue ( $ListObj; [n] );
-Control = GetLayoutObjectAttribute ( Value; \"isFrontTabPanel\" );
-Before = GetLayoutObjectAttribute ( Value; \"enclosingObject\" );
-$First = $First & Case (
-IsEmpty ( Before ) And Control > 0; $rc & Value;
-Not IsEmpty ( Before ) And PatternCount ( $rc & $First & $rc; $rc & Before & $rc  ) And Control > 0; $rc & Value )
-   ]; \"\" )" )
+	$First = "|###|"; $rc = ¶;
+	$ListObj =  LayoutObjectNames ( Get ( FileName ); layout );
+
+	Result = CustomList ( 1; ValueCount ( $ListObj );
+		"Let ([
+		Value = getValue ( $ListObj; [n] );
+		Control = GetLayoutObjectAttribute ( Value; \"isFrontTabPanel\" );
+		Before = GetLayoutObjectAttribute ( Value; \"enclosingObject\" );
+		$First = $First & 
+			Case (
+				IsEmpty ( Before ) And Control > 0;
+					$rc & Value;
+				Not IsEmpty ( Before ) And PatternCount ( $rc & $First & $rc; $rc & Before & $rc  ) And Control > 0; 
+					$rc & Value
+			)
+		]; \"\" )" )
    ];
-Substitute ( $First ; ["|###|¶" ; ""] ; [ "|###|" ; "" ] )
+	Substitute ( $First ;
+		["|###|¶" ; ""] ;
+		[ "|###|" ; "" ]
+	)
 )
 & Let ( $First = "" ; "" )
 
 /* —————————————————————————————— //
 NAME:
-	TabsSelected ( layoutName )
+	TabsSelected ( layout )
 
 PURPOSE:
 	Returns list of selected tabs on specified layout.
@@ -38,4 +45,6 @@ EXAMPLES:
 
 HISTORY:
 	Created by Agnes Barouh (see above)
+	Modified: 2010-Aug-27 16h43 PST — Donovan Chandler
+		Reformatted and added new comments at bottom.
 */
