@@ -1,0 +1,21 @@
+Let([
+	_mac = ( Abs( Get( SystemPlatform ) ) = 1 );
+	_path = If( _mac; Substitute( path; " "; "%20"); path );
+	_path = Substitute ( _path; ["file://"; "file:/"]; ["file:/";"file://"] )
+	];
+	_path
+)
+
+/* —————————————————————————————— //
+NAME:
+	ConvertPathForWebViewer ( filePath )
+
+PURPOSE:
+	Encodes file path for use in web viewer
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Jun-23 16h39 PST — Donovan A. Chandler
+*/

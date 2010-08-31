@@ -1,0 +1,20 @@
+Case(
+	urlOnly; "‡‡RESOURCE_PATH[" & index & "]‡‡";
+	"‡‡RESOURCE[" & index & "]‡‡"
+)
+
+/* —————————————————————————————— //
+NAME:
+	ResourceMergeLabel ( index ; urlOnly )
+
+PURPOSE:
+	Returns merge placeholder for Resource record of specified index.
+	Used to later merge actual value in its place.
+
+EXAMPLES:
+	ResourceMergeLabel ( 2; 0 ) returns text from Resource with index 2
+	ResourceMergeLabel ( 2; 1 ) returns url from Resource with index 2
+
+HISTORY:
+	Created: 2010-Aug-27 20h32 PST — Donovan A. Chandler
+*/

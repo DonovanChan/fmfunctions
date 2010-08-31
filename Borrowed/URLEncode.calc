@@ -1,0 +1,60 @@
+Substitute (
+
+text ;
+
+[ "%" ; "%25" ] ;
+[ "¶" ; "%0D" ] ;
+[ " " ; "%20" ] ;
+[ "!" ; "%21" ] ;
+[ "\"" ; "%22" ] ;
+[ "#" ; "%23" ] ;
+[ "$" ; "%24" ] ;
+[ "&" ; "%26" ] ;
+[ "'" ; "%27" ] ;
+[ "(" ; "%28" ] ;
+[ ")" ; "%29" ] ;
+[ "*" ; "%2A" ] ;
+[ "+" ; "%2B" ] ;
+[ "," ; "%2C" ] ;
+[ "-" ; "%2D" ] ;
+[ "." ; "%2E" ] ;
+[ "/" ; "%2F" ] ;
+[ ":" ; "%3A" ] ;
+[ ";" ; "%3B" ] ;
+[ "<" ; "%3C" ] ;
+[ "=" ; "%3D" ] ;
+[ ">" ; "%3E" ] ;
+[ "?" ; "%3F" ] ;
+[ "@" ; "%40" ] ;
+[ "[" ; "%5B" ] ;
+[ "\\" ; "%5C" ] ;
+[ "]" ; "%5D" ] ;
+[ "^" ; "%5E" ] ;
+[ "`" ; "%60" ] ;
+[ "{" ; "%7B" ] ;
+[ "|" ; "%7C" ] ;
+[ "}" ; "%7D" ]
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	URLEncode ( text )
+
+PURPOSE:
+	Converts illegal and reserved URL characters into URL-legal hex code.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: Jeremiah Small, Soliant Consulting
+		http://www.briandunning.com/cf/165
+	Modified: 2010-Aug-29 21h44 PST — Donovan A. Chandler
+	
+NOTES:
+	Complete table of hexadecimal codes can be found here
+	http://www.december.com/html/spec/ascii.html
+
+	Be aware that curly quotes (single and double) are high-ascii, and will not	be converted with this function. If you need quotes, make sure your input is with straight quotes.
+*/
