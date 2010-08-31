@@ -5,8 +5,8 @@ Let([
 	_field_type = MiddleWords ( FieldType ( Get ( FileName ); _sort_field ); 2; 1 )
 	];
 	Case (
-		//-- Sort Descending, Show nothing
-		GetAsBoolean ( _sort_field_descending ) = GetAsBoolean ( _sort_descending ); ""; 
+		//-- Sort settings don't match, Show nothing
+		GetAsBoolean ( _sort_field_descending ) ≠ GetAsBoolean ( _sort_descending ); ""; 
 		
 		//-- Text field, Show text
 		_field_type = "text"; GetField ( _sort_field );
