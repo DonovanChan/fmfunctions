@@ -1,11 +1,14 @@
 Let([
   _field = fieldName;
-  _isDescending = isDescending;
+  _rep = displayFieldRepetition;
+  _isDescending = If ( _rep = 2; 1; 0 );
+  _sortedFieldName = UIN_FOCUS::GT_SORT_FIELD_NAME;
+  _sortedDescending = UIN_FOCUS::GN_SORT_DESCENDING_FLAG;
 
   _table = ExtractTableName ( _field );
   _index = TableIndex( _table );
-  _sort_field = GetRepetition( sortedFieldName; _index );
-  _sort_desc = GetRepetition( sortedDescending; _index )
+  _sort_field = GetRepetition( _sortedFieldName; _index );
+  _sort_desc = GetRepetition( _sortedDescending; _index )
   ];
   Case(
     _field = _sort_field and
@@ -16,7 +19,7 @@ Let([
 
 /* —————————————————————————————— //
 NAME:
-	test.sortDisplay( fieldName; isDescending; sortedFieldName; sortedDescending )
+	test.sortDisplay( fieldName; displayFieldRepetition )
 
 PURPOSE:
 	Returns True if specified field is being sorted
@@ -24,10 +27,8 @@ PURPOSE:
 EXAMPLES:
 	test.sortDisplay(
 		GetFieldName( ERD_COMPANY::NAME );
-		0;
-		GetFieldName( UIN_FOCUS::GT_SORT_FIELD_NAME );
-		GetFieldName( UIN_FOCUS::GT_SORT_FIELD_DESCENGING )
-	)
+		1
+	) returns True if sort is by Name ascending
 
 HISTORY:
 	Created: 2010-Aug-20 12h49 PST — Donovan A. Chandler
