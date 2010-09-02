@@ -1,22 +1,4 @@
-Let([
-	$$_fn_merge_rep = $$_fn_merge_rep + 1;
-	_rep = $$_fn_merge_rep;
-	_marker = "‡‡RESOURCE[" & _rep & "]";
-	_marker_path = "‡‡RESOURCE_PATH[" & _rep & "]"
-	];
-	Case(
-		PatternCount( text; _marker );
-			Substitute( text; _marker; FOCUS::RESOURCE_TEXT[_rep]);
-		PatternCount( text; _marker_path );
-			Substitute( text; _marker; FOCUS::RESOURCE_URL[_rep]);
-		text
-	) &
-	Case(
-		PatternCount( text; "‡‡RESOURCE" );
-			ResourceMerge( text );
-		Let([ $$_fn_merge_rep = "" ]; "" )
-	)
-)
+ResourceMerge_Sub ( text ; 1 )
 
 /* —————————————————————————————— //
 NAME:

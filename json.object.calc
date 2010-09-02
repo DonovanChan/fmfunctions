@@ -2,15 +2,22 @@ Case( Left( stringToEnclose; 1 ) ≠ "{"; "{" ) &
 Substitute( stringToEnclose;
 	//-- Preserve values
 	[ ":\"\""; ":‡|‡" ];
+	[ ":''"; ":§|§" ];
 
 	//-- Insert delimiters where needed
+	//---- double quotes
 	[ "\"\""; "\",\"" ];
-	[ ":‡|‡\""; ":‡|‡,\""];
+	[ ":‡|‡\""; ":‡|‡,\"" ];
+	//---- single quotes
+	[ "''"; "','" ];
+	[ ":§|§'"; ":§|§,'" ];
+	//----
 	[ "]\""; "],\"" ];
-	[ "}{"; "},{"];
+	[ "}{"; "},{" ];
 
 	//-- Restore preserved values
-	[ ":‡|‡"; ":\"\""]
+	[ ":‡|‡"; ":\"\"" ];
+	[ ":§|§"; "''" ]
 ) &
 Case( Right( stringToEnclose; 1 ) ≠ "}"; "}" )
 
@@ -26,4 +33,7 @@ EXAMPLES:
 
 HISTORY:
 	Created: 2010-Aug-18 12h14 PST — Donovan A. Chandler
+	
+NOTES:
+	Currently does not support number values.  All values must be enclosed in quotes!
 */

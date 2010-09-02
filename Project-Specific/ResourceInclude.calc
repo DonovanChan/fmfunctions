@@ -7,15 +7,15 @@ Let([
 		language = "CSS";
 			Case(
 				urlOnly;
-					"<link rel=\"stylesheet\" type=\"text/css\" href='" URLEncode( url & "'></link>" );
-				"<style type=\"text/css\">" & text & "</style>"
+					"<link rel=\"stylesheet\" type=\"text/css\" href='" & PathEncodeForWebViewer( url ) & "'></link>";
+				"<style type=\"text/css\">¶" & text & "¶</style>"
 			);
 
 		language = "JavaScript";
 			Case(
 				urlOnly;
-					"<script src='" & PathEncodeForWebViewer( url & "'></script>";
-				"<script type=\"text/javascript\">" & text & "</script>"
+					"<script src='" & PathEncodeForWebViewer( url ) & "'></script>";
+				"<script type=\"text/javascript\">¶" & text & "¶</script>"
 			)
 	)
 )

@@ -1,6 +1,5 @@
 Let([
-	_mac = ( Abs( Get( SystemPlatform ) ) = 1 );
-	_path = If( _mac; Substitute( path; " "; "%20"); path );
+	_path = GetAsURLEncoded( pathString );
 	_path = Substitute ( _path; ["file://"; "file:/"]; ["file:/";"file://"] )
 	];
 	_path
@@ -8,7 +7,7 @@ Let([
 
 /* —————————————————————————————— //
 NAME:
-	ConvertPathForWebViewer ( filePath )
+	PathEncodeForWebViewer ( pathString )
 
 PURPOSE:
 	Encodes file path for use in web viewer
