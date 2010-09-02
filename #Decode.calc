@@ -1,0 +1,20 @@
+Substitute ( encodedString ;
+  [  "/:"; ":" ] ; 
+  [ "/="; "=" ] ; 
+  [ "/>"; ">" ] ; 
+  [ "/<" ; "<" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	#Decode ( encodedString )
+
+PURPOSE:
+	Removes encoding used for #() function
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Aug-31 18h04 PST — Donovan A. Chandler
+*/

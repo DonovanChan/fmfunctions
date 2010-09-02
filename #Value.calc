@@ -1,0 +1,18 @@
+#NthValue ( encodedString ; name ; 1 )
+
+/* —————————————————————————————— //
+NAME:
+	#Value ( encodedString ; name )
+
+PURPOSE:
+	Retrieves the value from the encoded string corresponding to the specified name.  This function is employed by the often-used #P and #R functions, but is also called directly by various calculations wanting to decode a string they were passed by a means other than via a script parameter/result.
+
+EXAMPLES:
+	#Value ( "<:CITY:=Oakland:>" ; "CITY" ) = "Oakland"
+
+HISTORY:
+	Created: 2007 by Jesse Antunes of six.fried.rice as DictGet()
+	Modified: 2010-Jan-29 17h00 PST — Will M. Baker
+	Modified: 2010-Mar-17 17h45 PST — Will M. Baker ; Wasn't properly decoding the carriage return.
+	Modified: 2010-Aug-31 18h00 PST — Donovan Chandler ; Removed need to decode carriage return and moved logic into #NthValue()
+*/

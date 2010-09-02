@@ -1,0 +1,20 @@
+Substitute ( string ;
+  [ ":" ; "/:" ] ;
+  [ "=" ; "/=" ] ;
+  [ ">" ; "/>" ] ;
+  [ "<" ; "/<" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	#Encode ( string )
+
+PURPOSE:
+	Escapes values in text that are reserved for #() function functionality
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Aug-31 17h56 PST — Donovan A. Chandler
+*/

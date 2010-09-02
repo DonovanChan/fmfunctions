@@ -1,0 +1,29 @@
+Let ( [
+  match = "<:" & Substitute ( name ; [ "=" ; "\=" ] ; [ "¶" ; "\¶" ] ) & ":=" ;
+  pstart = Position ( encodedString ; match ; 1 ; rep ) ;
+  start = pstart + Length ( match ) ;
+  end = Position ( encodedString ; ":>" ; start ; 1 ) ;
+  stringLength = Case ( end = 0 ; 999999999 ; end - start )
+  ] ;
+
+  Case ( 
+    pstart = 0 ; "" ; 
+    #Decode ( Middle ( encodedString ; start; stringLength ) )
+  )
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	#NthValue ( encodedString ; name ; rep )
+
+PURPOSE:
+	Retrieves the value from the encoded string corresponding to the specified name.  Will return the nth matching value.
+
+EXAMPLES:
+	#NthValue ( "<:CITY:=Oakland:><:CITY:=Cupertino:>" ; "CITY" ; 2 ) = "Cupertino"
+
+HISTORY:
+	Created: 2010-Apr-09 16h21 PST — Will M. Baker based on DictGet by Jesse Antunes
+	Modified: 2010-Aug-31 18h00 PST — Donovan Chandler ; Moved decoding into subfunction.
+*/
