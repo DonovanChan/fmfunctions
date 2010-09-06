@@ -101,7 +101,10 @@ Let ([
 		);
 	_state_result = GetValue ( _state_list; _state_result_index )
 	];
-	_state_result
+	Case(
+		_search_pos = 0; "";
+		_state_result
+	)
 )
 
 /* —————————————————————————————— //
