@@ -57,7 +57,15 @@ Let ([
 			country = "USA" or "U.S.A."; "USA";
 			Proper ( country )
 		);
-	_string = _street & " " & _unit & " " & _city & " " & _state & " " & _postal & " " & _country
+		
+	//-- DEFINE STYLES HERE --
+	_string = 
+		Case(
+			style = "label";
+				_street & " " & _unit & "¶" & 
+				_city & " " & _state & " " & _postal & " " & _country;
+			_street & " " & _unit & " " & _city & " " & _state & " " & _postal & " " & _country
+		)
 	];
 	Substitute ( _string;
 		[ "   "; " " ];    //Remove double spaces
@@ -66,8 +74,6 @@ Let ([
 )
 
 /* —————————————————————————————— //
-•••• STILL UNDER DEVELOPMENT ••••
-
 NAME:
 	domain.formatAddress ( street ; unit ; city ; state ; postal_code ; country ; style )
 
@@ -84,6 +90,8 @@ DEPENDENCIES:
 	Required Functions: ConvertState [can easily be commented out]
 	
 NOTES:
+	style can be "" or "label"
+
 	For USPS-preferred formats, see here: http://pe.usps.com/text/pub28/pub28c2.html
 	For USPS-preferred abbreviations, see here: http://www.usps.com/ncsc/lookups/usps_abbreviations.html
 	For more robust functionality, consider something else like a WSDL
