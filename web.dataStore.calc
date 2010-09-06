@@ -1,0 +1,29 @@
+"Data:text/html," & ¶ &
+"<html style=\"background-color:" & backgroundColor & "\">" & ¶ &
+"<body style=\"visibility:hidden\"" & ¶ &
+dataString & ¶ &
+"</body>¶</html>"
+
+/* —————————————————————————————— //
+NAME:
+	WebViewerDataStore ( dataString; backgroundColor )
+
+PURPOSE:
+	Stores text in hidden webviewer for retrieval.
+
+EXAMPLES:
+	WebViewerDataStore(
+		#( "TABLE" ; "CONTACT" ) & #( "FILTER_TABLE"; "POPUP" )
+		"RGB( 249,249,249 )"
+	)
+	Creates webviewer with a gray background.
+
+HISTORY:
+	Created: 2010-Sep-06 10h00 PST — Donovan A. Chandler
+	
+NOTES:
+	Best practice is to place the webviewer in the bottom-right, or bottom-left corner and on a white background so that it is inconspicuous while loading.
+	Retrieve dataString using GetLayoutObjectName( "webviewer_name"; "content" )
+	Webviewer is hidden using background color. 
+	backgroundColor param can be passed any CSS-valid value, so words like "white" are also supported.
+*/
