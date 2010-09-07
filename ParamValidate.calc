@@ -1,0 +1,21 @@
+Case (
+
+VariableValidate ( listOfVariables ) ≠ 0 ; 958 ;
+
+0
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	ParamValidate ( listOfVariables )
+
+PURPOSE:
+	Returns 958 if parameters are invalid, else returns 0
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Sep-07 08h51 PST — Donovan A. Chandler
+*/
