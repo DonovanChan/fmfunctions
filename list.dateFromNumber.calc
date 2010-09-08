@@ -1,0 +1,25 @@
+Let ([
+	listCount = ValueCount ( listOfNumbers )
+	];
+
+	GetAsDate ( GetAsNumber ( GetValue( listOfNumbers; 1 ) ) ) &
+	Case (
+		listCount > 1;
+		¶ & ListDateFromNumber ( RightValues ( listOfNumbers; listCount - 1 ))
+	)
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListDateFromNumber ( listOfNumbers )
+
+PURPOSE:
+	Converts a list of numbers into a list of dates.  Useful when sorting a list of dates.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Sep-07 17h18 PST — Donovan A. Chandler
+*/
