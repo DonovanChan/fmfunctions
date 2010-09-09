@@ -1,0 +1,33 @@
+Let([
+	secTotal = GetAsNumber( theSeconds );
+	sec = Mod( secTotal; 60 );
+	minTotal = Int( secTotal / 60 );
+	hour = Int( minTotal / 60 );
+	min = Mod( minTotal; hour )
+	];
+	Case(
+		//-- Errors
+		IsEmpty( secTotal ); "";
+		
+		//-- Custom formats
+		
+		//-- Default
+		hour > 0; hour & " hr " & min & " min " & sec & " sec";
+		
+		minTotal & " min " & sec & " sec"
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	SecondsAsString ( theSeconds; format )
+
+PURPOSE:
+	Returns time value as readable string
+
+EXAMPLES:
+	TimeAsString ( "10:25:44"; "" ) = 
+
+HISTORY:
+	Created: 2010-Sep-08 12h01 PST — Donovan A. Chandler
+*/
