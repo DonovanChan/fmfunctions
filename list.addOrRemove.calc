@@ -7,7 +7,7 @@ Let(
 			MiddleValues(
 				Substitute( "¶" & currentList;
 				 	[¶; "¶|"];
-					["|" & value & "¶"; "¶"];
+					["|" & value & "¶"; ""];
 					["¶|"; ¶]
 				);
 				2;
@@ -31,7 +31,7 @@ PURPOSE:
 
 HISTORY: 
 	Created by Matt Petrowsky of ISO Productions, Inc.
-	Adapted 2008jun18 by Donovan Chandler for formatting/documentation preference
+	Adapted 2008jun18 by Donovan Chandler for formatting/documentation preferencegit
 
 INPUT: 
 	currentList:  return-delimited list of values
