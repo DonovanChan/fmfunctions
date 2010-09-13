@@ -1,15 +1,33 @@
-"tell application" &" \""& $_application &  "\"" &¶ &
-   "tell current layout of document " &" \""& "kestenbaum DB" &"\"" & ¶ &
-      "sort by field" & "\"" & $_sort_field & "\"" & "in order ascending" &¶ &
-   "end tell" &¶ &
-"end tell"
+Let([
+	field = sortField;
+	order =
+		Case(
+			sortDescending; "descending";
+			"ascending"
+		);
+	app_rough = LeftWords( Get( ApplicationVersion ); 1 );
+	app =
+		Case(
+			app_rough = "ProAdvanced"; "FileMaker Pro Advanced";
+			app_rough = "Pro"; "FileMaker Pro"
+		);
+	doc = Get( FileName )
+	];
+
+	"tell application" &" \""& app &  "\"" &¶ &
+	   "tell current layout of document " &" \""& doc &"\"" & ¶ &
+	      "sort by field" & "\"" & field & "\"" & "in order ascending" &¶ &
+	   "end tell" &¶ &
+	"end tell"
+
+)
 
 /* —————————————————————————————— //
 NAME:
-	app.sort ( )
+	app.sort ( sortField ; sortDescending )
 
 PURPOSE:
-	
+	Provides dynamic sort on Mac OS using AppleScript.
 
 EXAMPLES:
 	
