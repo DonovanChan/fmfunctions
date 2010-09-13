@@ -1,5 +1,5 @@
 /* FilterList ( ListA ; Attribute ; ListB ; CaseSensitive ) .v2.0
-FilterList () requires CustomList ( Start ; End ; Function )*/
+FilterList () requires list.custom ( Start ; End ; Function )*/
 
 // Limited => ListA < 18700 values and ListB < 18700 values too
 // Attributes : Equals - NotEquals - Contains - NotContains - BeginsWith - NotBeginsWith - EndsWith - NotEndsWith
@@ -50,7 +50,7 @@ Case (
             $MyList = "[#|#]" & $TagB & Substitute ( Choose ( CaseSensitive ; Upper ( $MyFirstList ) ; $MyFirstList ) ; [ ¶ ; $TagE & ¶ & "[#|#]" & $TagB ] ) & $TagE ;
             $Values = Choose ( CaseSensitive ; Upper ( ListB ) ; ListB ) ;
 
-            Trigger = CustomList ( 1 ; ValueCount ( ListB ) ;
+            Trigger = list.custom ( 1 ; ValueCount ( ListB ) ;
                             "Let ([Value = GetValue ( $Values ; [n] ) ; $MyList = case ( Not IsEmpty ( value ) ; Substitute ( $MyList  ; $TagB & Value & $TagE ; \"X##X\"  ) ; $MyList ) ] ; \"\" )" ) ;
 
             $MyList = Substitute (  $MyList ; [ "[#|#]"; "" ] ;  [ "#|#"; "" ]  ) ;
@@ -60,7 +60,7 @@ Case (
     Case (
         CaseSensitive < 1 and Left ( Attribute ; 3 ) = "Not" ; Substitute ( FilterValues ( $MyFirstList ; $MyList ) & "#|#" ; ["¶#|#" ; "" ] ; ["#|#" ; "" ]) ;
 
-        CustomList ( 1 ; ValueCount ( $MyList  ) ; 
+        list.custom ( 1 ; ValueCount ( $MyList  ) ; 
             "Let ([ Value = GetValue ( $MyList ; [n] ) ]; Case ( PatternCount ( Value ; \"X##X\")" & $Test & " ; GetValue ( $MyFirstList ; [n] )))" ) 
             )
       )
