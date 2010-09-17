@@ -1,0 +1,28 @@
+//Filter( string; " 	!#$%&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`{|}~" )
+
+Substitute( string;
+	[ "0"; "" ];
+	[ "1"; "" ];
+	[ "2"; "" ];
+	[ "3"; "" ];
+	[ "4"; "" ];
+	[ "5"; "" ];
+	[ "6"; "" ];
+	[ "7"; "" ];
+	[ "8"; "" ];
+	[ "9"; "" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextFilterToAlpha( string )
+
+PURPOSE:
+	Returns string with numbers removed
+
+EXAMPLES:
+	TextFilterToText( "number10!" ) = "number!"
+
+HISTORY:
+	Created: 2010-Sep-14 17h51 PST — Donovan A. Chandler
+*/

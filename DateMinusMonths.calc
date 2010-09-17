@@ -1,0 +1,19 @@
+Date(
+	Month( theDate ) - monthsToSubtract;
+	1;
+	Year( theDate )
+)
+
+/* —————————————————————————————— //
+NAME:
+	DateMinusMonths( theDate; monthsToSubtract )
+
+PURPOSE:
+	Returns first day of month x number of months prior to date provided.
+
+EXAMPLES:
+	DateMinusMonths( "8/5/09"; 3 ) = "5/1/09"
+
+HISTORY:
+	Created: 2010-Sep-14 17h45 PST — Donovan A. Chandler
+*/
