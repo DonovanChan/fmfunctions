@@ -19,6 +19,7 @@ Let([
 	];
 
 	"data:text/html,<html>
+	<head>
 	<style type=\"text/css\">
 
 	body {
@@ -42,6 +43,7 @@ Let([
 	text-decoration: none;
 	margin-bottom: 4px;
 	margin-left: " & _bubble_margin_side & "
+	white-space:nowrap;
 	}
 
 	a:link.ovalbutton, a:visited.ovalbutton, a:active.ovalbutton{
@@ -74,7 +76,7 @@ Let([
 			window.location.search = txt
 		}
 	</script>
-
+	</head>
 	<body>
 	<div class=\"buttonwrapper\">" &
 	Case (
