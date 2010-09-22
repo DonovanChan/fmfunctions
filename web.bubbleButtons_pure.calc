@@ -1,15 +1,16 @@
 Let([
 	//-- Parameters --
-	buttonList = "foo¶fum";
-	textColor = "black";
-	backgroundColor = "white";
+	//buttonList = "foo¶fum";
+	_button_color = bubbleColor;
+	_background_color = backgroundColor;
 	
 	//-- Settings --
 	_button_text_color = "#494949";
 	_button_text_color_highlight = "black";
-	_body_margin_top = 6;	// Space above body
+	_body_margin_top = 0;	// Space above body
 	_bubble_margin_side = 6;	// Space between bubbles
-	_text_padding_side = 4;	// Space around text
+	_text_color = "black";
+	_text_padding_side = "1.5em";	// Space around text
 	_always_emphasize = True;	// False causes buttons to appear highlighted on hover
 	_bubbleHeight = 70;
 
@@ -17,67 +18,185 @@ Let([
 	_label_list = buttonList;
 	_label_count = ValueCount ( _label_list );
 	_label_1 = GetValue ( _label_list; 1 );
-	_background_color = backgroundColor
+	_button_attributes = _button_color
 	
 	];
 
 	"data:text/html,<html>
 	<head>
 	<style type=\"text/css\">
-
-	body {
-		background-color: " & _background_color & ";
-		border:0;
-		margin:" & _body_margin_top & " 0 0 0;
-		overflow:hidden;
-	}
+		
+		/* credits
+		CSS technique provided by Web Designer Wall, 
+		http://www.webdesignerwall.com/demo/css-buttons.html#
+		---------------------------------------------- */
+		
+		body {
+			background-color: " & _background_color & ";
+			border:0;
+			margin:" & _body_margin_top & " 0 0 0;
+			overflow:hidden;
+		}
+		a {
+			color: #339;
+			text-decoration: none;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
 	
-	.button{
-		display: block;
-		float: left;
-		font: normal 10px Verdana;
-		line-height: " & _bubbleHeight - _text_padding_side*2 & "px;
-		height: " & _bubbleHeight & "px; /* Height of button background height */
-		text-decoration: none;
-		margin-bottom: 4px;
-		margin-left: " & _bubble_margin_side & ";
-		white-space:nowrap;
-		border-top: 1px solid #96d1f8;
-		background: #65a9d7;
-		background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
-		background: -moz-linear-gradient(top, #3e779d, #65a9d7);
-		-webkit-border-radius: " & _bubbleHeight/2 & ";
-		-moz-border-radius: " & _bubbleHeight/2 & ";
-		border-radius: " & _bubbleHeight/2 & ";
-		-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-		-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-		box-shadow: rgba(0,0,0,1) 0 1px 0;
-		text-shadow: rgba(0,0,0,.4) 0 1px 0;
-		color: white;
-		font-size: 15px;
-		/*font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;*/
-		text-decoration: none;
-		vertical-align: middle;
-	}
+		/* button 
+		---------------------------------------------- */
+		.button {
+			display: inline-block;
+			zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+			*display: inline;
+			vertical-align: baseline;
+			margin: 0 " & _bubble_margin_side & " 0 0;
+			outline: none;
+			cursor: pointer;
+			text-align: center;
+			text-decoration: none;
+			font: 11px/100% Verdana, Arial, Helvetica, sans-serif;
+			padding: .4em " & _text_padding_side & " .42em;
+			text-shadow: 0 1px 1px rgba(0,0,0,.3);
+			-webkit-border-radius: .5em; 
+			-moz-border-radius: .5em;
+			border-radius: .5em;
+			-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+			-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+			box-shadow: 0 1px 2px rgba(0,0,0,.2);
+		}
+		.button:hover {
+			text-decoration: none;
+		}
+		.button:active {
+			position: relative;
+			top: 1px;
+		}
 
+		.rounded {
+			-webkit-border-radius: 2em;
+			-moz-border-radius: 2em;
+			border-radius: 2em;
+		}
+		.medium { /*Default defined in .button*/
+			font-size: 12px;
+			padding: .4em 1.5em .42em;
+		}
+		.big {
+			font-size: 12px/100%;
+			padding: .5em 2em .55em;
+		}
+		.small {
+			font-size: 11px;
+			padding: .2em 1em .275em;
+		}
+	
+		/* color styles 
+		(black, gray, white, orange, brick, red, blue, rosy, green, pink)
+		---------------------------------------------- */
 
-	.button span{
-		padding: 0 " & _text_padding_side & ";
-	}
+		/* black */
+		.black {
+			color: #d7d7d7;
+			border: solid 1px #333;
+			background: #333;
+			background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+			background: -moz-linear-gradient(top,  #666,  #000);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#666666', endColorstr='#000000');
+		}
 
-	.button" & If ( not _always_emphasize; ":hover" ) & "{ /* Hover state CSS */
-		background-position: bottom left;
-	}
+		/* gray */
+		.gray {
+			color: #e9e9e9;
+			border: solid 1px #555;
+			background: #6e6e6e;
+			background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#575757));
+			background: -moz-linear-gradient(top,  #888,  #575757);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#888888', endColorstr='#575757');
+		}
 
-	a.button" & If ( not _always_emphasize; ":hover" ) & " span{ /* Hover state CSS */
-		background-position: bottom right;
-		color: " & _button_text_color_highlight & ";
-	}
+		/* white */
+		.white {
+			color: #606060;
+			border: solid 1px #b7b7b7;
+			background: #fff;
+			background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+			background: -moz-linear-gradient(top,  #fff,  #ededed);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+		}
 
-	.buttonwrapper{ /* To clear button float */
-		overflow: hidden;
-		width: 100%;
-	}
+		/* orange */
+		.orange {
+			color: #fef4e9;
+			border: solid 1px #da7c0c;
+			background: #f78d1d;
+			background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+			background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+		}
+
+		/* brick */
+		.brick {
+			color: #fef4e9;
+			border: solid 1px #da7c0c;
+			background: #f78d1d;
+			background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#C75B21));
+			background: -moz-linear-gradient(top,  #faa51a,  #C75B21);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#C75B21');
+		}
+
+		/* red */
+		.red {
+			color: #faddde;
+			border: solid 1px #980c10;
+			background: #d81b21;
+			background: -webkit-gradient(linear, left top, left bottom, from(#ed1c24), to(#aa1317));
+			background: -moz-linear-gradient(top,  #ed1c24,  #aa1317);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ed1c24', endColorstr='#aa1317');
+		}
+
+		/* blue */
+		.blue {
+			color: #d9eef7;
+			border: solid 1px #0076a3;
+			background: #0095cd;
+			background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+			background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+		}
+
+		/* rosy */
+		.rosy {
+			color: #fae7e9;
+			border: solid 1px #b73948;
+			background: #da5867;
+			background: -webkit-gradient(linear, left top, left bottom, from(#f16c7c), to(#bf404f));
+			background: -moz-linear-gradient(top,  #f16c7c,  #bf404f);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f16c7c', endColorstr='#bf404f');
+		}
+
+		/* green */
+		.green {
+			color: #e8f0de;
+			border: solid 1px #538312;
+			background: #64991e;
+			background: -webkit-gradient(linear, left top, left bottom, from(#7db72f), to(#4e7d0e));
+			background: -moz-linear-gradient(top,  #7db72f,  #4e7d0e);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db72f', endColorstr='#4e7d0e');
+		}
+
+		/* pink */
+		.pink {
+			color: #feeef5;
+			border: solid 1px #d2729e;
+			background: #f895c2;
+			background: -webkit-gradient(linear, left top, left bottom, from(#feb1d3), to(#f171ab));
+			background: -moz-linear-gradient(top,  #feb1d3,  #f171ab);
+			filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#feb1d3', endColorstr='#f171ab');
+		}
+
 	</style>
 	
 	<script type=\"text/javascript\">
@@ -91,13 +210,13 @@ Let([
 	<div class=\"buttonwrapper\">" &
 	Case (
 		not IsEmpty ( _label_1 );
-		"<a class=\"button\" href=\"#\" onclick=\"add_param('" & _label_1 & "')\"><span>" & _label_1 & "</span></a>"
+		"<a class=\"button " & _button_attributes & "\" href=\"#\" onclick=\"add_param('" & _label_1 & "')\"><span>" & _label_1 & "</span></a>"
 	) &
 	Case (
 		_label_count > 1;
-		CustomList ( 2; _label_count;
+		ListCustom ( 2; _label_count;
 			"Let([_label = GetValue(" & Quote(_label_list) & "; [n] ) ];" &
-			"\"<a class='button' href='#' onclick='add_param(\\\"\" & _label & \"\\\")'><span>\" & _label & \"</span></a>\" )"
+			"\"<a class='button " & _button_attributes & "' href='#' onclick='add_param(\\\"\" & _label & \"\\\")'><span>\" & _label & \"</span></a>\" )"
 		)
 	) &
 	"</div>
@@ -107,25 +226,21 @@ Let([
 
 /* —————————————————————————————— // 
 NAME:
-	web.bubbleButtons ( buttonList ; textColor ; backgroundColor )
+	web.bubbleButtons ( buttonList ; bubbleColor ; backgroundColor )
 
 PURPOSE:
-	Creates bubble backgrounds to each value supplied in buttonList, separated by bubbleDelimiter
+	Creates bubble backgrounds to each value supplied in buttonList
 
 EXAMPLES:
 	web.bubbleButtons ( 
 		"Button1¶Button2";
-		"file://path-to-temp-folder/button-img-left.gif";
-		"file://path-to-temp-folder/button-img-right.gif"; //This one is larger
-		10;
-		22;  //Actual image may be 44 px high.  The bottom half is visible on mouse-over.
-		"white"
+		"white";
+		"red"
 	)
 	
 DEPENDENCIES:
-	CustomList()
-	Button background graphics accessible in specified path.
+	ListCustom()
 
 HISTORY:
-	2010-Sep-17 18h08 PST — Donovan Chandler
+	2010-Sep-21 09h25 PST — Donovan Chandler
 */
