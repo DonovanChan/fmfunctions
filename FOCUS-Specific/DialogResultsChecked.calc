@@ -1,10 +1,10 @@
 Let([
-	_result_cur = #ValueNotFirst ( dialogResults; "RESULT"; startIndex );
+	_result_cur = #NthValue ( dialogResults; "RESULT"; startIndex );
 	_result_cur_value = #Value ( _result_cur; "VALUE" );
 	_result_cur_menu = #Value ( _result_cur; "MENU" );
 	_is_checked = ( _result_cur_value = 1 );
 	
-	_result_next = #ValueNotFirst ( dialogResults; "RESULT"; startIndex + 1 );
+	_result_next = #NthValue ( dialogResults; "RESULT"; startIndex + 1 );
 	_result_next_value = #Value ( _result_next; "VALUE" )
 	];
 	If ( _is_checked; _result_cur_menu	) &
