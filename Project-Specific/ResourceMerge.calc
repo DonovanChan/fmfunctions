@@ -1,4 +1,4 @@
-ResourceMerge_Sub ( text ; 1 )
+ResourceMergeLoop ( text ; 1 )
 
 /* —————————————————————————————— //
 NAME:
