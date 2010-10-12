@@ -1,0 +1,33 @@
+Let ( [
+  #_list = listOfIDs ;
+  #_id = TableIDRetrieve ( table ) ;
+  #_row = ListValueRowNum ( #_list ; #_id ) ;
+  #_list_new = 
+    Case ( 
+      #_row > 0 ;
+        LeftValues ( #_list ; #_row - 1 ) & RightValues ( #_list ; ValueCount ( #_list ) - #_row ) ;
+      #_list
+      )
+  ] ;
+  Case (
+    ListValueRowNum ( #_list_new ; #_id ) > 0 ;
+      TableIDRemoveLoop ( table ; #_list_new ) ;
+
+    #_list_new
+    )
+  )
+
+/* —————————————————————————————— //
+NAME:
+	TableIDRemoveLoop ( table ; listOfIDs )
+
+PURPOSE:
+	Returns the list of focused IDs, but without the ID for the specified table.  If the ID is not present, the list will be returned as is.  Note that each row must be parsed, because we only know the table we are looking for, not a specific ID.  
+	DISABLED -> We assume that only one ID is in focus for the specified table, and thus only attempt to remove the first ID we find.
+
+EXAMPLES:
+
+HISTORY:
+	Created: 2010-Jan-29 17h00 PST — Will M. Baker
+	Modified: 2010-Sep-22 16h25 PST — Donovan Chandler : Modified into recursive subscript
+*/

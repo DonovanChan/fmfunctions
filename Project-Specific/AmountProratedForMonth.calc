@@ -1,0 +1,27 @@
+Let ( [
+  dte = GetAsDate ( dateOfAmount ) ;
+  amount = amountSoFar ;
+  
+  month = Month ( dte ) ;
+  yr = Year ( dte ) ;
+  days_past = dte - Date ( month ; 1 ; yr ) + 1 ;
+  days_ahead = Date ( month + 1 ; 0 ; yr ) - dte ;
+  amount_daily = amount / days_past ;
+  amount_prorated = amount + amount_daily * days_ahead
+  ];
+  amount_prorated
+)
+
+/* —————————————————————————————— //
+NAME:
+  AmountProratedForMonth ( amountSoFar ; dateOfAmount )
+
+PURPOSE:
+  Returns prorated amount for month
+
+EXAMPLES:
+  AmountProratedForMonth ( 100 ; "2/14/10" ) = 200
+
+HISTORY:
+  Created: 2010-Oct-11 12h09 PST — Donovan A. Chandler
+*/

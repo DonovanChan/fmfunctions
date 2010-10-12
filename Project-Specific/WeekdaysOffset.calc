@@ -1,0 +1,51 @@
+Let ( [
+  #day = DayOfWeek (startDate );
+  #pastFuture = If (offset < 0; "past"; "future" );
+  #theStart = 
+    Case ( 
+      #day = 7 and #pastFuture = "future"; // Saturday
+      startdate - 1;
+
+      #day = 1 and #pastFuture = "future"; // Sunday
+      startdate - 2;
+
+      #day = 1 and #pastFuture = "past"; // Sunday
+      startdate + 1;
+
+      #day = 7 and #pastFuture = "past"; // Saturday
+      startdate + 2;
+
+      startDate
+    )
+  ];
+
+  Case (
+    #pastFuture = "past";
+      #theStart + Int (offset / 5 ) * 7 - 
+      Middle ("23456034560145601256012360123412345" ; 
+        (DayOfWeek (#theStart ) - 1 ) * 5 + Mod (Abs (offset ); 5 ) + 1;
+        1
+      );
+     
+    #theStart + Int (offset / 5 ) * 7 + 
+    Middle ("12345012340123601256014560345623456" ; 
+      (DayOfWeek (#theStart ) - 1 ) * 5 + Mod (offset; 5 ) + 1; 
+      1 
+    )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	WeekdaysOffset ( startDate; offset )
+
+PURPOSE:
+	Returns the specified date plus or minus the offset (specified weekdays [Monday - Friday])
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: Nick Chapin
+	Modified: 2010-Oct-12 10h00 PST — Donovan Chandler (Reformatted)
+*/
