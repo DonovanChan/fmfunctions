@@ -1,36 +1,36 @@
 Case(
-	//-- Iterate until all empty rows are removed
-	PatternCount( text; "¶¶" ) > 0; 
-		ListRemoveEmptyValues(
-			Substitute( text;
-				[ "¶¶¶"; "¶" ];
-				[ "¶¶"; "¶" ]
-			)
-		);
-	
-	//-- If list is clean, remove leading/trailing returns	
-	Substitute( 
-		Trim(
-			Substitute( text; 
-				[ " " ; "::‡::" ]; 
-				[ ¶ ; " " ] 
-			)
-		);
-		[ " " ; ¶ ];
-		[ "::‡::" ; " " ]
-	)	
+  //-- Iterate until all empty rows are removed
+  PatternCount( text; "¶¶" ) > 0; 
+    ListRemoveEmptyValues(
+      Substitute( text;
+        [ "¶¶¶"; "¶" ];
+        [ "¶¶"; "¶" ]
+      )
+    );
+  
+  //-- If list is clean, remove leading/trailing returns  
+  Substitute( 
+    Trim(
+      Substitute( text; 
+        [ " " ; "::‡::" ]; 
+        [ ¶ ; " " ] 
+      )
+    );
+    [ " " ; ¶ ];
+    [ "::‡::" ; " " ]
+  ) 
  )
 
 /* —————————————————————————————— //
 NAME:
-	ListRemoveEmptyValues
+  ListRemoveEmptyValues
 
 PURPOSE:
-	Removes all empty values from list
+  Removes all empty values from list
 
 EXAMPLES:
-	ListRemoveEmptyValues( "¶foo¶¶bar" ) = "foo¶bar"
+  ListRemoveEmptyValues( "¶foo¶¶bar" ) = "foo¶bar"
 
 HISTORY:
-	Created: 2010-Sep-06 08h26 PST — Donovan A. Chandler
+  Created: 2010-Sep-06 08h26 PST — Donovan A. Chandler
 */
