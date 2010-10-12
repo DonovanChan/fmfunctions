@@ -7,8 +7,9 @@ Let([
 	//-- Settings --
 	_button_text_color = "#494949";
 	_button_text_color_highlight = "black";
-	_body_margin_top = 0;	// Space above body
-	_bubble_margin_side = 6;	// Space between bubbles
+	_body_margin_top = "2px";	// Space above body
+	_bubble_margin_side = "6px";	// Space between bubbles
+	_bubble_margin_bottom = "6px";
 	_text_color = "black";
 	_text_padding_side = "1.5em";	// Space around text
 	_always_emphasize = True;	// False causes buttons to appear highlighted on hover
@@ -52,7 +53,7 @@ Let([
 			zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
 			*display: inline;
 			vertical-align: baseline;
-			margin: 0 " & _bubble_margin_side & " 0 0;
+			margin: 0 " & _bubble_margin_side & " " & _bubble_margin_bottom & " 0;
 			outline: none;
 			cursor: pointer;
 			text-align: center;
