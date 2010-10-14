@@ -1,7 +1,7 @@
 Let ( [
   #date = GetAsDate ( startDate );
   #day = DayOfWeek ( #date );
-  #pastFuture = If (offset < 0; "past"; "future" );
+  #pastFuture = If ( offset < 0; "past"; "future" );
   #theStart = 
     Case ( 
       #day = 7 and #pastFuture = "future"; // Saturday
