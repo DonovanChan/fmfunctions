@@ -1,0 +1,65 @@
+Let ( [
+  db = Get ( FileName ) ;
+  fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
+  table = GetValue ( fieldList ; 1 ) ;
+  field = GetValue ( fieldList ; 2 )
+  ] ;
+  "set fmResult to \"\"" & ¶ &
+  "try" & ¶ &
+  " set colorArray to choose color" & ¶ &
+  "on error errText number errNum" & ¶ &
+  " set fmResult to 1" & ¶ &
+  "end try" & ¶ &
+  "if fmResult is \"\" then" & ¶ &
+  " set colorArrayNew to adjustColorArray(colorArray)" & ¶ &
+  " set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"" & ¶ &
+  "end if" & ¶ &
+  "setField(\"" & db & "\",\"" & table & "\",\"" & field & "\",fmResult)" & ¶ &
+  "" & ¶ &
+  "------------------------------------------------" & ¶ &
+  "-- HANDLERS" & ¶ &
+  "------------------------------------------------" & ¶ &
+  "" & ¶ &
+  "-- Handler: Converts RGB values from max 65535 to max 255" & ¶ &
+  "on adjustColorArray(array)" & ¶ &
+  "  set divisor to 257" & ¶ &
+  "  set newArray to {}" & ¶ &
+  "  repeat with i in array" & ¶ &
+  "    set end of newArray to (i / divisor) as integer" & ¶ &
+  "  end repeat" & ¶ &
+  "  return newArray" & ¶ &
+  "end adjustColorArray" & ¶ &
+  "" & ¶ &
+  "---- FileMaker Handlers ----" & ¶ &
+  "------------------------------------------------" & ¶ &
+  "" & ¶ &
+  "-- Handler: Sets FileMaker field value" & ¶ &
+  "on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
+  " tell application \"FileMaker Pro Advanced\"" & ¶ &
+  "   tell database (databaseName as text)" & ¶ &
+  "     tell table (tableName as text)" & ¶ &
+  "       set field fieldName to theValue" & ¶ &
+  "     end tell" & ¶ &
+  "   end tell" & ¶ &
+  " end tell" & ¶ &
+  "end setField"
+
+)
+
+/* —————————————————————————————— //
+NAME:
+  AppleScriptChooseColor ( fullFieldName ; defaultColor )
+
+PURPOSE:
+  Shows color picker and sets RGB value to FileMaker field
+
+EXAMPLES:
+  AppleScriptChooseColor ( "FOCUS::TEMP_TEXT_GT" ; "" ) 
+  returns "RGB(255;255;255)" in FOCUS::TEMP_TEXT_GT
+
+HISTORY:
+  Created: 2010-Oct-14 10h26 PST — Donovan A. Chandler
+
+NOTES:
+  defaultColor parameter currently not supported
+*/
