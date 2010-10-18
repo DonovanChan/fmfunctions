@@ -1,0 +1,27 @@
+Case (
+  numberOfDaysToReturn > 0 ; 
+    DatesFromStartLoop ( 
+      GetAsDate ( startDate ) ;
+      numberOfDaysToReturn ;
+      omitWeekends ;
+      omitHolidays ;
+      ""
+    )
+)
+
+/* —————————————————————————————— //
+NAME:
+  DatesFromStart ( startDate ; numberOfDaysToReturn ; omitWeekends ; omitHolidays )
+
+PURPOSE:
+  Returns list of dates in range. Excludes weekends and/or holidays if specified.
+
+EXAMPLES:
+  DatesFromStart ( "10/1/2010" ; 2 ; 1 ; 0 ) = "10/1/2010¶10/4/2010"
+
+HISTORY:
+  Created: 2010-Oct-15 12h06 PST — Donovan A. Chandler
+  
+NOTE:
+  omitHolidays parameter currently not supported.
+*/
