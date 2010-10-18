@@ -6,13 +6,13 @@ dataString & ¶ &
 
 /* —————————————————————————————— //
 NAME:
-	WebViewerDataStore ( dataString; backgroundColor )
+	WebDataStore ( dataString; backgroundColor )
 
 PURPOSE:
 	Stores text in hidden webviewer for retrieval.
 
 EXAMPLES:
-	WebViewerDataStore(
+	WebDataStore(
 		#( "TABLE" ; "CONTACT" ) & #( "FILTER_TABLE"; "POPUP" )
 		"RGB( 249,249,249 )"
 	)
