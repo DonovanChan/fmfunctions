@@ -4,9 +4,13 @@ Let ( [
   dayOfWeek = DayOfWeek ( start ) ;
   dateCur =
     Case (
-      not omitWeekends ; start ;
-      omitWeekends and dayOfWeek = 7 ; start + 2 ; // Skip Sat & Sun
-      omitWeekends and dayOfWeek = 1 ; start + 1   // Skip Sun
+      omitWeekends ;
+        Case (
+          dayOfWeek = 7 ; start + 2 ; // Skip Sat & Sun
+          dayOfWeek = 1 ; start + 1 ; // Skip Sun
+          start
+        ) ;
+      start
     )
   ] ;
   Case (
