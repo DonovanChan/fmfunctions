@@ -30,14 +30,17 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-	DatesInRangeLoop ( startDate ; endDate ; omitWeekends ; omitHolidays ; previousResults )
+  DatesInRangeLoop ( startDate ; endDate ; omitWeekends ; omitHolidays ; previousResults )
 
 PURPOSE:
-
+  Performs recursive operation for DatesInRange().  Returns list of dates as specified. 
 
 EXAMPLES:
-
+  DatesInRangeLoop ( "10/2/2010" ; "10/4/2010" ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
 
 HISTORY:
-	Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler
+  Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler
+
+NOTE:
+    omitHolidays parameter currently not supported.
 */
