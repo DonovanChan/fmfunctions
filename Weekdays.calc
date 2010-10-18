@@ -1,0 +1,32 @@
+Let ( [
+  startDay = DayOfWeek ( startDate ) ; // startDate's day of the week
+  rawRange = endDate - startDate + 1 ; // how many days there are between and inclusive of the two dates
+  rawWeekendDays = Floor ( rawRange / 7 ) * 2 ; // weekend days included in full weeks
+  modRange = Mod ( rawRange ; 7 ) ; // days left over, not part of full weeks
+  modWeekendDays = Case (
+    startDay = 1 and modRange > 0 ; 1 ;
+    modRange > ( 8 - startDay ) ; 2 ;
+    modRange = ( 8 - startDay ) ; 1 ;
+    0
+    ) ; // weekend days included in the leftover days
+  weekendDays = rawWeekendDays + modWeekendDays // total weekend days
+  ] ;
+
+  rawRange - weekendDays
+
+  )
+
+/* —————————————————————————————— //
+NAME:
+	Weekdays ( startDate ; endDate )
+
+PURPOSE:
+	Return the number of weekdays in and inclusive of the range, excluding Saturdays and Sundays.
+
+EXAMPLES:
+	Weekdays ( 10/11/2010 ; 10/20/2010 ) = 8
+	Weekdays ( 10/16/2010 ; 10/25/2010 ) = 6
+
+HISTORY:
+	Created: 2010-Oct-12 13h51 PST — Will M. Baker
+*/

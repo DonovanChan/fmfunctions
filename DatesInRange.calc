@@ -1,0 +1,25 @@
+Let ( [
+  start = GetAsDate ( startDate ) ;
+  end = GetAsDate ( endDate )
+  ] ;
+  Case (
+    start ≤ end ; DatesInRangeLoop ( start ; end ; omitWeekends ; omitHolidays ; "" )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+  DatesInRange ( startDate ; endDate ; omitWeekends ; omitHolidays )
+
+PURPOSE:
+  Returns list of dates in range. Excludes weekends and/or holidays if specified.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Oct-15 12h06 PST — Donovan A. Chandler
+	
+NOTE:
+  excludeHolidays parameter currently not supported.
+*/

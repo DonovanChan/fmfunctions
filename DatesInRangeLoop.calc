@@ -1,0 +1,39 @@
+Let ( [
+  start = GetAsDate ( startDate ) ;
+  end = GetAsDate ( endDate ) ;
+  dayOfWeek = DayOfWeek ( start ) ;
+  dateCur =
+    Case (
+      not omitWeekends ; start ;
+      omitWeekends and dayOfWeek = 7 ; start + 2 ; // Skip Sat & Sun
+      omitWeekends and dayOfWeek = 1 ; start + 1   // Skip Sun
+    )
+  ] ;
+  Case (
+    dateCur > end ;
+      previousResults ;
+
+    DatesInRangeLoop (
+      dateCur + 1 ;
+      endDate ;
+      omitWeekends ;
+      omitHolidays ;
+      List ( previousResults ; dateCur )
+    )
+
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	DatesInRangeLoop ( startDate ; endDate ; omitWeekends ; omitHolidays ; previousResults )
+
+PURPOSE:
+
+
+EXAMPLES:
+
+
+HISTORY:
+	Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler
+*/
