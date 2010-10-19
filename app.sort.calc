@@ -1,37 +1,32 @@
 Let([
-	field = sortField;
-	order =
-		Case(
-			sortDescending; "descending";
-			"ascending"
-		);
-	app_rough = LeftWords( Get( ApplicationVersion ); 1 );
-	app =
-		Case(
-			app_rough = "ProAdvanced"; "FileMaker Pro Advanced";
-			app_rough = "Pro"; "FileMaker Pro"
-		);
-	doc = Get( FileName )
-	];
+  field = sortField;
+  order =
+    Case(
+      sortDescending; "descending";
+      "ascending"
+    );
+  doc = Get( FileName )
+  ];
 
-	"tell application" &" \""& app &  "\"" &¶ &
-	   "tell current layout of document " &" \""& doc &"\"" & ¶ &
-	      "sort by field" & "\"" & field & "\"" & "in order ascending" &¶ &
-	   "end tell" &¶ &
-	"end tell"
+   "tell current layout of document " & "\"" & doc & "\"" & ¶ &
+      "sort by field " & "\"" & field & "\"" & " in order " & order & ¶ &
+   "end tell"
 
 )
 
 /* —————————————————————————————— //
 NAME:
-	app.sort ( sortField ; sortDescending )
+  AppleScriptSort ( sortField ; sortDescending )
 
 PURPOSE:
-	Provides dynamic sort on Mac OS using AppleScript.
+  Provides dynamic sort on Mac OS using AppleScript.
 
 EXAMPLES:
-	
+  
 
 HISTORY:
-	Created: 2010-May-25 18h16 PST — Donovan A. Chandler
+  Created: 2010-May-25 18h16 PST — Donovan A. Chandler
+  
+NOTES:
+  BEWARE, sortField must be visible on layout!
 */
