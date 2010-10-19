@@ -2,27 +2,36 @@ Let ( [
   start = GetAsDate ( startDate ) ;
   end = GetAsDate ( endDate ) ;
   dayOfWeek = DayOfWeek ( start ) ;
-  dateCur =
+  holidayList = ListDateToNumber ( DatesHolidayList ) ;
+  isWeekend =
     Case (
       omitWeekends ;
-        Case (
-          dayOfWeek = 7 ; start + 2 ; // Skip Sat & Sun
-          dayOfWeek = 1 ; start + 1 ; // Skip Sun
-          start
-        ) ;
-      start
+        dayOfWeek = 7 or dayOfWeek = 1 ;
+      0
+    ) ;
+  isHoliday =
+    Case (
+      omitHolidays ;
+        ValueCount ( FilterValues ( holidayList ; GetAsNumber ( start ) ) ) > 0 ;
+      0
+    ) ;
+  result = 
+    Case (
+      isWeekend or isHoliday ;
+        previousResults ;
+      List ( previousResults ; start )
     )
   ] ;
   Case (
-    dateCur > end ;
+    start > end ;
       previousResults ;
 
     DatesInRangeLoop (
-      dateCur + 1 ;
+      start + 1 ;
       endDate ;
       omitWeekends ;
       omitHolidays ;
-      List ( previousResults ; dateCur )
+      result
     )
 
   )
