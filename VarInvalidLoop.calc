@@ -1,0 +1,79 @@
+Let ( [
+  _line = Trim ( GetValue ( listOfVariables ; rep ) ) ;
+  _line_count = ValueCount ( listOfVariables ) ;
+  _is_multiple = PatternCount ( _line ; "|" ) ; // Multiple vars (OR option)
+  _value = 
+    Case (
+      //-- Multiple variables (OR option)
+      _is_multiple ;
+        VarInvalidLoop ( Substitute ( _line ; "|" ; ¶ ) ; 0 ; 1 ; "" ) ;
+      
+      //-- Singular variable
+      Left ( _line ; 1 ) = "$" ;
+        Evaluate ( _line ) ;
+        
+      //-- Text string
+      _line
+    ) ;
+  _result = 
+    Case (
+      //-- Multiple vars failed
+      _is_multiple ;
+        _value ;
+        //Substitute ( _value ; ¶ ; " | " ) ;
+      
+      //-- Single var failed
+      _value = "?" or IsEmpty ( _value ) ;
+        _line
+    ) ;
+  _result_full = List ( previousResults ; _result )
+  ] ; 
+  Case (
+    rep ≥ _line_count ;
+      Case (
+        //-- All vars required
+        GetAsBoolean ( requireAll ) ;
+          _result_full ;
+          
+        //-- Only return result if all vars failed
+        ValueCount ( _result_full ) ≥ _line_count ;
+          Substitute ( _result_full ; ¶ ; " | " )
+      ) ;
+    
+    VarInvalidLoop (
+      listOfVariables ;
+      requireAll ;
+      rep + 1 ;
+      _result_full
+      )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	VarInvalidLoop ( listOfVariables ; requireAll ; rep ; previousResults )
+
+PURPOSE:
+	Returns list of variables with invalid data.
+
+USAGE:
+	Supply variable names as text strings (in quotes).
+	Each line of the parameter must evaluate to a valid value.
+	To require one of several vars, place them on one line separated by "|". 
+
+EXAMPLES:
+	Where $_table = "CONTACT", $_id_contact = "?", $_id_student = ""
+	
+	VarInvalid ( "$_table" ) = ""
+	
+	VarInvalid ( 
+		List ( "$_table" ; "$_id_contact | $_id_student" )
+	) = "$_id_contact | $_id_student"
+	
+	VarInvalid ( 
+		"$_table | $_id_student" )
+	) = ""
+	
+HISTORY:
+	Created: 2010-Oct-28 08h04 PST — Donovan Chandler
+*/
