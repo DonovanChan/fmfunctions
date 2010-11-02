@@ -1,12 +1,12 @@
 Case (
-  not IsEmpty ( VarInvalid ( listOfVariables ; 1 ) ) ;
+  not IsEmpty ( VarInvalid ( listOfVariableNames ; 1 ) ) ;
     10 ;
   0
 )
 
 /* —————————————————————————————— //
 NAME:
-	ParamValidate ( listOfVariables )
+	ParamValidate ( listOfVariableNames )
 
 PURPOSE:
 	Returns 10 if parameters are invalid, else returns 0

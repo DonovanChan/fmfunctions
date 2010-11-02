@@ -1,8 +1,8 @@
-VarInvalidLoop ( listOfVariables ; requireAll ; 1 ; "" )
+VarInvalidLoop ( listOfVariableNames ; requireAll ; 1 ; "" )
 
 /* —————————————————————————————— //
 NAME:
-	VarInvalid ( listOfVariables ; requireAll )
+	VarInvalid ( listOfVariableNames ; requireAll )
 
 PURPOSE:
 	Returns list of variables with invalid data.

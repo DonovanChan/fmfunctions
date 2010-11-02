@@ -1,6 +1,6 @@
 Let ( [
-  _line = Trim ( GetValue ( listOfVariables ; rep ) ) ;
-  _line_count = ValueCount ( listOfVariables ) ;
+  _line = Trim ( GetValue ( listOfVariableNames ; rep ) ) ;
+  _line_count = ValueCount ( listOfVariableNames ) ;
   _is_multiple = PatternCount ( _line ; "|" ) ; // Multiple vars (OR option)
   _value = 
     Case (
@@ -41,7 +41,7 @@ Let ( [
       ) ;
     
     VarInvalidLoop (
-      listOfVariables ;
+      listOfVariableNames ;
       requireAll ;
       rep + 1 ;
       _result_full
@@ -51,7 +51,7 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-	VarInvalidLoop ( listOfVariables ; requireAll ; rep ; previousResults )
+	VarInvalidLoop ( listOfVariableNames ; requireAll ; rep ; previousResults )
 
 PURPOSE:
 	Returns list of variables with invalid data.
