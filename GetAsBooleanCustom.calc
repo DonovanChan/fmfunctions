@@ -1,7 +1,7 @@
 Case (
-	string = "no"; 0;
-	string = "yes"; 1;
-	GetAsBoolean( string )
+  string = "no" or string = "N"; 0;
+  string = "yes" or string = "Y"; 1;
+  GetAsBoolean( string )
 )
 
 /* —————————————————————————————— //
