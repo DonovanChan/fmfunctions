@@ -13,10 +13,10 @@ Case(
         leftList = LeftValues( theList; leftLength);
         rightList = RightValues( theList; rightLength);
         //  sort each sub-list
-        sortedLeft = list.sort( leftList );
-        sortedRight = list.sort( rightList );
+        sortedLeft = ListSort( leftList );
+        sortedRight = ListSort( rightList );
         //  merge the two sorted lists
-        mergedList = list.sort_sub( sortedLeft; sortedRight )
+        mergedList = ListSortLoop( sortedLeft; sortedRight )
         ];
         mergedList 
     )
@@ -24,7 +24,7 @@ Case(
 
 /* —————————————————————————————— //
 NAME:
-    list.sort( theList )
+    ListSort( theList )
     v1.1
 
 PURPOSE:
@@ -41,7 +41,7 @@ OUTPUT:
     The same list, sorted ascending
 
 DEPENDENCIES:
-    Requires the list.sort_sub function
+    Requires the ListSortLoop() function
 
 Function created by Soliant Consulting
 www.soliantconsulting.com

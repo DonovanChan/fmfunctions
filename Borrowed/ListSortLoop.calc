@@ -4,16 +4,16 @@ Case(
 
     GetValue( list1; 1 ) < GetValue( list2; 1 ); 
         GetValue( list1; 1 ) & "¶" & 
-        list.sort_sub( RightValues( list1; ValueCount( list1 ) - 1 ); list2); 
+        ListSortLoop( RightValues( list1; ValueCount( list1 ) - 1 ); list2); 
 
     GetValue( list2; 1 ) & "¶" & 
-    list.sort_sub( list1; RightValues( list2; ValueCount( list2 ) - 1 ) )
+    ListSortLoop( list1; RightValues( list2; ValueCount( list2 ) - 1 ) )
 
 )
 
 /* —————————————————————————————— //
 NAME:
-    list.sort_sub( list1; list2 )
+    ListSortLoop( list1; list2 )
     v1.1
 
 PURPOSE:
