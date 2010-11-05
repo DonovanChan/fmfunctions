@@ -1,0 +1,43 @@
+Let([
+  //-- Increment counter
+  $$_fn_varvalidate_rep = $$_fn_varvalidate_rep + 1;
+  _rep = $$_fn_varvalidate_rep;
+  
+  _var = GetValue( listOfVariables; _rep );
+  _value = 
+    Case(
+      Left( _var; 1 ) = "$"; Evaluate( _var );
+      _var
+    );
+  _var_count = PatternCount( listOfVariables; ¶ ) + 1
+  ];
+  //-- Add 1 if current value is invalid
+  Case(
+    _value = "?" or IsEmpty( _value );
+      1;
+    0
+  ) +
+  //-- Iterate thru other values
+  Case(
+    _rep < _var_count;
+      var.validate( listOfVariables );
+    Let($$_fn_varvalidate_rep = ""; 0 )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	var.validate( listOfVariables )
+
+PURPOSE:
+	Returns count of variables with invalid data
+
+EXAMPLES:
+	(where all variables contain values other than "?")
+	
+	var.validate( "$_table¶$_field" ) = 0 
+	var.validate( $_table & ¶ & $_field ) = 0
+	
+HISTORY:
+	Created: 2010-Aug-20 16h07 PST — Donovan A. Chandler
+*/

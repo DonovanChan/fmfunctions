@@ -1,0 +1,34 @@
+Let ( [
+  _var = GetValue ( listOfVariables ; rep ) ;
+  _var_count = PatternCount ( listOfVariables ; ¶ ) + 1 ;
+  _value = 
+    Case ( 
+      GetValue ( _var ; 1 ) = "$" ; Evaluate ( _var ) ; 
+      _var
+    ) ;
+  _invalid = ( _value = "?" or IsEmpty ( _value ) )
+  ] ; 
+ +
+  //-- Iterate thru other values
+  Case ( 
+    rep < _var_count ; 
+      var.validate ( listOfVariables )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	var.validate( listOfVariables ; rep ; previousResults )
+
+PURPOSE:
+	Returns count of variables with invalid data
+
+EXAMPLES:
+	(where all variables contain values other than "?")
+	
+	var.validate( "$_table¶$_field" ) = 0 
+	var.validate( $_table & ¶ & $_field ) = 0
+	
+HISTORY:
+	Created: 2010-Aug-20 16h07 PST — Donovan A. Chandler
+*/
