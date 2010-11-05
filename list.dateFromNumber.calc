@@ -1,12 +1,12 @@
 Let ([
-	listCount = ValueCount ( listOfNumbers )
-	];
+  listCount = ValueCount ( listOfNumbers )
+  ];
 
-	GetAsDate ( GetAsNumber ( GetValue( listOfNumbers; 1 ) ) ) &
-	Case (
-		listCount > 1;
-		¶ & ListDateFromNumber ( RightValues ( listOfNumbers; listCount - 1 ))
-	)
+  GetAsDate ( GetAsNumber ( GetValue( listOfNumbers; 1 ) ) ) &
+  Case (
+    listCount > 1;
+    ¶ & ListDateFromNumber ( RightValues ( listOfNumbers; listCount - 1 ))
+  )
 
 )
 
