@@ -1,0 +1,25 @@
+Let ([
+  tableEnd = Position ( fieldName ; "::" ; 1 ; 1 ) ;
+  field =
+    Case (
+      tableEnd = 0 ;
+        fieldName ;
+      Middle ( fieldName ; tableEnd + 2 ; 999 )
+    )
+  ];
+  Trim ( field )
+)
+
+/* —————————————————————————————— //
+NAME:
+	FieldNameShort ( fieldName )
+
+PURPOSE:
+	Returns name of field without table name
+
+EXAMPLES:
+	FieldNameShort ( "CONTACT::NAME" ) = "NAME"
+
+HISTORY:
+	Created: 2010-Nov-02 08h59 PST — Donovan A. Chandler
+*/
