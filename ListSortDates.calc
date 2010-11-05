@@ -1,0 +1,25 @@
+Let ([
+  numberList = ListDateToNumber ( listOfDates ) ;
+  numberSorted = 
+    Case (
+      sortDescending ;
+        ListSortDesc ( numberList) ;
+      ListSort ( numberList )
+    )
+  ];
+  ListDateFromNumber ( numberSorted )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListSortDates ( listOfDates ; sortDescending )
+
+PURPOSE:
+	Returns a sorted list of dates.
+
+EXAMPLES:
+	ListSortDates ( "9/1/10¶10/1/10" ; 1 ) = "10/1/10¶9/1/10"
+
+HISTORY:
+	Created: 2010-Sep-07 17h45 PST — Donovan A. Chandler
+*/
