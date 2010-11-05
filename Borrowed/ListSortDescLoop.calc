@@ -1,0 +1,37 @@
+Case(
+    (ValueCount( list1 ) < 1) or (ValueCount( list2 ) < 1); 
+        Case( ValueCount( list1 ) < 1; list2; list1 ); 
+
+    GetValue( list1; 1 ) > GetValue( list2; 1 ); 
+        GetValue( list1; 1 ) & "¶" & 
+        ListSortDescLoop( RightValues( list1; ValueCount( list1 ) - 1 ); list2); 
+
+    GetValue( list2; 1 ) & "¶" & 
+    ListSortDescLoop( list1; RightValues( list2; ValueCount( list2 ) - 1 ) )
+
+)
+
+/* —————————————————————————————— //
+NAME:
+    ListSortDescLoop( list1; list2 )
+    v1.1
+
+PURPOSE:
+    Merges two sorted lists into a single sorted list.  Used by list.sort().
+
+HISTORY:
+    Created by Soliant Consulting (See below or FM 8 Functions p. 229)
+    Modified 2008.06.17 by DChandler for formatting/commenting preference
+
+INPUT:
+    Two sorted, return-delimited lists
+
+OUTPUT:
+    A single sorted return-delimited list
+
+Function created by Soliant Consulting
+www.soliantconsulting.com
+
+Released under the Creative Commons Attribution 2.5 License
+http://creativecommons.org/licenses/by/2.5/
+*/
