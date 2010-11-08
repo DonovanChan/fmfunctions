@@ -1,0 +1,26 @@
+Let ( [
+  _S = If ( GetAsBoolean ( isGlobal ) ; "$$" ; "$" ) ;
+  exError = "IsEmpty ( " & _S & name & ")"
+  ] ;
+  Evaluate (
+    "Let([" & _S & name & "=" & Quote ( value ) & "];" & exError & ")"
+  )
+)
+
+/*---------------------------------------------------------------------------------------
+NAME:
+	VarSet ( name ; value ; isGlobal )
+
+PURPOSE:
+	Instantiates local or global variable
+
+HISTORY:
+	Created 2008-Sep-24 — Donovan Chandler
+
+OUTPUT: 
+	Assigns local or global variable, returning "1" if variable is empty (else 0)
+
+EXAMPLE:
+	VarSet ( "_tab_list" ; "tab_1" ; 1 ) = 0, sets $$_tab_list to "tab_1"
+	VarSet ( "_tab_list" ; "" ; 1 ) = 1, = 1, sets $$_tab_list to null 
+---------------------------------------------------------------------------------------*/
