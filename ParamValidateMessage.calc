@@ -1,0 +1,26 @@
+Let ([
+  vars = VarInvalid ( listOfVariables ; 1 ) ;
+  varsPretty = Substitute ( vars ; ¶ ; ", " )
+  ] ;
+  Case (
+    ValueCount ( vars ) ;
+      "Internal Error: Invalid parameters" & ¶ &
+      ¶ &
+      "Script: " & Get ( ScriptName ) & ¶ &
+      "Missing Parameters: " & varsPretty
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ParamValidateMessage ( listOfVariables )
+
+PURPOSE:
+	Returns dialog error message for missing parameters
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Nov-08 11h48 PST — Donovan A. Chandler
+*/
