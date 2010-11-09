@@ -1,26 +1,26 @@
 Let([
-	_label_list = listOfLabels;
-	_value_list = listOfValues;
-	_label_cur = GetValue ( _label_list; 1 );
-	_value_cur = GetValue ( _value_list; 1 );
-	_label_count = ValueCount ( _label_list )
-	];
-	Case (
-		not IsEmpty ( _label_cur );
-		# ( "INPUT" ;
-		  # ( "TYPE" ; "checkbox" ) &
-		  # ( "LABEL" ; _label_cur ) &
-		  # ( "DEFAULT_VALUE" ; _value_cur ) &
-		  # ( "DEFAULT_IS_VALID" ; 1 )
-		)
-	)
-	& Case ( 
-		_label_count > 1; 
-		¶ & DialogInputCheckboxes (
-			RightValues ( _label_list; _label_count - 1 );
-			RightValues ( _value_list; _label_count - 1 )
-		)
-	)
+  _label_list = listOfLabels;
+  _value_list = listOfValues;
+  _label_cur = GetValue ( _label_list; 1 );
+  _value_cur = GetValue ( _value_list; 1 );
+  _label_count = ValueCount ( _label_list )
+  ];
+  Case (
+    not IsEmpty ( _label_cur );
+    # ( "INPUT" ;
+      # ( "TYPE" ; "checkbox" ) &
+      # ( "LABEL" ; _label_cur ) &
+      # ( "DEFAULT_VALUE" ; _value_cur ) &
+      # ( "DEFAULT_IS_VALID" ; 1 )
+    )
+  )
+  & Case ( 
+    _label_count > 1; 
+    ¶ & DialogInputCheckboxes (
+      RightValues ( _label_list; _label_count - 1 );
+      RightValues ( _value_list; _label_count - 1 )
+    )
+  )
 )
 
 /* —————————————————————————————— //
