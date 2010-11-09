@@ -23,11 +23,11 @@ Let ( [
   resultCount = ValueCount ( result )
   ] ;
   Case (
-    resultCount ≥ numberOfDaysToReturn ;
+    resultCount ≥ Abs ( numberOfDaysToReturn ) ;
       result ;
 
     DatesFromStartLoop (
-      start + 1 ;
+      start + If ( numberOfDaysToReturn < 0 ; -1 ; 1 ) ;
       numberOfDaysToReturn ;
       omitWeekends ;
       omitHolidays ;
@@ -46,6 +46,7 @@ PURPOSE:
 
 EXAMPLES:
   DatesFromStartLoop ( "10/2/2010" ; 2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
+  DatesFromStartLoop ( "10/2/2010" ; -2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶9/30/2010"
 
 HISTORY:
   Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler
