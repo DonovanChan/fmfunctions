@@ -1,0 +1,33 @@
+Let ([
+  value_cur = GetValue ( text ; repetition ) ;
+  value_prev = GetValue ( previousResults ; ValueCount ( previousResults ) ) ;
+  result_new = 
+    Case (
+      value_cur ≠ value_prev ;
+        previousResults & ¶ & value_cur ;
+      previousResults
+    )
+  ];
+
+  Case (
+    repetition ≥ ValueCount ( text ) ;
+      ListTrimCR ( result_new ) ;
+    
+    ListRemoveSuccessiveDuplicatesLoop ( text ; repetition + 1 ; result_new )
+  )
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListRemoveSuccessiveDuplicates ( text ; repetition )
+
+PURPOSE:
+	Returns list of values with neighboring duplicates removed.
+
+EXAMPLES:
+	ListRemoveSuccessiveDuplicatesLoop ( "1¶2¶2¶1¶2" ; 3 ; "1¶2" ) = "1¶2¶1¶2"
+
+HISTORY:
+	Created: 2010-Nov-09 10h17 PST — Donovan A. Chandler
+*/

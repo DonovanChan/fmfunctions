@@ -1,0 +1,15 @@
+ListRemoveSuccessiveDuplicatesLoop ( text ; 1 ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	ListRemoveSuccessiveDuplicates ( text )
+
+PURPOSE:
+	Returns list of values with neighboring duplicates removed.
+
+EXAMPLES:
+	ListRemoveNeighboringDuplicates ( "1¶2¶2¶1¶2" ) = "1¶2¶1¶2"
+
+HISTORY:
+	Created: 2010-Nov-09 10h17 PST — Donovan A. Chandler
+*/
