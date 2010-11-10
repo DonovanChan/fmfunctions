@@ -1,12 +1,25 @@
-Case (
-  numberOfDaysToReturn ≠ 0 ;
-    DatesFromStartLoop (
-      GetAsDate ( startDate ) ;
-      numberOfDaysToReturn ;
-      omitWeekends ;
-      omitHolidays ;
-      ""
+Let ([
+  //-- Build list of valid dates
+  list_new =
+    Case (
+      numberOfDaysToReturn ≠ 0 ;
+        DatesFromStartLoop (
+          GetAsDate ( startDate ) ;
+          numberOfDaysToReturn ;
+          omitWeekends ;
+          omitHolidays ;
+          ""
+        )
     )
+  ];
+  //-- Ensure list is sorted ascending
+  Case (
+    IsEmpty ( list_new ) ;
+      "" ;
+    numberOfDaysToReturn < 0 ;
+      ListSortDates ( list_new ; 0 ) ;
+    list_new
+  )
 )
 
 /* —————————————————————————————— //
@@ -18,7 +31,7 @@ PURPOSE:
 
 EXAMPLES:
   DatesFromStart ( "10/1/2010" ; 2 ; 1 ; 0 ) = "10/1/2010¶10/4/2010"
-  DatesFromStart ( "10/1/2010" ; -2 ; 1 ; 0 ) = "10/1/2010¶9/30/2010"
+  DatesFromStart ( "10/1/2010" ; -2 ; 1 ; 0 ) = "9/30/2010¶10/1/2010"
 
 HISTORY:
   Created: 2010-Oct-15 12h06 PST — Donovan A. Chandler
