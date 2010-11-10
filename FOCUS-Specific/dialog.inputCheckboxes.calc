@@ -14,8 +14,8 @@ Let([
       # ( "DEFAULT_IS_VALID" ; 1 )
     )
   )
-  & Case ( 
-    _label_count > 1; 
+  & Case (
+    _label_count > 1;
     ¶ & DialogInputCheckboxes (
       RightValues ( _label_list; _label_count - 1 );
       RightValues ( _value_list; _label_count - 1 )
