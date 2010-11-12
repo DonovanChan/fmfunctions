@@ -1,7 +1,7 @@
 Case(
     //  One value left in list - return just that value
     ValueCount( theList ) <= 1;
-       LeftValues (theList; 1 );
+       GetValue (theList; 1 );
        
    //   Default
     Let(
@@ -18,7 +18,7 @@ Case(
         //  merge the two sorted lists
         mergedList = ListSortLoop( sortedLeft; sortedRight )
         ];
-        mergedList 
+        ListTrimCR ( mergedList )
     )
 )
 
@@ -33,6 +33,7 @@ PURPOSE:
 HISTORY:
     Created by Soliant Consulting (See below or FM 8 Functions p. 228)
     Modified 2008.06.17 by DChandler for formatting/commenting preference
+    Modified 2010.11.10 by DChandler to trim trailing carriage return
 
 INPUT:
     list:  return-delimited list of values
@@ -41,7 +42,7 @@ OUTPUT:
     The same list, sorted ascending
 
 DEPENDENCIES:
-    Requires the ListSortLoop() function
+    Custom Functions: ListSortLoop(), ListTrimCR()
 
 Function created by Soliant Consulting
 www.soliantconsulting.com
