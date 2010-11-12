@@ -28,6 +28,7 @@ NAME:
 
 PURPOSE:
   Returns list of dates in range. Excludes weekends and/or holidays if specified.
+  Pass negative number into numberOfDaysToReturn to end range on startDate.
 
 EXAMPLES:
   DatesFromStart ( "10/1/2010" ; 2 ; 1 ; 0 ) = "10/1/2010¶10/4/2010"
