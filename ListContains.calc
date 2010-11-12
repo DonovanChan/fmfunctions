@@ -1,0 +1,21 @@
+ValueCount (
+  FilterValues ( listOfValues ; searchValue )
+) > 0
+
+/* —————————————————————————————— //
+NAME:
+	ListContains ( listOfValues ; searchValue )
+
+PURPOSE:
+	Returns true if listOfValues contains match for searchValue
+
+EXAMPLES:
+	ListContains ( "foo¶fum" ; "FOO" ) = 1
+	ListContains ( "foo¶fum" ; "FOG" ) = 0
+
+HISTORY:
+	Created: 2010-Nov-10 11h56 PST — Donovan A. Chandler
+
+NOTES:
+	For case sensitive search, use ListFilterCustom()
+*/

@@ -1,0 +1,31 @@
+Let ([
+  input = #NthValue ( dialogHashContents ; "INPUT" ; rep ) ;
+  type = #Value (input ; "TYPE" ) ;
+  invalidTypes = "separator¶image¶link¶caption" ;
+  isValid = not ListContains ( invalidTypes ; type )
+  ] ;
+  Case (
+    IsEmpty ( input ) ; previousResults ;
+    
+    DialogDataInputsLoop (
+      dialogHashContents ;
+      rep + 1 ;
+      List ( previousResults ; If ( isValid ; input ) )
+    )
+  )
+)
+  
+/* —————————————————————————————— //
+NAME:
+	DialogDataInputsLoop ( dialogHashContents ; rep ; previousResults )
+
+PURPOSE:
+	Returns DIALOG hash omitting INPUT elements that don't accept data entry.
+	Built for use with dialog script supporting SimpleDialog.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Nov-11 15h21 PST — Donovan A. Chandler
+*/

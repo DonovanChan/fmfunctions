@@ -1,0 +1,16 @@
+DialogDataInputsLoop ( dialogHashContents ; 1 ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	DialogDataInputs ( dialogHashContents )
+
+PURPOSE:
+	Returns DIALOG hash omitting INPUT elements that don't accept data entry.
+	Built for use with dialog script supporting SimpleDialog.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Nov-11 17h43 PST — Donovan A. Chandler
+*/
