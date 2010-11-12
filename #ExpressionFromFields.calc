@@ -6,7 +6,7 @@ Let ( [
       "valueRough = GetField( nameFull ); " &
       "value = If( valueRough = \"?\" or IsEmpty( valueRough ); \"\"; valueRough ) " &
       "]; " &
-      "\"# ( \" & Quote( name ) & \" ; \" & Quote( value ) & \" )\" " &
+      "\"# ( \" & Quote( name ) & \" ; \" & TextAsCalculation ( value ) & \" )\" " &
     ")" ;
   list = ListCustom ( 1 ; ValueCount ( listOfFieldNames ) ; ex )
   ];
