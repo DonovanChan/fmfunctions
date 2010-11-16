@@ -4,9 +4,16 @@ Let ( [
       "nameFull = GetValue( nameList; [n] ); " &
       "name = FieldNameShort( nameFull ); " &
       "valueRough = GetField( nameFull ); " &
-      "value = If( valueRough = \"?\" or IsEmpty( valueRough ); \"\"; valueRough ) " &
+      "value = " &
+        "Case( " &
+          "valueRough = \"?\" or IsEmpty( valueRough ); " &
+            "Quote( \"\" ); " &
+          "Left ( valueRough ; 12 ) = \"GetFieldName\"; " &
+            "valueRough; " &
+          "Quote( valueRough ) " &
+        ") " &
       "]; " &
-      "\"# ( \" & Quote( name ) & \" ; \" & TextAsCalculation ( value ) & \" )\" " &
+      "\"# ( \" & Quote( name ) & \" ; \" & value & \" )\" " &
     ")" ;
   list = ListCustom ( 1 ; ValueCount ( listOfFieldNames ) ; ex )
   ];
