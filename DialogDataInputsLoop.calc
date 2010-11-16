@@ -10,7 +10,7 @@ Let ([
     DialogDataInputsLoop (
       dialogHashContents ;
       rep + 1 ;
-      List ( previousResults ; If ( isValid ; input ) )
+      List ( previousResults ; If ( isValid ; # ( "INPUT" ; input ) ) )
     )
   )
 )
