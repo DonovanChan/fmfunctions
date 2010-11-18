@@ -1,5 +1,5 @@
 not IsEmpty( string ) and
-GetAsDate( string ) = string
+GetAsText ( GetAsDate( string ) ) = GetAsText ( string )
 
 /* —————————————————————————————— //
 NAME:
