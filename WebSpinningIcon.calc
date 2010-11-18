@@ -1,12 +1,20 @@
 "data:text/html,<html><head>
 <style type=\"text/css\">
- 
-  /* Background Color */
-  body { background: #" & backgroundColorHex & "}
 
-  /* Scale image to width of viewer */
+  /* Background Color */
+  body {
+    background: #" &
+      Case (
+        //-- If empty, use white
+        IsEmpty ( backgroundColorHex ) ; "FFFFFF" ;
+        backgroundColorHex
+      ) &
+    "}
+
+  /* Scale image to size of viewer */
   img {
-    width: 100% 
+    width: 100%;
+    height: 100%
   }
 
 </style>
