@@ -1,0 +1,32 @@
+Let ([
+  omitDateList =
+    List (
+      If ( omitHolidays ; holidayDateList ) ;
+      If ( omitVacation ; vacationDateList )
+    )
+  ];
+  DatesFrom (
+    startDate ; numberOfDaysToReturn ;
+    omitWeekends ;
+    If ( not IsEmpty ( omitDateList ) ; ListDateToNumber ( omitDateList ) )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+  DatesFromFull (
+    startDate ; numberOfDaysToReturn ;
+    omitWeekends ;
+    omitHolidays ; holidayDateList ;
+    omitVacation ; vacationDateList
+  )
+
+PURPOSE:
+  Wrapper for DatesFrom() providing better support for toggling multiple sets of omit dates 
+
+EXAMPLES:
+  
+
+HISTORY:
+  Created: 2010-Nov-19 15h07 PST — Donovan Chandler
+*/
