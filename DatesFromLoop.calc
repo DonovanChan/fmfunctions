@@ -1,22 +1,16 @@
 Let ( [
   start = GetAsDate ( startDate ) ;
   dayOfWeek = DayOfWeek ( start ) ;
-  holidayList = ListDateToNumber ( DatesHolidayList ) ;
   isWeekend =
     Case (
       omitWeekends ;
         dayOfWeek = 7 or dayOfWeek = 1 ;
       0
     ) ;
-  isHoliday =
-    Case (
-      omitHolidays ;
-        ValueCount ( FilterValues ( holidayList ; GetAsNumber ( start ) ) ) > 0 ;
-      0
-    ) ;
+  isOmitted = ValueCount ( FilterValues ( omitDateNumberList ; GetAsNumber ( start ) ) ) > 0 ;
   result = 
     Case (
-      isWeekend or isHoliday ;
+      isWeekend or isOmitted ;
         previousResults ;
       List ( previousResults ; start )
     ) ;
@@ -26,11 +20,11 @@ Let ( [
     resultCount ≥ Abs ( numberOfDaysToReturn ) ;
       result ;
 
-    DatesFromStartLoop (
+    DatesFromLoop (
       start + If ( numberOfDaysToReturn < 0 ; -1 ; 1 ) ;
       numberOfDaysToReturn ;
       omitWeekends ;
-      omitHolidays ;
+      omitDateNumberList ;
       result
     )
 
@@ -39,14 +33,14 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-  DatesFromStartLoop ( startDate ; numberOfDaysToReturn ; omitWeekends ; omitHolidays ; previousResults )
+  DatesFromLoop ( startDate ; numberOfDaysToReturn ; omitWeekends ; omitDateNumberList ; previousResults )
 
 PURPOSE:
   Performs recursive operation for DatesFromStart().  Returns list of dates as specified. 
 
 EXAMPLES:
-  DatesFromStartLoop ( "10/2/2010" ; 2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
-  DatesFromStartLoop ( "10/2/2010" ; -2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶9/30/2010"
+  DatesFromLoop ( "10/2/2010" ; 2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
+  DatesFromLoop ( "10/2/2010" ; -2 ; 1 ; 0 ; "10/1/2010" ) = "10/1/2010¶9/30/2010"
 
 HISTORY:
   Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler

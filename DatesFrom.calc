@@ -3,11 +3,11 @@ Let ([
   list_new =
     Case (
       numberOfDaysToReturn ≠ 0 ;
-        DatesFromStartLoop (
+        DatesFromLoop (
           GetAsDate ( startDate ) ;
           numberOfDaysToReturn ;
           omitWeekends ;
-          omitHolidays ;
+          ListDateToNumber ( omitDateList ) ;
           ""
         )
     )
@@ -24,19 +24,19 @@ Let ([
 
 /* —————————————————————————————— //
 NAME:
-  DatesFromStart ( startDate ; numberOfDaysToReturn ; omitWeekends ; omitHolidays )
+  DatesFrom ( startDate ; numberOfDaysToReturn ; omitWeekends ; omitDateList )
 
 PURPOSE:
   Returns list of dates in range. Excludes weekends and/or holidays if specified.
   Pass negative number into numberOfDaysToReturn to end range on startDate.
 
 EXAMPLES:
-  DatesFromStart ( "10/1/2010" ; 2 ; 1 ; 0 ) = "10/1/2010¶10/4/2010"
-  DatesFromStart ( "10/1/2010" ; -2 ; 1 ; 0 ) = "9/30/2010¶10/1/2010"
+  DatesFrom ( "10/1/2010" ; 2 ; 1 ; "10/1/2010" ) = "10/4/2010¶10/5/2010"
+  DatesFrom ( "10/1/2010" ; -2 ; 1 ; "" ) = "9/29/2010¶9/30/2010"
 
 HISTORY:
   Created: 2010-Oct-15 12h06 PST — Donovan A. Chandler
   
 NOTE:
-  omitHolidays parameter currently not supported.
+  
 */
