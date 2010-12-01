@@ -1,41 +1,41 @@
 Let([
-	stringTrim = Trim( string );
-	yes = "yes¶1¶true";
-	no = "no¶0¶false"
-	];
-	Case(
-		//-- Null, convert if requested
-		IsEmpty( stringTrim ) and nullAsFalse;
-			0;
-			
-		//-- True
-		ValueCount( FilterValues( yes; stringTrim ) );
-			1;
-			
-		//-- False
-		ValueCount( FilterValues( no; stringTrim ) );
-			0;
-			
-		//-- Unrecognized
-		preserveUnrecognizedValues;
-			string
-	)
+  stringTrim = Trim( string );
+  yes = "yes¶1¶true";
+  no = "no¶0¶false"
+  ];
+  Case(
+    //-- Null, convert if requested
+    IsEmpty( stringTrim ) and nullAsFalse;
+      0;
+      
+    //-- True
+    ValueCount( FilterValues( yes; stringTrim ) );
+      1;
+      
+    //-- False
+    ValueCount( FilterValues( no; stringTrim ) );
+      0;
+      
+    //-- Unrecognized
+    preserveUnrecognizedValues;
+      string
+  )
 )
 
 /* —————————————————————————————— //
 NAME:
-	TextAsBoolean( string ; nullAsFalse ; preserveUnrecognizedValues )
+  TextAsBoolean( string ; nullAsFalse ; preserveUnrecognizedValues )
 
 PURPOSE:
-	Converts recognized strings into boolean values.
+  Converts recognized strings into boolean values.
 
 EXAMPLES:
-	TextAsBoolean( "yes"; 1; 1 ) = 1
-	TextAsBoolean( "maybe"; 1; 1 ) = "maybe"
-	TextAsBoolean( "maybe"; 1; 0 ) = ""
-	TextAsBoolean( ""; 1; 1 ) = 0
-	TextAsBoolean( ""; 0; 1 ) = ""
+  TextAsBoolean( "yes"; 1; 1 ) = 1
+  TextAsBoolean( "maybe"; 1; 1 ) = "maybe"
+  TextAsBoolean( "maybe"; 1; 0 ) = ""
+  TextAsBoolean( ""; 1; 1 ) = 0
+  TextAsBoolean( ""; 0; 1 ) = ""
 
 HISTORY:
-	Created: 2010-Sep-21 14h26 PST — Donovan A. Chandler
+  Created: 2010-Sep-21 14h26 PST — Donovan A. Chandler
 */
