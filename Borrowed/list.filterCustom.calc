@@ -50,7 +50,7 @@ Case (
             $MyList = "[#|#]" & $TagB & Substitute ( Choose ( CaseSensitive ; Upper ( $MyFirstList ) ; $MyFirstList ) ; [ ¶ ; $TagE & ¶ & "[#|#]" & $TagB ] ) & $TagE ;
             $Values = Choose ( CaseSensitive ; Upper ( ListB ) ; ListB ) ;
 
-            Trigger = list.custom ( 1 ; ValueCount ( ListB ) ;
+            Trigger = ListCustom ( 1 ; ValueCount ( ListB ) ;
                             "Let ([Value = GetValue ( $Values ; [n] ) ; $MyList = case ( Not IsEmpty ( value ) ; Substitute ( $MyList  ; $TagB & Value & $TagE ; \"X##X\"  ) ; $MyList ) ] ; \"\" )" ) ;
 
             $MyList = Substitute (  $MyList ; [ "[#|#]"; "" ] ;  [ "#|#"; "" ]  ) ;
@@ -60,8 +60,20 @@ Case (
     Case (
         CaseSensitive < 1 and Left ( Attribute ; 3 ) = "Not" ; Substitute ( FilterValues ( $MyFirstList ; $MyList ) & "#|#" ; ["¶#|#" ; "" ] ; ["#|#" ; "" ]) ;
 
-        list.custom ( 1 ; ValueCount ( $MyList  ) ; 
+        ListCustom ( 1 ; ValueCount ( $MyList  ) ; 
             "Let ([ Value = GetValue ( $MyList ; [n] ) ]; Case ( PatternCount ( Value ; \"X##X\")" & $Test & " ; GetValue ( $MyFirstList ; [n] )))" ) 
             )
       )
 ) & Let( [ $MyFirstList = "" ; $MyList = "" ; $Values = ""] ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	ListFilterCustom ( listA ; attribute ; listB ; caseSensitive )
+
+PURPOSE:
+	Advanced filtering of list values
+
+HISTORY:
+	Created 2007-Jul by Agnes Barough (see documentation above)
+	Adapted: 2010-Nov-19 16h54 PST — Donovan A. Chandler
+*/
