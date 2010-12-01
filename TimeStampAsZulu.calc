@@ -1,0 +1,38 @@
+Let ( [
+  timeZ =
+    Time (
+      Hour ( tme ) + ( timeOffset * -1 ) ;
+      Minute ( tme ) ;
+      Seconds ( tme )
+    ) ;
+  m = Timestamp ( dte ; timeZ );
+  d = Date ( Month ( m ) ; Day ( m ) ; Year ( m ) );
+  t = Time ( Hour ( m ) ; Minute ( m ) ; Seconds ( m ) )
+  ] ;
+  Year ( d ) &
+  "-" &
+  Right ( "00" & Month ( d ) ; 2 ) &
+  "-"  &
+  Right ( "00" & Day ( d ) ; 2 ) &
+  "T" &
+  Right ( "00" & Hour ( t ) ; 2 ) &
+  ":" &
+  Right ( "00" & Minute ( t ) ; 2 ) &
+  ":" &
+  Right ( "00" & Seconds ( t ) ; 2 ) & ".000Z"
+)
+
+/* —————————————————————————————— //
+NAME:
+	TimestampAsZulu ( dte ; tme ; timeOffset )
+
+PURPOSE:
+	Takes timestamp and returns equivalent time in Zulu (GMT) forma
+
+EXAMPLES:
+	TimestampAsZulu ( "12/1/10" ; "1:05 PM" ; -8 )
+	= "2010-12-01T21:00:05.000Z"
+
+HISTORY:
+	Created: 2010-Dec-01 12h09 PST — Donovan A. Chandler
+*/

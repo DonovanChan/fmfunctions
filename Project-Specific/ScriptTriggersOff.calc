@@ -1,0 +1,19 @@
+Let ([
+  $$_script_triggers_disabled = 1
+  ];
+  $$_script_triggers_disabled
+)
+
+/* —————————————————————————————— //
+NAME:
+	ScriptTriggersOff ( )
+
+PURPOSE:
+	Sets boolean flag to True that prevents triggered scripts from executing.
+
+EXAMPLES:
+	ScriptTriggersOff() = 1
+
+HISTORY:
+	Created: 2010-Nov-23 09h20 PST — Donovan A. Chandler
+*/
