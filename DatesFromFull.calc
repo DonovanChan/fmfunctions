@@ -1,14 +1,10 @@
 Let ([
-  omitDateList =
-    List (
-      If ( omitHolidays ; holidayDateList ) ;
-      If ( omitVacation ; vacationDateList )
-    )
+  omitDateList = If ( omitHolidays ; DatesHolidayList )
   ];
   DatesFrom (
     startDate ; numberOfDaysToReturn ;
     omitWeekends ;
-    If ( not IsEmpty ( omitDateList ) ; ListDateToNumber ( omitDateList ) )
+    omitDateList
   )
 )
 
@@ -17,8 +13,7 @@ NAME:
   DatesFromFull (
     startDate ; numberOfDaysToReturn ;
     omitWeekends ;
-    omitHolidays ; holidayDateList ;
-    omitVacation ; vacationDateList
+    omitHolidays
   )
 
 PURPOSE:
