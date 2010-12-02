@@ -1,7 +1,7 @@
 Let ( [
   timeZ =
     Time (
-      Hour ( tme ) + ( timeOffset * -1 ) ;
+      Hour ( tme ) + ( hourOffsetFromZulu * -1 ) ;
       Minute ( tme ) ;
       Seconds ( tme )
     ) ;
@@ -24,7 +24,7 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-	TimestampAsZulu ( dte ; tme ; timeOffset )
+	TimestampAsZulu ( dte ; tme ; hourOffsetFromZulu )
 
 PURPOSE:
 	Takes timestamp and returns equivalent time in Zulu (GMT) forma
