@@ -1,0 +1,26 @@
+Let ([
+  dte = GetAsDate ( theDate ) ;
+  mnth = Month ( dte ) ;
+  yr = Year ( dte )
+  ];
+  DatesInRange (
+    Date ( mnth ; 1 ; yr ) ;
+    Date ( mnth + 1 ; 1 ; yr ) - 1 ;
+    1 ;
+    omitDateList
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	DateWorkdaysInMonth ( theDate ; omitDateList )
+
+PURPOSE:
+	Returns workdays for month of given date
+
+EXAMPLES:
+	ValueCount ( DateWorkdaysInMonth ( "12/20/10" ; "12/20/10" ) ) = 22
+
+HISTORY:
+	Created: 2010-Dec-20 14h41 PST — Donovan A. Chandler
+*/

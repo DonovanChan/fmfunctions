@@ -1,0 +1,23 @@
+Let ([
+  string = Substitute ( text ; Left ( charactersToOmit ; 1 ) ; "" ) ;
+  charRemaining = Right ( charactersToOmit ; Length ( charactersToOmit ) - 1 )
+  ];
+  Case (
+    IsEmpty ( charRemaining ) ; string ;
+    TextOmitChars ( string ; charRemaining )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextOmitChars ( text ; charactersToOmitToOmit )
+
+PURPOSE:
+	Removes each character from text.  Functional inverse of Filter()
+
+EXAMPLES:
+	TextOmitChars ( "23 Main Ave" ; "0123456789" ) = " Main Ave"
+
+HISTORY:
+	Created: 2010-Dec-17 14h25 PST — Donovan A. Chandler
+*/

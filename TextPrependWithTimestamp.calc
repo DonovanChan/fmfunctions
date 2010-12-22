@@ -1,0 +1,36 @@
+Let ([
+  clrA = RGB ( 189 ; 76 ; 0 ) ; //Orange///
+  clrB = RGB ( 85 ; 85 ; 85 ) //Gray//
+  ];
+  Case (
+    not IsEmpty ( newText ) ;
+      GetAsDate ( timestmp ) & " " &
+      TextColor ( GetAsTime ( timestmp ) & " by " ; clrB ) &
+      TextColor ( name ; clrA ) & 
+      TextColor (
+        ":¶" &
+        "-------------------------------------------------¶" ; clrB
+      ) &
+      newText &
+      Case (
+        not IsEmpty ( oldText ) ;
+        "¶¶" & oldText
+      )
+  )
+)
+
+
+
+/* —————————————————————————————— //
+NAME:
+	TextPrependWithTimestamp ( oldText ; newText ; name ; timestmp )
+
+PURPOSE:
+	Prepends block of text with header containing provided name and timestamp
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Dec-21 12h25 PST — Donovan A. Chandler
+*/

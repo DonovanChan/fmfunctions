@@ -1,0 +1,21 @@
+Day (
+  Date (
+    Month ( GetAsDate ( theDate ) ) + 1 ;
+    0 ;
+    Year ( GetAsDate ( theDate ) )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	DateMonthDays ( theDate )
+
+PURPOSE:
+	Returns count of days in month
+
+EXAMPLES:
+	DateMonthDays ( "12/1/2010" ) = 31
+
+HISTORY:
+	Created: 2010-Dec-20 14h08 PST — Donovan A. Chandler
+*/
