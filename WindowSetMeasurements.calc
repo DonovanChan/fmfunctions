@@ -1,0 +1,452 @@
+/*
+INPUT: 
+    windowType:     Command in curly braces or one of pre-determined text strings 
+            Supported types: scratch, prepare, test, offsetLeft, offsetRight, offsetTop, offsetBottom, palette, dialog, report, clear
+    applySettings:    Type of window movement being undertaken
+            1 / "all"        - Applies all settings 
+            2 / "default"    - Applies default window size 
+                              (good if followed by "adjust to fit" script step)
+            3 / "location"    - Applies window location but leaves size in tact
+            4 / "size"        - Applies window size by leaves location in tact
+    
+    Command Syntax: [axis][location][reference][adjustment]
+        "axis" determines if following command characters are applied along "x" or "y" axes
+        "location" sets alignment of new window along...
+            "C"     - Center
+            "T"     - Top
+            "B"     - Bottom
+            "L"     - Left
+            "R"     - Right
+        "reference" determines what "location" aligns to
+            "W"     - Current open window
+            "S"     - Visible screen area
+            "O"     - Active layout object
+        "adjustment" adds or subtracts numerical value from location
+            e.g., "+50"     adds 50 pixels to the location
+
+    Examples:
+        nav.setWindowSettings( "offsetLeft"; 0 ) offsets window from $$_window_orig_left
+        nav.setWindowSettings( "{xCWyTW+50}"; 0 ), 
+            Translation of "{xCWyTS}": "On X axis, place at CENTER of WINDOW. On Y axis, place at TOP of SCREEN."
+    
+OUTPUT: 
+    Function output: 0 if windowType is recognized, else error message
+    Local variables: $_window_new_name, $_window_new_height, $_window_new_width, $_window_new_top, $_window_new_left
+    
+NOTES: 
+    How to Set Correct Window Size:
+        • (A) Set object named "background" in very bottom right corner, or
+        • (B) Set height with $preWindowHeight and width with $preWindowWidth, 
+        • (C) Else, current window size is used.
+                (Make window adjustments beforehand, e.g., View as List adds 3 px of width.)
+        • (D) Or... use this function to position the window, then "resize to fit" (although this will force the window onto the window content area)
+    Other Size Considerations:
+        • These measurements relate to the layout only. Extra pixels will be added for the chrome height and width (difference between layout size and window size).
+        • Make sure changes to the window (i.e., status area) are made BEFORE using this function
+        • Aligning by right or bottom sides of window (e.g., "offsetRight", "offsetBottom", "{xRWyCW}") requires its size to be set correctly according to options A, B or C above 
+        
+    How to Set Correct Window Location (in relation to existing window):
+        • (A) Call this function while on the original (reference) window, or
+        • (B) Set $$_window_orig_top, $$_window_orig_left, $$_window_orig_height and $$_window_orig_width before leaving original window
+        
+    Note about reference type "O":
+        Be careful when using on buttons. A button can only become an active object if it is "tabbed" to or has been selected with the "Go To Object" script step. 
+    
+    • Window name can be overridden with $preWindowName
+    • Only "selection" window types account for extra 3 pixels of width required by list view 
+    • "scratch" settings will be disabled if sys.getMode() > 1 (system mode NOT in production or testing)
+    
+    Compatibility Considerations:
+        • FMP 9 or older
+            • Sorry, versions prior to 10 are currently not supported.  Adjustments for chrome height/width may be off.
+        • FMP 10
+            • Window in List View must be ≥ 270 px high to measure background object's properties (in my tests)
+    
+TO DO:
+    Mac Issues (FMP 9):
+    DesktopContentHeight/Width does NOT account for... toolbars, dock or external monitor
+    Can't open window off left side of screen - always appears at ~20px
+—————————————————————————————— */
+
+Let([
+    //--  Parse parameters
+    isCommand = ( Left( windowType; 1 ) = "{" and Right( windowType; 1 ) = "}" );
+    apply = 
+        Case(
+            GetAsNumber( applySettings ) > 0; 
+                Choose( applySettings;
+                    "all";
+                    "default";
+                    "location";
+                    "size"
+                );
+            applySettings = "position"; "location";
+            applySettings
+        );
+    
+    //--  Settings
+    bnShowScratchWindows = 0 ; //sys.getMode( False ) > 1;    //system bnStatusOn is "development" or "debugging"
+    offScreenTypes = "¶scratch¶prepare¶";    //all other types kept to viewable area
+    minTop = 20;    //could account for OS differences here
+    minLeft = 20;
+    minHeight = 270;    //object not otherwise measured on List layout in FMP 10
+    minWidth = 50;
+    listViewH = 500;    //default height for layouts viewed as list
+    
+    //--  Assess Current Window State
+    mac = Abs( Get( SystemPlatform ) ) = 1;
+    wContentH = Get( WindowContentHeight );
+    wContentW = Get( WindowContentWidth );
+    wDesktopH = Get( WindowDesktopHeight );
+    wDesktopW = Get( WindowDesktopWidth );
+    bnStatusOn = ( Get( StatusAreaState ) = 1 or Get( StatusAreaState ) = 2 );
+    bnListView = Get( LayoutViewState ) = 1;
+    bnSidebarOn = ( bnListView or Get( LayoutViewState ) =  2 );
+    bnOldInterface = GetAsNumber( Get( ApplicationVersion ) ) < 10;
+    
+    //--  Default measurements
+    statusW = If( IsEmpty( $$nav_statusAreaWidth ); 69; $$nav_statusAreaWidth );
+    statusH = If( IsEmpty( $$nav_statusAreaHeight ); 83; $$nav_statusAreaHeight );
+        //statusH includes extra 25px for toolbar
+    sidebarW = 3;
+    titleBarHeight = If( mac; 22; 25 );
+    footerBarHeight = If( mac; 15; 25 );
+    borderRightWidth = Case( mac; 15; 22 );
+    
+    chromeH = Get( WindowHeight ) - wContentH;
+        //If( IsEmpty( $$chrome_height ); If( mac; 37; 47 ); $$chrome_height );
+    chromeW = Get( WindowWidth ) - wContentW;
+        //If( IsEmpty( $$chrome_width ); If( mac; 15; 28 ); $$chrome_width );
+    chromeLeft = Case( bnOldInterface and bnStatusOn; statusW )  
+        + Case( bnSidebarOn; sidebarW ) 
+        + Case( not mac; 5 ) ;    //for window frame
+    chromeRight = borderRightWidth;
+    chromeTop = Case( not bnOldInterface and bnStatusOn; statusH ) + titleBarHeight;
+    
+    origTop = If( IsEmpty( $$_window_orig_top ); Get( WindowTop ); $$_window_orig_top );
+    origHeight = If( IsEmpty( $$_window_orig_height ); Get( WindowHeight ); $$_window_orig_height );
+    origLeft = If( IsEmpty( $$_window_orig_left ); Get( WindowLeft ); $$_window_orig_left );
+    origWidth = If( IsEmpty( $$_window_orig_width ); Get( WindowWidth ); $$_window_orig_width );
+        
+    backgndH = 
+        GetLayoutObjectAttribute( "background"; "bottom" ) - Get( WindowTop ) 
+        - chromeTop;
+    backgndR = GetLayoutObjectAttribute( "background"; "right" );
+    backgndW = backgndR - Get( WindowLeft ) - chromeLeft;
+    
+    error = 
+        Case( 
+            IsEmpty( backgndH ); 
+                "Error: \"background\" object, used to determine window size, not found. Preset the $preWindowWidth and/or $preWindowHeight variables or create a background object. ";
+            isCommand and Length( windowType ) < Length( "{xCWyCW}" );
+                "Error: Invalid windowType (\"" & windowType & "\")";
+            0
+        );
+    overrideH = Case( $preWindowHeight; $preWindowHeight + chromeH);
+    adjustedH = 
+        Case( 
+            apply = "default"; 200;
+            apply = "location"; Get( WindowHeight );
+            //--  Override background object if viewing as list or table
+            backgndH > 0 and bnListView; If( Length( overrideH ); overrideH; listViewH + chromeH );
+            backgndH > 0; backgndH + chromeH; 
+            not IsEmpty( $preWindowHeight ); overrideH;
+            bnListView; listViewH;
+            origHeight 
+        );
+    adjustedW = 
+        Case( 
+            apply = "default"; 200;
+            apply = "location"; Get( WindowWidth );
+            backgndW > 0; backgndR - Get( WindowLeft ) + chromeRight; //backgndW + chromeW;
+            not IsEmpty( $preWindowWidth ); $preWindowWidth + chromeW;
+            origWidth 
+        );
+    windowNameTemp = "TEMP_" & Get( CurrentTime ) & "_" & Get( ScriptName );
+    
+    //--  windowType Settings
+    setCommands = 
+        Case( 
+            //--  Is a direct command - pass on
+            isCommand;
+                Let([
+                    windowType = Substitute( windowType; ["{"; ""]; ["}"; ""]);
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    posX = Position( windowType; "x"; 1; 1 );
+                    posY = Position( windowType; "y"; 1; 1 );
+                    commandX = If( posX <= 1
+                        ; Middle( windowType; posX+1; posY-posX-1 )
+                        ; Middle( windowType; posX+1; Length( windowType )));
+                    commandY = If( posY <= 1
+                        ; Middle( windowType; posY+1; posX-posY-1 )
+                        ; Middle( windowType; posY+1; Length( windowType )));
+                    $_window_new_top = commandY;
+                    $_window_new_left = commandX
+                    ]; error );
+                
+            //--  Pre-set types
+            windowType = "current";
+                Let([
+                    $_window_new_name = windowNameTemp;
+                    $_window_new_height = $origHeight;
+                    $_window_new_width = $origWidth;
+                    $_window_new_top = $origTop;
+                    $_window_new_left = $origLeft
+                    ]; 0 );
+                    
+            windowType = "scratch";
+                Let([
+                    $_window_new_name = windowNameTemp;
+                    $_window_new_height = minHeight + chromeTop;
+                    $_window_new_width = minWidth;
+                    $_window_new_top = If( bnShowScratchWindows; 50; Get( ScreenHeight ) + 50 );
+                    $_window_new_left = If( bnShowScratchWindows; 50; Get( ScreenWidth ) + 50 )
+                    ]; 0 );
+              
+            windowType = "prepare";
+                Let([
+                    $_window_new_name = windowNameTemp;
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = If( bnShowScratchWindows; 50; Get( ScreenHeight ) + 50 );
+                    $_window_new_left = If( bnShowScratchWindows; 50; Get( ScreenWidth ) + 50 )
+                    ]; 0 );
+        
+            windowType = "offsetLeft";
+                Let([
+                    $_window_new_name = "Selection Window";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW + 50";
+                    $_window_new_left = "LW + 50" 
+                    ]; error );
+        
+            windowType = "offsetRight";
+                Let([
+                    $_window_new_name = "Selection Window";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW + 50";
+                    $_window_new_left = "RW - 50"
+                    ]; error );
+                
+            windowType = "offsetTop";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW + 50";
+                    $_window_new_left = "CW"
+                    ]; error );
+                
+            windowType = "offsetBottom";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "BW - 50";
+                    $_window_new_left = "CW"
+                    ]; error );
+        
+            windowType = "palette";
+                Let([
+                    $_window_new_name = "Palette";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW";
+                    $_window_new_left = "RW + $_window_new_width"
+                    ]; error );
+        
+            windowType = "dialog";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "CW";
+                    $_window_new_left = "CW" 
+                    ]; 0 ); 
+
+            windowType = "report";
+                Let([
+                    $_window_new_name = "Report";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = 25;
+                    $_window_new_left = 25 
+                    ]; error );
+        
+            windowType = "cascadeTop";
+                Let([
+                    $_window_new_name = "Selection Window";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW + " & titleBarHeight; 
+                    $_window_new_left = "RW" 
+                    ]; error );
+                    
+            windowType = "cascadeTopLeft";
+                Let([
+                    $_window_new_name = "Selection Window";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "TW + " & titleBarHeight; 
+                    $_window_new_left = "LW" 
+                    ]; error );
+                
+            windowType = "centerWindow";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "CW";
+                    $_window_new_left = "CW" 
+                    ]; 0 ); 
+                
+            windowType = "centerScreen";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = adjustedH;
+                    $_window_new_width = adjustedW;
+                    $_window_new_top = "CS";
+                    $_window_new_left = "CS" 
+                    ]; 0 ); 
+                
+            windowType = "clear";
+                Let([
+                    $_window_new_name = "";
+                    $_window_new_height = "";
+                    $_window_new_width = "";
+                    $_window_new_top = "";
+                    $_window_new_left = "" 
+                    ]; 0 );
+        
+            windowType = "test";
+                Let([
+                    $_window_new_name = windowNameTemp;
+                    $_window_new_height = $_window_new_height;
+                    $_window_new_width = "";
+                    $_window_new_top = 50;
+                    $_window_new_left = 100 
+                    ]; 0 );
+                
+            "Error: windowType \"" & windowType & "\" not recognized by nav.setWindowSettings"
+        
+        );     //end Case {setCommands}
+    
+    //--  Evaluate settings
+    //--      Substitutes commands with corresponding values and then evaluates full expression
+    //--      E.g., "BW - 50" -> "900 - 50" where 900 is the bottom of the current window
+    xCommand = Left( Filter( $_window_new_left; "CLRWSO" ); 2 );
+    yCommand = Left( Filter( $_window_new_top; "CTBWSO" ); 2 );
+    xLocation    = Left( xCommand; 1 );
+    xReference    = Right( xCommand; 1 );
+    yLocation    = Left( yCommand; 1 );
+    yReference    = Right( yCommand; 1 );
+    
+    vObject = Get( ActiveLayoutObjectName );
+    refH = Case( yReference = "W"; origHeight; 
+        yReference = "O"; GetLayoutObjectAttribute( vObject; "height" );
+        wDesktopH );
+    refW = Case( xReference = "W"; origWidth; 
+        xReference = "O"; GetLayoutObjectAttribute( vObject; "width" );
+        wDesktopW );
+    refT = Case( yReference = "W"; origTop; 
+        yReference = "O"; GetLayoutObjectAttribute( vObject; "top" );
+        0 );
+    refL = Case( xReference = "W"; origLeft; 
+        xReference = "O"; GetLayoutObjectAttribute( vObject; "left" );
+        0 );
+    
+    //$$windowSettings_Test = "refH = " & refH & "; refW = " & refW & "; refT = " & refT & "; refL = " & refL;
+    
+    yVal = 
+        Case(
+            yLocation = "C";
+                refT + refH/2 - $_window_new_height/2;
+            yLocation = "T";
+                refT;
+            yLocation = "B";
+                refT + refH - $_window_new_height
+        );
+    xVal = 
+        Case(
+            xLocation = "C";
+                refL + refW/2 - $_window_new_width/2;
+            xLocation = "L";
+                refL;
+            xLocation = "R";
+                refL + refW - $_window_new_width                          
+        );
+    yCommandNew = Substitute( $_window_new_top; yCommand; yVal );
+    xCommandNew = Substitute( $_window_new_left; xCommand; xVal );
+    
+    //--  Adjust final variables
+    $_window_new_name = 
+        Case( 
+            Length( $preWindowName ); $preWindowName;
+            Length( $_window_new_name ); $_window_new_name;
+            ""
+        );
+    $_window_new_top = Evaluate( yCommandNew );
+    $_window_new_left = Evaluate( xCommandNew );
+    
+    //--  Check that window is entirely on-screen
+    vCorrectTopUp = wDesktopH - $_window_new_height - 20;
+    svCorrections = 
+        Case(
+            //--  windowType is off-screen
+            PatternCount( offScreenTypes; "¶" & windowType & "¶" );
+                "do nothing";
+            //--  Default
+            Let(
+                [
+                $_window_new_top = 
+                    Case(
+                        applySettings = "size"; origTop;
+                        $_window_new_top < minTop; minTop; 
+                        $_window_new_top + $_window_new_height > wDesktopH; 
+                            If( vCorrectTopUp < minTop; minTop; vCorrectTopUp );
+                        $_window_new_top 
+                    );
+                $_window_new_left = 
+                    Case(
+                        applySettings = "size"; origLeft;
+                        $_window_new_left < minLeft; minLeft;
+                        $_window_new_left + $_window_new_width > wDesktopW; 
+                            wDesktopW - $_window_new_width - minLeft;
+                        $_window_new_left
+                    );
+                clearOrigWindowMeasurements = WindowGetMeasurements( True )
+                ];
+                1
+            )    //end Let
+        )  //end Case
+        
+    ; $_window_new_top    = Int( $_window_new_top )
+    ; $_window_new_left    = Int( $_window_new_left )
+    ; $_window_new_width    = Int( $_window_new_width )
+    ; $_window_new_height    = Int( $_window_new_height )
+    ];
+    setCommands
+)     //Let
+
+/* —————————————————————————————— //
+NAME: 
+    WindowSetMeasurements( windowType; applySettings )
+    Version 3.4
+
+PURPOSE: 
+    Creates coded local variables for window creation based on windowType
+
+HISTORY: 
+    Created 2008.04.06 by Donovan Chandler
+    Compliments to Dawn Heady for demonstrating this technique at DevCon 2007
+
+DEPENDENCIES: 
+    Custom Functions: sys.getMode(), nav.measureWindow()
+    Optional Variables: $$nav_statusAreaWidth (v9 and lower), $$nav_statusAreaHeight (v10 and higher)
+    Reserved Variables: $$chrome_height, $$chrome_width, $preWindowName, $preWindowWidth, $preWindowHeight
+    Some types also require variables set in nav.measureWindow() ($$_window_orig_height, $$_window_orig_width, $$_window_orig_top, $$_window_orig_left)
+*/
