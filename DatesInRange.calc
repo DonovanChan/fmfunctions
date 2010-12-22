@@ -16,7 +16,7 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-  DatesInRange ( startDate ; endDate ; omitDateList )
+  DatesInRange ( startDate ; endDate ; omitWeekends ; omitDateList )
 
 PURPOSE:
   Returns list of dates in range. Excludes weekends and/or holidays if specified.
