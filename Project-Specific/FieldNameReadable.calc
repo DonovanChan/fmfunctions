@@ -1,0 +1,27 @@
+Let([
+  field_name_full = Substitute ( fieldName ; "::" ; ¶ ) ;
+  field_name = GetValue ( field_name_full ; ValueCount ( field_name_full ) )
+  ] ;
+  Proper (
+    Substitute (
+      fieldName ;
+      [ "_FLAG" ; "" ] ;
+      [ "ID_" ; "" ] ;
+      [ "_" ; " " ]
+    )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	FieldNameReadable ( fieldName )
+
+PURPOSE:
+	
+
+EXAMPLES:
+	FieldNameReadable ( GetFieldName ( CONTACT::FIRST_NAME )) = "First Name"
+
+HISTORY:
+	Created: 2011-Jan-12 14h12 PST — Donovan A. Chandler
+*/

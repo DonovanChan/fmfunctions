@@ -1,0 +1,24 @@
+# ( "QUERY" ;
+  # ( "REQUEST" ;
+    # ( "OMIT" ; omit ) &
+    # ( "CRITERION" ;
+      # ( "FIELD" ; fieldName ) &
+      # ( "VALUE" ; searchValue )
+    )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ParamQuery ( fieldName ; searchValue ; omit )
+
+PURPOSE:
+	Constructs QUERY parameter using inputs.
+	Used with "t filter" and related scripts.
+
+EXAMPLES:
+	ParamQuery ( "CONTACT::TYPE" ; "Client" ; 0 )
+
+HISTORY:
+	Created: 2011-Jan-06 11h58 PST — Donovan A. Chandler
+*/
