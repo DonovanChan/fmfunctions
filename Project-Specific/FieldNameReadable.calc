@@ -4,9 +4,12 @@ Let([
   ] ;
   Proper (
     Substitute (
-      fieldName ;
+      field_name ;
       [ "_FLAG" ; "" ] ;
       [ "ID_" ; "" ] ;
+      [ "_CT" ; "" ] ;
+      [ "_CN" ; "" ] ;
+      [ "_AT" ; "" ] ;
       [ "_" ; " " ]
     )
   )
