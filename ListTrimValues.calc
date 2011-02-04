@@ -1,0 +1,15 @@
+ListTrimValuesLoop ( theList ; 1 ; ValueCount ( theList ) )
+
+/* —————————————————————————————— //
+NAME:
+	ListTrimValues ( theList )
+
+PURPOSE:
+  Removes leading and trailing spaces from each value in a list.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Feb-02 12h11 PST — Donovan Chandler
+*/

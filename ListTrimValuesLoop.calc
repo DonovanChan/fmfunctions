@@ -1,0 +1,30 @@
+Let ([
+  valueTrimmed = Trim ( GetValue ( theList ; rep ) ) ;
+  listNew =
+    List (
+      ListTrimCR ( LeftValues ( theList ; rep - 1 ) ) ;
+      valueTrimmed ;
+      MiddleValues ( theList ; rep + 1 ; 50000 )
+    )
+  ] ;
+  Case (
+    rep < repMax ;
+      ListTrimValuesLoop ( listNew ; rep + 1 ; repMax ) ;
+    
+    listNew
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListTrimValuesLoop ( theList ; rep ; repMax )
+
+PURPOSE:
+	Peforms recursion for ListTrimValues
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Feb-02 12h04 PST — Donovan A. Chandler
+*/

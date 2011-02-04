@@ -1,0 +1,15 @@
+StringRepeatLoop ( string ; 1 ; repetitions )
+
+/* —————————————————————————————— //
+NAME:
+	StringRepeat ( string ; repetitions )
+
+PURPOSE:
+	Repeats string n times
+
+EXAMPLES:
+	StringRepeat ( "-" ; 4 ) = "----"
+
+HISTORY:
+	Created: 2011-Feb-02 16h23 PST — Donovan A. Chandler
+*/

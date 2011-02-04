@@ -1,0 +1,28 @@
+Let ([
+  objectString =
+    Substitute (
+      listOfObjects ;
+      [ "&" ; "or" ] ;
+      [ ¶ ; ", " ]
+    )
+  ];
+  "Error:	Missing Data" & ¶ &
+  "Script:	" & Get ( ScriptName ) & ¶ &
+  "Objects:	" & objectString
+)
+
+/* —————————————————————————————— //
+NAME:
+	MessageInvalidVar ( listOfObjects )
+
+PURPOSE:
+	Returns error message for list of objects that failed previous validation.
+	Used to keep messages uniform and modifiable across solution.
+
+EXAMPLES:
+	MessageInvalidVar ( "$_field & $_object" )
+	= "The following objects are missing required data:¶$_field or $_object"
+
+HISTORY:
+	Created: 2011-Jan-31 13h40 PST — Donovan A. Chandler
+*/

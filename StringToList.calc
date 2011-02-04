@@ -1,0 +1,18 @@
+ListTrimValues (
+  Substitute ( string ; delimiter ; ¶ )
+)
+
+/* —————————————————————————————— //
+NAME:
+	StringToList ( string ; delimiter )
+
+PURPOSE:
+	Converts string to list, breaking lines on delimiter.
+	Removes spaces
+
+EXAMPLES:
+	StringToList ( "dog ,cat, mouse" ; "," ) = "dog¶cat¶mouse"
+
+HISTORY:
+	Created: 2011-Feb-02 11h53 PST — Donovan A. Chandler
+*/
