@@ -1,7 +1,7 @@
 Let([
   stringTrim = Trim( string );
-  yes = "yes¶1¶true";
-  no = "no¶0¶false"
+  yes = "yes¶y¶1¶true";
+  no = "no¶n¶0¶false"
   ];
   Case(
     //-- Null, convert if requested
