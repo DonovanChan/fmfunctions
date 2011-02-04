@@ -1,0 +1,17 @@
+PatternCount ( fieldName ; "::" ) > 0
+
+/* —————————————————————————————— //
+NAME:
+	FieldIsQualified ( fieldName )
+
+PURPOSE:
+	Returns True if field name is fully qualified (contains table name)
+
+EXAMPLES:
+	FieldIsQualified ( GetFieldName ( CONTACT::NAME ) ) = 1
+	FieldIsQualified ( "NAME" ) = 0
+	FieldIsQualified ( "" ) = 0
+
+HISTORY:
+	Created: 2011-Jan-25 14h59 PST — Donovan A. Chandler
+*/
