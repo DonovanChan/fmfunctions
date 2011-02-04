@@ -1,33 +1,36 @@
 Let ( [
-  _var = GetValue ( listOfVariables ; rep ) ;
-  _var_count = PatternCount ( listOfVariables ; ¶ ) + 1 ;
-  _value = 
+  var = GetValue ( listOfVariables ; rep ) ;
+  value = 
     Case ( 
-      GetValue ( _var ; 1 ) = "$" ; Evaluate ( _var ) ; 
-      _var
+      Left ( var ; 1 ) = "$" ; Evaluate ( var ) ; 
+      var
     ) ;
-  _invalid = ( _value = "?" or IsEmpty ( _value ) )
-  ] ; 
- +
+  invalid = ( value = "?" or IsEmpty ( value ) )
+  ] ;
+  
+  //-- Add 1 if current value is invalid
+  Case(
+    value = "?" or IsEmpty( value );
+      1;
+    0
+  ) +
+  
   //-- Iterate thru other values
   Case ( 
-    rep < _var_count ; 
-      var.validate ( listOfVariables )
+    rep < repMax ; 
+      VarValidateLoop ( listOfVariables ; rep + 1 ; repMax )
   )
 )
 
 /* —————————————————————————————— //
 NAME:
-	var.validate( listOfVariables ; rep ; previousResults )
+	VarValidateLoop ( listOfVariables ; rep ; repMax )
 
 PURPOSE:
-	Returns count of variables with invalid data
+	Performs recursion for VarValidate ()
 
 EXAMPLES:
-	(where all variables contain values other than "?")
 	
-	var.validate( "$_table¶$_field" ) = 0 
-	var.validate( $_table & ¶ & $_field ) = 0
 	
 HISTORY:
 	Created: 2010-Aug-20 16h07 PST — Donovan A. Chandler
