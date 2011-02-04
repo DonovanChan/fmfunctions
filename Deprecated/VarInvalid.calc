@@ -1,0 +1,30 @@
+VarInvalidLoop ( listOfVariableNames ; requireAll ; 1 ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	VarInvalid ( listOfVariableNames ; requireAll )
+
+PURPOSE:
+	Returns list of variables with invalid data.
+
+USAGE:
+	Supply variable names as text strings (in quotes).
+	Each line of the parameter must evaluate to a valid value.
+	To require one of several vars, place them on one line separated by "|". 
+
+EXAMPLES:
+	Where $_table = "CONTACT", $_id_contact = "?", $_id_student = ""
+	
+	VarInvalid ( "$_table" ) = ""
+	
+	VarInvalid ( 
+		List ( "$_table" ; "$_id_contact | $_id_student" )
+	) = "$_id_contact | $_id_student"
+	
+	VarInvalid ( 
+		"$_table | $_id_student" )
+	) = ""
+	
+HISTORY:
+	Created: 2010-Oct-28 08h04 PST — Donovan Chandler
+*/
