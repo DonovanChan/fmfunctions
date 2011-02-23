@@ -1,0 +1,54 @@
+Let ([
+	name = TrimAll ( labelString ; 1 ; 3 ) ;
+	dte = Get ( CurrentDate ) ;
+	dteWeekBegin = dte - ( DayOfWeek ( dte ) - 2 )	// starting Monday
+	] ;
+	Case (
+		name = "yesterday" ;
+			GetAsDate ( dte - 1 ) ;
+		name = "today" ;
+			GetAsDate ( dte ) ;
+		name = "tomorrow" ;
+			GetAsDate ( dte + 1 ) ;
+		
+		name = "lastweek" ;
+			GetAsDate ( dteWeekBegin - 7 ) & "..." & dteWeekBegin ;
+		name = "thisweek" ;
+			dteWeekBegin & "..." & GetAsDate ( dteWeekBegin + 7 ) ;
+		name = "nextweek" ;
+			GetAsDate ( dteWeekBegin + 7 ) & "..." & 
+			GetAsDate ( dteWeekBegin + 14 ) ;
+		
+		name = "lastmonth" ;
+			Month ( dte ) - 1 & "/*/" & Year ( dte ) ;
+		name = "thismonth" ;
+			Month ( dte ) & "/*/" & Year ( dte ) ;
+		name = "nextmonth" ;
+			Month ( dte ) + 1 & "/*/" & Year ( dte ) ;
+		
+		name = "last7days" ;
+			GetAsDate ( dte - 7 ) & "..." & dte ;
+		name = "next7days" ;
+			dte & "..." & GetAsDate ( dte + 7 ) ;
+		name = "last30days" ;
+			dte & "..." & GetAsDate ( dte - 30 ) ;
+		name = "next30days" ;
+			dte & "..." & GetAsDate ( dte + 30 )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	DateRangeFromLabel ( labelString )
+
+PURPOSE:
+	Returns searchable date range based on label string.
+	Weeks start on Monday.
+
+EXAMPLES:
+	Where today is 1/1/2011
+	DateRangeFromLabel ( "This Week" ) = "1/1/2011...1/7/2011"
+
+HISTORY:
+	Created: 2011-Feb-16 16h08 PST — Donovan A. Chandler
+*/

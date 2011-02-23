@@ -1,0 +1,28 @@
+Let([
+	sNext = Position( text; startDelim; startPosition; 1 );
+	eNext = TextClosePosition( text; startDelim; endDelim; sNext )
+	];
+	Case(
+		nodeNumber = 1; sNext
+		
+		; TextNthNodePosition( text; startDelim; endDelim; eNext; nodeNumber - 1 )
+	)
+)
+
+/* —————————————————————————————— //
+NAME: 
+	TextNthNodePosition( text; startDelim; endDelim; startPosition; nodeNumber )
+
+PURPOSE: 
+	Returns start position of Nth "node".
+	Each node is contained by startDelim and endDelim.
+
+HISTORY: 
+	Created 2009.12.03 by Donovan Chandler
+
+INPUT: 
+	
+
+OUTPUT: 
+
+*/

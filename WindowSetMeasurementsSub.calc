@@ -1,0 +1,165 @@
+/*
+Command Syntax: [axis][location][reference][adjustment]
+    "axis" determines if following command characters are applied along "x" or "y" axes
+    "location" sets alignment of new window along...
+        "C"     - Center
+        "T"     - Top
+        "B"     - Bottom
+        "L"     - Left
+        "R"     - Right
+    "reference" determines what "location" aligns to
+        "W"     - Current open window
+        "S"     - Visible screen area
+        "O"     - Active layout object
+    "adjustment" adds or subtracts numerical value from location
+        e.g., "+50"     adds 50 pixels to the location
+
+Examples:
+  nav.setWindowSettings( "offsetLeft"; 0 ) offsets window from $$_window_orig_left
+  nav.setWindowSettings( "{xCWyTW+50}"; 0 ), 
+  Translation of "{xCWyTS}": "On X axis, place at CENTER of WINDOW. On Y axis, place at TOP of SCREEN."
+
+OUTPUT: 
+  Function output: 0 if windowType is recognized, else error message
+  Local variables: $_window_new_name, $_window_new_height, $_window_new_width, $_window_new_top, $_window_new_left
+——————————————————————————————*/
+
+Let ([
+  $_window_new_height = windowHeight ;
+  $_window_new_width = windowWidth ;
+  
+  //--  Assess environment
+  wDesktopH = Get( WindowDesktopHeight );
+  wDesktopW = Get( WindowDesktopWidth );
+  origTop = If( IsEmpty( $$_window_orig_top ); Get( WindowTop ); $$_window_orig_top );
+  origHeight = If( IsEmpty( $$_window_orig_height ); Get( WindowHeight ); $$_window_orig_height );
+  origLeft = If( IsEmpty( $$_window_orig_left ); Get( WindowLeft ); $$_window_orig_left );
+  origWidth = If( IsEmpty( $$_window_orig_width ); Get( WindowWidth ); $$_window_orig_width );
+  
+  //--  Evaluate settings
+  //      Substitutes commands with corresponding values and then evaluates full expression
+  //      Syntax: {xCWyTS}
+  //      E.g., "BW - 50" -> "900 - 50" where 900 is the bottom of the current window
+  vCommandSplit = Substitute ( command ; [ "x" ; "" ] ; [ "y" ; ¶ ] ) ;
+  
+  // •••• NEED TO PARSE COMMAND HERE ••••
+  
+  xCommand = Left( Filter( $_window_new_left; "CLRWSO" ); 2 );
+  yCommand = Left( Filter( $_window_new_top; "CTBWSO" ); 2 );
+  xLocation	= Left( xCommand; 1 );
+  xReference	= Right( xCommand; 1 );
+  yLocation	= Left( yCommand; 1 );
+  yReference	= Right( yCommand; 1 );
+  
+  vObject = Get( ActiveLayoutObjectName );
+  refH =
+    Case(
+      yReference = "W"; origHeight; 
+      yReference = "O"; GetLayoutObjectAttribute( vObject; "height" );
+      wDesktopH
+    );
+  refW =
+    Case(
+      xReference = "W"; origWidth; 
+      xReference = "O"; GetLayoutObjectAttribute( vObject; "width" );
+      wDesktopW
+    );
+  refT =
+    Case(
+      yReference = "W"; origTop; 
+      yReference = "O"; GetLayoutObjectAttribute( vObject; "top" );
+      0
+    );
+  refL =
+    Case(
+      xReference = "W"; origLeft; 
+      xReference = "O"; GetLayoutObjectAttribute( vObject; "left" );
+      0
+    );
+  
+  //$$windowSettings_Test = "refH = " & refH & "; refW = " & refW & "; refT = " & refT & "; refL = " & refL;
+  
+  yVal = 
+    Case(
+      yLocation = "C";
+        refT + refH/2 - $_window_new_height/2;
+      yLocation = "T";
+        refT;
+      yLocation = "B";
+        refT + refH - $_window_new_height
+    );
+  xVal = 
+    Case(
+      xLocation = "C";
+        refL + refW/2 - $_window_new_width/2;
+      xLocation = "L";
+        refL;
+      xLocation = "R";
+        refL + refW - $_window_new_width              
+    );
+  yCommandNew = Substitute( $_window_new_top; yCommand; yVal );
+  xCommandNew = Substitute( $_window_new_left; xCommand; xVal );
+  
+  //--  Adjust final variables
+  $_window_new_name = 
+    Case( 
+      Length( $preWindowName ); $preWindowName;
+      Length( $_window_new_name ); $_window_new_name;
+      ""
+    );
+  $_window_new_top = Evaluate( yCommandNew );
+  $_window_new_left = Evaluate( xCommandNew );
+  
+  //--  Check that window is entirely on-screen
+  vCorrectTopUp = wDesktopH - $_window_new_height - 20;
+  svCorrections = 
+    Case(
+      //--  Keep on-screen
+      keepOnscreen;
+      Let([
+        $_window_new_top = 
+          Case(
+            applySettings = "size"; origTop;
+            $_window_new_top < minTop; minTop; 
+            $_window_new_top + $_window_new_height > wDesktopH; 
+              If( vCorrectTopUp < minTop; minTop; vCorrectTopUp );
+            $_window_new_top 
+          );
+        $_window_new_left = 
+          Case(
+            applySettings = "size"; origLeft;
+            $_window_new_left < minLeft; minLeft;
+            $_window_new_left + $_window_new_width > wDesktopW; 
+              wDesktopW - $_window_new_width - minLeft;
+            $_window_new_left
+          );
+        clearOrigWindowMeasurements = WindowGetMeasurements( True )
+        ];
+        1
+      )  //end Let
+    )  //end Case
+      
+  ; $_window_new_top    = Int( $_window_new_top )
+  ; $_window_new_left    = Int( $_window_new_left )
+  ; $_window_new_width    = Int( $_window_new_width )
+  ; $_window_new_height    = Int( $_window_new_height )
+  
+  ];
+  
+)
+/* —————————————————————————————— //
+NAME:
+	WindowSetMeasurementsSub ( command ; windowHeight ; windowWidth ; keepOnscreen )
+
+PURPOSE:
+	Dynamically prescribes window placement according to supplied parameters
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2010-Dec-21 21h03 PST — Donovan A. Chandler
+
+NOTES:
+	See top.
+*/
