@@ -1,5 +1,5 @@
 "[" &
-Substitute( JSONArray_sub( stringToEnclose ); ¶; "," ) &
+Substitute( JSONArrayLoop( stringToEnclose ); ¶; "," ) &
 "]"
 
 /* —————————————————————————————— //

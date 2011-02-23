@@ -1,25 +1,3 @@
-/*---------------------------------------------------------------------------------------
-NAME: 
-    json.getVal ( text; path )
-    Version 1.02
-
-PURPOSE: 
-    Parses JSON text like JSONPath (an adaptation of XPath's concepts)
-
-HISTORY: 
-    Created: 2009.07.17 by Donovan Chandler
-
-INPUT: 
-    path:    JSONPath to desired node/value
-    
-DEPENDENCIES:
-    Custom Functions: text.getClosePosition()
-
-NOTES:
-    For JSONPath, see http://goessner.net/articles/JsonPath/
-    
----------------------------------------------------------------------------------------*/
-
 Let([
     //---- Retrieve variables ----
     vNodeNumCurrent = $$fn_json_nodePrevious + 1;
@@ -55,7 +33,7 @@ Let([
     
     sNextArray = Position( text; "["; sPairValue; 1 );
     sNextObject = Position( text; "{"; sPairValue; 1 );
-    eNextObject = text.getClosePosition( text; "{"; "}"; sPairValue );
+    eNextObject = TextClosePosition( text; "{"; "}"; sPairValue );
     sNextValue = Position( text; ":"; sPairValue; 1 );
     
     isArray = If( sNextArray > 0 and sNextObject > 0 and sNextValue > 0
@@ -70,7 +48,7 @@ Let([
                 Case(
                     //--Value is an array--
                     isArray;
-                        Let([ res = text.getNthNodePosition( text; "{"; "}"; sPairValue; GetAsNumber( vSubscript) )
+                        Let([ res = TextNthNodePosition( text; "{"; "}"; sPairValue; GetAsNumber( vSubscript) )
                             ; $fn_json_error = If( Left( res; 5 ) = "Error"
                                 ; "Error 100: Invalid Path at " & vPathNodeDisplay
                                 ; "" 
@@ -84,7 +62,7 @@ Let([
             
             //-- Searching for entire Array--
             isArray;
-                text.getNthNodePosition( text; "["; "]"; sPairValue; 1 );
+                TextNthNodePosition( text; "["; "]"; sPairValue; 1 );
             
             //--Searching for Object--
             sNextObject < eNextObject and sNextObject < sNextValue
@@ -103,8 +81,8 @@ Let([
             $fn_json_isPair; 
                 If( sNextComma < sNextCloseBracket and sNextComma > 0; sNextComma; sNextCloseBracket ) - 1;
             isArray and vNodeType ≠ "arrayIndex";
-                text.getClosePosition( text; "["; "]"; sPairResult );
-            text.getClosePosition( text; "{"; "}"; sPairResult )
+                TextClosePosition( text; "["; "]"; sPairResult );
+            TextClosePosition( text; "{"; "}"; sPairResult )
         );
     
     vError =
@@ -155,7 +133,30 @@ Let([
             ; $$fn_json_pairParentEnd = ePairResult
             ; $fn_json_isPair = ""
             ]; "" 
-        ) & json.getVal( text; path )
+        ) & JSONValue( text; path )
     )
         
 )
+
+/* —————————————————————————————— //
+NAME: 
+    JSONValue ( text; path )
+    Version 1.02
+
+PURPOSE: 
+    Parses JSON text like JSONPath (an adaptation of XPath's concepts)
+
+HISTORY: 
+    Created: 2009.07.17 by Donovan Chandler
+
+INPUT: 
+    path:    JSONPath to desired node/value
+    
+DEPENDENCIES:
+    Custom Functions: TextClosePosition(), text.getNthNodePosition()
+
+NOTES:
+    For JSONPath, see http://goessner.net/articles/JsonPath/
+    DOES NOT SUPPORT ARRAYS!
+    
+*/

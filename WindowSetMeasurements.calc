@@ -338,62 +338,7 @@ Let([
     //--  Evaluate settings
     //--      Substitutes commands with corresponding values and then evaluates full expression
     //--      E.g., "BW - 50" -> "900 - 50" where 900 is the bottom of the current window
-    xCommand = Left( Filter( $_window_new_left; "CLRWSO" ); 2 );
-    yCommand = Left( Filter( $_window_new_top; "CTBWSO" ); 2 );
-    xLocation    = Left( xCommand; 1 );
-    xReference    = Right( xCommand; 1 );
-    yLocation    = Left( yCommand; 1 );
-    yReference    = Right( yCommand; 1 );
-    
-    vObject = Get( ActiveLayoutObjectName );
-    refH = Case( yReference = "W"; origHeight; 
-        yReference = "O"; GetLayoutObjectAttribute( vObject; "height" );
-        wDesktopH );
-    refW = Case( xReference = "W"; origWidth; 
-        xReference = "O"; GetLayoutObjectAttribute( vObject; "width" );
-        wDesktopW );
-    refT = Case( yReference = "W"; origTop; 
-        yReference = "O"; GetLayoutObjectAttribute( vObject; "top" );
-        0 );
-    refL = Case( xReference = "W"; origLeft; 
-        xReference = "O"; GetLayoutObjectAttribute( vObject; "left" );
-        0 );
-    
-    //$$windowSettings_Test = "refH = " & refH & "; refW = " & refW & "; refT = " & refT & "; refL = " & refL;
-    
-    yVal = 
-        Case(
-            yLocation = "C";
-                refT + refH/2 - $_window_new_height/2;
-            yLocation = "T";
-                refT;
-            yLocation = "B";
-                refT + refH - $_window_new_height
-        );
-    xVal = 
-        Case(
-            xLocation = "C";
-                refL + refW/2 - $_window_new_width/2;
-            xLocation = "L";
-                refL;
-            xLocation = "R";
-                refL + refW - $_window_new_width                          
-        );
-    yCommandNew = Substitute( $_window_new_top; yCommand; yVal );
-    xCommandNew = Substitute( $_window_new_left; xCommand; xVal );
-    
-    //--  Adjust final variables
-    $_window_new_name = 
-        Case( 
-            Length( $preWindowName ); $preWindowName;
-            Length( $_window_new_name ); $_window_new_name;
-            ""
-        );
-    $_window_new_top = Evaluate( yCommandNew );
-    $_window_new_left = Evaluate( xCommandNew );
-    
-    //--  Check that window is entirely on-screen
-    vCorrectTopUp = wDesktopH - $_window_new_height - 20;
+    sv = WindowSetMeasurementsSub ( )
     svCorrections = 
         Case(
             //--  windowType is off-screen

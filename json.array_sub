@@ -13,14 +13,14 @@ Let([
 	_value &
 	Case(
 		_value_count - 1 > 0;
-			¶ & JSONArray_sub( RightValues( listOfValues; _value_count - 1 ))
+			¶ & JSONArrayLoop( RightValues( listOfValues; _value_count - 1 ))
 	)
 )
 
 
 /* —————————————————————————————— //
 NAME:
-	JSONArray_sub( listOfValues )
+	JSONArrayLoop( listOfValues )
 
 PURPOSE:
 	Used by JSONArray. Iterates over array values adding quotations.
