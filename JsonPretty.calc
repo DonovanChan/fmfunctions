@@ -1,84 +1,26 @@
-Let ( [
-  charCur = Middle ( text ; rep ; 1 ) ;
-  whitespace = " ¶	" ;
-  $_level = indentLevel ;
-  $_rep = rep ;
-  tab = "	" ;
-  charNew =
-    Case (
-      //-- Value boundary
-      ListContains ( boundaryChars ; charCur ) ;
-        VarSet ( "_boundary_in" ; Abs ( $_boundary_in - 1 ) ; 0 ) & // Toggle, 1 means we are within two boundary chars
-        charCur ;
-      //-- Opening char
-      ListContains ( openChars ; charCur ) ;
-        VarSet ( "_level" ; $_level + 1 ; 0 ) &
-        VarSet ( "_clear_flag" ; 1 ; 0 ) &
-        charCur & ¶ ;
-      //-- Closing char
-      ListContains ( closeChars ; charCur ) ;
-        VarSet ( "_level" ; $_level - 1 ; 0 ) &
-        VarSet ( "_clear_flag" ; 1 ; 0 ) &
-        ¶ & charCur ;
-      //-- Delimiting char (between siblings)
-      ListContains ( delimiterChars ; charCur ) ;
-        VarSet ( "_clear_flag" ; 1 ; 0 ) &
-        charCur & ¶ ;
-      //-- Clear whitespace
-      $_clear_flag and not $_boundary_in ;
-        Case (
-          Position ( whitespace ; charCur ; 1 ; 1 ) > 0 ;
-            VarSet ( "_rep" ; $_rep - 1 ; 0 ) ;
-          StringRepeat ( tab ; $_level ) & charCur &
-          VarSet ( "_clear_flag" ; 0 ; 0 )
-        ) ;
-      //-- Pass through
-      charCur
-    ) ;
-  textNew =
-    Left ( text ; rep - 1 ) &
-    charNew &
-    Middle ( text ; rep + 1 ; repMax ) ;
-  repNew = rep + Length ( charNew )
-  ] ;
-  Case (
-    rep < repMax ;
-      TextFormatLoop ( textNew ; openChars ; closeChars ; delimiterChars ; boundaryChars ; 
-        indentLevel ; repNew ; repMax ) ;
-    textNew
-  )
+TextFormatLoop (
+  text ;
+  "[¶{" ;		// Open chars
+  "]¶}" ;		// Close chars
+  "," ;		// Delimiter chars
+  "\"¶'" ;		// Boundary chars
+  0 ;			// Indent level
+  1 ;			// Repetition
+  Length ( text )
 )
+
+// TextFormatLoop ( text ; openChars ; closeChars ; delimiterChars ; boundaryChars ; indentLevel ; rep ; repMax )
 
 /* —————————————————————————————— //
 NAME:
-	TextFormatLoop ( text ; openChars ; closeChars ; delimiterChars ; boundaryChars ; indentLevel ; rep ; repMax )
+	JSONPretty ( text )
 
 PURPOSE:
-	Formats, or pretty prints, text according to supplied parameters
+	Formats JSON text in readable format
 
 EXAMPLES:
-	untitled ( )
+	
 
 HISTORY:
-	Created: 2011-Feb-02 16h43 PST — Donovan A. Chandler
-*/
-
-/*
-TEST TEXT:
-
-{
-  'target_id':'chart',
-	'type':'area','title':'Showtimes Per Theatre','subtitle':'Reported 2/1/2009 to 2/2/2011','zoom_type':'x','xaxis_headers':[
-	'Feb 09','Mar 09','Apr 09','May 09','Jun 09','Jul 09','Aug 09','Sep 09','Oct 09','Nov 09','Dec 09','Jan 10','Feb 10','Mar 10','Apr 10','May 10','Jun 10','Jul 10','Aug 10','Sep 10','Oct 10','Nov 10','Dec 10','Jan 11'
-	],'yaxis_title':'Units','series':[{'name':'AMC 16','data':[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{'name':'Regal 5','data':[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{'name':'Paramount','data':[0,0,1,1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]},{'name':'Century 16','data':[0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0]},{'name':'Kennedy School','data':[0,2,1,2,1,1,1,1,2,0,2,2,0,8,0,1,1,2,2,0,0,1,1,0]},{'name':'OmniMax','data':[4,12,10,19,17,13,12,5,13,7,14,10,22,22,21,18,5,12,9,6,5,11,10,1]},{'name':'Other','data':[3,1,2,1,3,4,7,5,3,9,5,3,13,5,3,1,9,3,13,6,10,11,14,17]}]};
-
-TESTING CODE:
-
-//text = "{ 'name' : 'value' }" ;
-openChars = "[¶{" ;
-closeChars = "]¶}" ;
-delimiterChars = "," ;
-boundaryChars = "\"¶'" ;
-//rep = 1 ;
-repMax = Length ( text ) ;
+	Created: 2011-Feb-08 11h11 PST — Donovan A. Chandler
 */
