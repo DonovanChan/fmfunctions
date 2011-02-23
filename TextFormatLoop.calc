@@ -1,0 +1,98 @@
+Let ( [
+  charCur = Middle ( text ; rep ; 1 ) ;
+  whitespace = " ¶	" ;
+  $_level = indentLevel ;
+  $_rep = rep ;
+  tab = "	" ;
+  charNew =
+    Case (
+      //-- Within value
+      not $_boundary_in ;
+        If (
+          ListContains ( boundaryChars ; charCur ) ;
+            VarSet ( "_boundary_in" ; Abs ( $_boundary_in - 1 ) ; 0 )  & // Toggle, 1 means char is within two boundary chars
+            charCur ;
+          charCur
+        ) ;
+      //-- Value boundary
+      ListContains ( boundaryChars ; charCur ) ;
+        VarSet ( "_boundary_in" ; Abs ( $_boundary_in - 1 ) ; 0 ) & // Toggle, 1 means char is within two boundary chars
+        charCur ;
+      //-- Opening char
+      ListContains ( openChars ; charCur ) ;
+        VarSet ( "_level" ; $_level + 1 ; 0 ) &
+        VarSet ( "_clear_flag" ; 1 ; 0 ) &
+        charCur & ¶ ;
+      //-- Closing char
+      ListContains ( closeChars ; charCur ) ;
+        VarSet ( "_level" ; $_level - 1 ; 0 ) &
+        VarSet ( "_clear_flag" ; 1 ; 0 ) &
+        ¶ & charCur ;
+      //-- Delimiting char (between siblings)
+      ListContains ( delimiterChars ; charCur ) ;
+        VarSet ( "_clear_flag" ; 1 ; 0 ) &
+        charCur & ¶ ;
+      //-- Clear whitespace
+      $_clear_flag and not $_boundary_in ;
+        Case (
+          Position ( whitespace ; charCur ; 1 ; 1 ) > 0 ;
+            VarSet ( "_rep" ; $_rep - 1 ; 0 ) ;
+          StringRepeat ( tab ; $_level ) & charCur &
+          VarSet ( "_clear_flag" ; 0 ; 0 )
+        ) ;
+      //-- Pass through
+      charCur
+    ) ;
+  textNew =
+    Left ( text ; rep - 1 ) &
+    charNew &
+    Middle ( text ; rep + 1 ; repMax ) ;
+  repNew = rep + Length ( charNew )
+  ] ;
+  Case (
+    rep < repMax ;
+      TextFormatLoop ( textNew ; openChars ; closeChars ; delimiterChars ; boundaryChars ; 
+        indentLevel ; repNew ; repMax ) ;
+    textNew
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextFormatLoop ( text ; openChars ; closeChars ; delimiterChars ; boundaryChars ; indentLevel ; rep ; repMax )
+
+PURPOSE:
+	Formats, or pretty prints, text according to supplied parameters
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Feb-02 16h43 PST — Donovan A. Chandler
+
+NOTES:
+	STILL UNDER DEVELOPMENT!!!
+*/
+
+/*
+TEST TEXT:
+
+{
+  'target_id':'chart',
+	'type':'area','title':'Showtimes Per Theatre','subtitle':'Reported 2/1/2009 to 2/2/2011','xaxis_headers':[
+	'Feb 09','Mar 09','Apr 09','May 09','Jun 09'],'series':[{'name':'AMC 16'},{'name':'Century 16'}]};
+
+TESTING CODE:
+Let ( [ text = ""
+];
+TextFormatLoop ( text ; "{¶[" ; "}¶]" ; "," ; "\"¶'" ; 0 ; 1 ; Length ( text ) )
+)
+
+//text = "{ 'name' : 'value' }" ;
+openChars = "[¶{" ;
+closeChars = "]¶}" ;
+delimiterChars = "," ;
+boundaryChars = "\"¶'" ;
+//rep = 1 ;
+repMax = Length ( text ) ;
+*/

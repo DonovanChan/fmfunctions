@@ -1,0 +1,73 @@
+Let([
+  //_field_name_full = Substitute ( fieldName ; "::" ; ¶ ) ;
+  //_field_name = GetValue ( _field_name_full ; ValueCount ( _field_name_full ) ) ;
+  _list1 = 
+    "INCIDENT::ID_DISPLAY" & ¶ &
+    "INCIDENT::ID_RADAR" & ¶ &
+    "INCIDENT::ASSOCIATE_DRI_NAME_AT" & ¶ &
+    "INCIDENT::ASSOCIATE_ASSIGNEE_NAME_AT" & ¶ &
+    "INCIDENT::ASSOCIATE_SSE_NAME_AT" & ¶ &
+    "INCIDENT::ASSOCIATE_CSE_NAME_AT" & ¶ &
+    "INCIDENT::ASSOCIATE_PSE_NAME_AT" & ¶ &
+    "-" & ¶ &
+    "UNIT::MANUF_YEAR" & ¶ &
+    "UNIT::MANUF_WEEK" & ¶ &
+    "UNIT::IS_PRIMARY" & ¶ &
+    "UNIT::IS_AT_FAULT" & ¶ &
+    "-" & ¶ &
+    "COMPLAINT::ID_INJURY_TYPE" & ¶ &
+    "COMPLAINT::ID_DAMAGE_TYPE" & ¶ &
+    "-" & ¶ &
+    "AGENCY_REPORT::REFERENCE_ID"
+    ;
+  _list2 =
+    "Incident ID" & ¶ &
+    "Radar ID" & ¶ &
+    "DRI" & ¶ &
+    "Assignee" & ¶ &
+    "SSE" & ¶ &
+    "CSE" & ¶ &
+    "PSE" & ¶ &
+    "-" & ¶ &
+    "YOM" & ¶ &
+    "WOM" & ¶ &
+    "Reported (Checkbox)" & ¶ &
+    "Is At Fault (Checkbox)" & ¶ &
+    "-" & ¶ &
+    "Injury Type" & ¶ &
+    "Damage Type" & ¶ &
+    "-" & ¶ &
+    "Reference #"
+    ;
+  _field_name_list =
+    Substitute ( fieldName ;
+      [ "__" ; ¶ ] ;
+      [ "::" ; ¶ ]
+    ) ;
+  _field_table = GetValue ( _field_name_list ; 1 ) ;
+  _field_name = _field_table & "::" & GetValue ( _field_name_list ; ValueCount ( _field_name_list ) ) ;
+  _list1_index = ListValueRowNum ( _list1; _field_name ) ;
+  _list2_index = 0 //ListValueRowNum ( _list2; _field_name )
+  ];
+  Case(
+    _list1_index > 0 ; 
+      GetValue ( _list2 ; _list1_index ) ;
+    _list2_index > 0 ;
+      GetValue ( _list1 ; _list2_index ) ;
+    FieldNameReadable ( fieldName )
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+  FieldDisplayName ( fieldName )
+
+PURPOSE:
+  Returns display value corresponding to supplied field name.
+
+EXAMPLES:
+  
+
+HISTORY:
+  Created: 2011-Jan-11 14h35 PST — Donovan Chandler
+*/
