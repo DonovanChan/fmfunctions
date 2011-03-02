@@ -1,0 +1,22 @@
+Let([
+	newStart = Position ( path ; "/Users" ; 1 ; 1 ) ;
+	pathNew = Middle ( path ; newStart ; Length ( path ) )
+	];
+	pathNew
+)
+
+/* —————————————————————————————— //
+NAME:
+	FilePathForScriptMaster ( path )
+
+PURPOSE:
+	Returns path usable for ScriptMaster.
+	Does NOT support Windows.
+
+EXAMPLES:
+	FilePathForScriptMaster ( "filemac:/Macintosh HD/Users/Donovan/Desktop/test.txt" )
+	= "/Users/Donovan/Desktop/test.txt"
+
+HISTORY:
+	Created: 2011-Feb-24 21h13 PST — Donovan A. Chandler
+*/
