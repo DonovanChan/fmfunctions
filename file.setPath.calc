@@ -1,64 +1,64 @@
-Let([
-	directory = directory ; //If( sys.getMode( False ) > 2; "desktop"; directory );
+Let ( [
+	directory = directory ; //If ( sys.getMode ( False ) > 2 ; "desktop" ; directory ) ;
 	typeFull =
-		Case(
-			Abs( Get( SystemPlatform ) ) = 1 ; "filemac:" ;
-			Abs( Get( SystemPlatform ) ) = 2 ; "filewin:" ;
-		);
+		Case (
+			Abs ( Get ( SystemPlatform ) ) = 1 ; "filemac:" ;
+			Abs ( Get ( SystemPlatform ) ) = 2 ; "filewin:" ;
+		) ;
 	typePath =
-		Case(
-			pathType = "relative"	; "file:";
-			pathType = "full"	; typeFull;
-			pathType = "remote"	; "filewin://" & Get( HostName );
-			pathType = "network"	; "fmnet:" & Get( HostIPAddress ) & "/";
+		Case (
+			pathType = "relative"	; "file:" ;
+			pathType = "full"	; typeFull ;
+			pathType = "remote"	; "filewin://" & Get ( HostName ) ;
+			pathType = "network"	; "fmnet:" & Get ( HostIPAddress ) & "/" ;
 			pathType = "web"	; "file:/"
-		);
+		) ;
 	dirPathA =
-		Case(
-			directory = "desktop"		; Get( DesktopPath );
-			directory = "documents"	; Get( DocumentsPath );
-			directory = "temporary"	; Get( TemporaryPath );
-			directory = "preferences"	; Get( PreferencesPath );
-			directory = "drive"		; Get( SystemDrive );
-			directory = "filemaker"	; Get( FileMakerPath );
-			directory = "file"			; Get( FilePath );
-			directory = "parentDir"	; Get( FilePath );
-		);
+		Case (
+			directory = "desktop"		; Get ( DesktopPath ) ;
+			directory = "documents"	; Get ( DocumentsPath ) ;
+			directory = "temporary"	; Get ( TemporaryPath ) ;
+			directory = "preferences"	; Get ( PreferencesPath ) ;
+			directory = "drive"		; Get ( SystemDrive ) ;
+			directory = "filemaker"	; Get ( FileMakerPath ) ;
+			directory = "file"			; Get ( FilePath ) ;
+			directory = "parentDir"	; Get ( FilePath ) ;
+		) ;
 	dirPathB =
-		Substitute( dirPathA;
-			["file:/"; ""];
-			["file:"; ""];
-			["filemac:"; ""];
-			["filewin:"; ""]
-		);
+		Substitute ( dirPathA ;
+			["file:/" ; ""] ;
+			["file:" ; ""] ;
+			["filemac:" ; ""] ;
+			["filewin:" ; ""]
+		) ;
 	directoryPath =
-		Case(
-			directory = "parentDir"; Left( dirPathB; Position( dirPathB; "/"; Length(dirPathB); -1 ));
+		Case (
+			directory = "parentDir" ; Left ( dirPathB ; Position ( dirPathB ; "/" ; Length ( dirPathB) ; -1 )) ;
 			dirPathB
-		);
+		) ;
 	result_rough =
-		Case(
-			IsEmpty( typePath ); "Error: Invalid pathType (" & Quote( pathType ) & ")";
-			IsEmpty( dirPathA ); "Error: Invalid directory (" & Quote( directory ) & ")";
+		Case (
+			IsEmpty ( typePath ) ; "Error: Invalid pathType ( " & Quote ( pathType ) & ")" ;
+			IsEmpty ( dirPathA ) ; "Error: Invalid directory ( " & Quote ( directory ) & ")" ;
 			typePath & directoryPath & file
-		);
+		) ;
 	result =
-		Case(
-			pathType = "web";
-				Case(
+		Case (
+			pathType = "web" ;
+				Case (
 					//-- If Mac, encode path
-					Abs( Get( SystemPlatform ) ) = 1;
-					Substitute( result_rough; " "; "%20" )
-				);
+					Abs ( Get ( SystemPlatform ) ) = 1 ;
+					Substitute ( result_rough ; " " ; "%20" )
+				) ;
 			result_rough
 		)
-	];
+	] ;
 	result
 )
 
 /* —————————————————————————————— //
 NAME:
-	file.setPath( pathType; directory ; file )
+	FileSetPath ( pathType ; directory ; file )
 	v2.4
 
 PURPOSE:
@@ -66,17 +66,17 @@ PURPOSE:
 
 HISTORY:
 	Created 2008.07.29 by Donovan Chandler
-	
+
 DEPENDENCIES:
-	Custom Functions:  sys.getMode()
+	Custom Functions:  sys.getMode ( )
 
 INPUT:
 	pathType:  Location of the directory [relative, full, network]
-	directory:	Directory found by Get() functions
+	directory:	Directory found by Get ( ) functions
 	file:	Name of file
-	
-	file.setPath( "full"; "desktop"; "graphic.gif" ) ->> "filemac:/Macintosh HD/Users/apu/Desktop/graphic.gif"
-	
+
+	FileSetPath ( "full" ; "desktop" ; "graphic.gif" ) ->> "filemac:/Macintosh HD/Users/apu/Desktop/graphic.gif"
+
 NOTES:
-	- DISABLED -> Directory overridden to "desktop" if sys.getMode() > 2 (system mode NOT in production or testing)
+	- DISABLED -> Directory overridden to "desktop" if sys.getMode ( ) > 2 ( system mode NOT in production or testing)
 */
