@@ -1,45 +1,51 @@
-Let(
-	[
-	value_exists = PatternCount( "¶" & currentList & "¶"; "¶" & value & "¶" )
-	];
-	Case(
-		value_exists;
-			MiddleValues(
-				Substitute( "¶" & currentList;
-				 	[¶; "¶|"];
-					["|" & value & "¶"; ""];
-					["¶|"; ¶]
-				);
-				2;
-				1000000
-			);
-		
-		IsEmpty ( value );
-			currentList;
-		
-		currentList & 
-		If( Right( currentList; 1 ) ≠ ¶ and Length ( currentList ); ¶ ) & value
+Let ( [
+	searchList = ¶ & currentList & ¶ ;
+	value_exists = PatternCount ( searchList ; ¶ & value & ¶ ) ;
+	currentListLength = Length ( currentList )
+	 ];
+	Case (
+		value_exists ;
+			Let ( [
+				newList =
+					Substitute ( searchList ;
+						[ ¶ ; "¶|" ];
+						[ "|" & value & ¶ ; "" ];
+						[ "¶|" ; ¶ ]
+					)
+				 ];
+				Middle (
+					newList ;
+					2 ;
+					Length ( newList ) - 2
+				)
+			) ;
+
+		IsEmpty ( value ) ;
+			currentList ;
+
+		currentList &
+		If ( Right ( currentList ; 1 ) ≠ ¶ and currentListLength ; ¶ ) & value
 	)
 )
 
 /* —————————————————————————————— //
-NAME: 
-	list.addRemove( currentList; value )
+NAME:
+	list.addRemove ( currentList ; value )
 
-PURPOSE: 
+PURPOSE:
 	Adds or removes value from return-delimited list.
 
-HISTORY: 
-	Created by Matt Petrowsky of ISO Productions, Inc.
-	Adapted 2008jun18 by Donovan Chandler for formatting/documentation preferencegit
+HISTORY:
+	Created: 2011-Mar-02 12h19 PST — Donovan Chandler
+	Based on old function by Matt Petrowsky of ISO Productions, Inc.
 
-INPUT: 
+INPUT:
 	currentList:  return-delimited list of values
 	value:	text string to be added or removed
 
-OUTPUT: 
+OUTPUT:
    Return-delimited list from currentList parameter with value added or removed
-   
+
 NOTES:
    Adds if "value" exists in "currentList" or removes if it does not. Useful for adding/removing an id from a multi-key, such as for portal selections.
 */
