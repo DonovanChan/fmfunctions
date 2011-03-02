@@ -1,0 +1,29 @@
+Let ( [
+  #_open_string = "<:" ;
+  #_close_string = ":=" ;
+  #_start = Position ( encodedString ; #_open_string ; 1 ; 1 ) + Length ( #_open_string ) ;
+  #_end = Position ( encodedString ; #_close_string ; 1 ; 1 ) ;
+  #_name = Middle ( encodedString ; #_start ; #_end - #_start )
+  ] ;
+
+  Case (
+    PatternCount ( encodedString ; #_open_string ) = 0 or PatternCount ( encodedString ; #_close_string ) = 0 ; "" ;
+    #_name
+    )
+
+  )
+
+/* —————————————————————————————— //
+NAME:
+	#Name ( encodedString )
+
+PURPOSE:
+	Retrieves the name of the value from the name/value pair in the encoded string.  Could be useful if a string has been passed but the parsing function isn't looking for anything in particular, and needs to determine the name of the value it has been passed.
+	Unlike its sister function, #Value, #Name does not have the benefit of looking for a specific name/value pair.  Therefore it will return the first name it finds.  Therefore, this function should only be used to interpret an individual name/value pair.  Some other function (yet to be written) could be used to digest a large encoded string, returning name/value pairs one at a time.
+
+EXAMPLES:
+	#Name ( "<:CITY:=Oakland:>" ) = "CITY"
+
+HISTORY:
+	Created: 2010-Jan-29 17h00 PST — Will M. Baker
+*/
