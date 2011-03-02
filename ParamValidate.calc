@@ -1,5 +1,5 @@
 Case (
-  not IsEmpty ( VarInvalid ( listOfVariableNames ; 1 ) ) ;
+  not IsEmpty ( VarInvalid ( listOfVariableNames ) ) ;
     10 ;
   0
 )
