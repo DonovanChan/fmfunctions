@@ -1,21 +1,44 @@
 Let([
-	newStart = Position ( path ; "/Users" ; 1 ; 1 ) ;
-	pathNew = Middle ( path ; newStart ; Length ( path ) )
+	pathCur = GetValue ( pathList ; 1 ) ;
+	pathCount = ValueCount ( pathList ) ;
+	
+	//-- Remove prefixes
+	pathStart = Position ( pathCur ; ":" ; 1 ; 1 ) + 1 ;
+	pathStart = If ( pathStart = 1 ; 1 ; pathStart + 1 ) ; // Move past leading slash
+	pathCur = Middle ( pathCur ; pathStart ; 9999 ) ;
+	
+	//-- Determine how much to remove from beginning of path
+	desktopPath = Get ( DesktopPath ) ;
+	usersStart = Position ( desktopPath ; "/Users" ; 1 ; 1 ) ;
+	
+	pathNew = Middle ( pathCur ; usersStart + 1 ; Length ( pathCur ) ) ;
+	pathEncoded = If ( not encode ; pathNew ; TextEncodeForFilePath ( pathNew ) )
 	];
-	pathNew
+	List (
+		If ( not IsEmpty ( pathEncoded ) ; pathEncoded ) ;
+		If ( pathCount > 1 ;
+			FilePathForScriptMaster ( RightValues ( pathList ; pathCount - 1 ) ; encode )
+		)
+	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	FilePathForScriptMaster ( path )
+	FilePathForScriptMaster ( pathList ; encode )
 
 PURPOSE:
 	Returns path usable for ScriptMaster.
 	Does NOT support Windows.
+	Does NOT support external drives.
 
 EXAMPLES:
-	FilePathForScriptMaster ( "filemac:/Macintosh HD/Users/Donovan/Desktop/test.txt" )
-	= "/Users/Donovan/Desktop/test.txt"
+	Where $_path = "filemac:/Macintosh HD/Users/Donovan/Desktop/test, 1.txt"
+
+	FilePathForScriptMaster ( $_path ; True )
+	= "/Users/Donovan/Desktop/test 1.txt"
+
+	FilePathForScriptMaster ( $_path ; False )
+	= "/Users/Donovan/Desktop/test, 1.txt"
 
 HISTORY:
 	Created: 2011-Feb-24 21h13 PST — Donovan A. Chandler
