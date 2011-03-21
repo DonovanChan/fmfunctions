@@ -1,5 +1,5 @@
 Let ( [
-	directory = directory ; //If ( sys.getMode ( False ) > 2 ; "desktop" ; directory ) ;
+	directory = directory ;
 	typeFull =
 		Case (
 			Abs ( Get ( SystemPlatform ) ) = 1 ; "filemac:" ;
@@ -45,11 +45,7 @@ Let ( [
 	result =
 		Case (
 			pathType = "web" ;
-				Case (
-					//-- If Mac, encode path
-					Abs ( Get ( SystemPlatform ) ) = 1 ;
-					Substitute ( result_rough ; " " ; "%20" )
-				) ;
+				GetAsURLEncoded ( result_rough ) ;
 			result_rough
 		)
 	] ;
@@ -59,7 +55,7 @@ Let ( [
 /* —————————————————————————————— //
 NAME:
 	FileSetPath ( pathType ; directory ; file )
-	v2.4
+	v2.5
 
 PURPOSE:
 	Returns path to pre-designated directory
@@ -68,15 +64,15 @@ HISTORY:
 	Created 2008.07.29 by Donovan Chandler
 
 DEPENDENCIES:
-	Custom Functions:  sys.getMode ( )
+	Custom Functions:  
 
 INPUT:
-	pathType:  Location of the directory [relative, full, network]
-	directory:	Directory found by Get ( ) functions
-	file:	Name of file
+	pathType:  Location of the directory [relative, full, remote, network, web]
+	directory:	Any directory found by Get ( ) functions
+	file:	Name of file (including extension)
 
 	FileSetPath ( "full" ; "desktop" ; "graphic.gif" ) ->> "filemac:/Macintosh HD/Users/apu/Desktop/graphic.gif"
 
 NOTES:
-	- DISABLED -> Directory overridden to "desktop" if sys.getMode ( ) > 2 ( system mode NOT in production or testing)
+	
 */
