@@ -1,0 +1,16 @@
+ListContains ( FOCUS::MENU_REVEALED_LIST ; menu )
+
+/* —————————————————————————————— //
+NAME:
+	MenuRevealIsOn ( menu )
+
+PURPOSE:
+	Returns True if specified menu is supposed to be revealed.
+	You can hide menus and menu items in FMP 11 by setting the name to null. This function helps leverage that feature for items that are more often than note hidden.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Feb-18 11h35 PST — Donovan A. Chandler
+*/
