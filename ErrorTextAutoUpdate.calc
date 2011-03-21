@@ -1,39 +1,39 @@
-Case(
-	errorCode = -1;
-		"The file to be downloaded is missing from the temporary folder";
-	errorCode = -2;
-		"The Extensions\Saved folder to contain the backup of the outdated plug-in or support file couldn’t be created on the client computer";
-	errorCode = -3;
-		"The file to be replaced on the client computer couldn’t be deleted from the current user’s FileMaker Extensions folder";
-	errorCode = -4;
-		"The file to be replaced couldn’t be moved to the Extensions\Saved folder";
-	errorCode = -5;
-		"The downloaded file can’t be copied to the current user’s FileMaker Extensions folder";
-	errorCode = -6;
-		"The download file must be a plug-in file";
-	errorCode = 3;
-		"The Auto Update plug-in is disabled in the FileMaker Server Admin Console.";
-	errorCode = 5;
-		"The download file can’t be found in the AutoUpdate folder on the FileMaker Server computer";
-	errorCode = 6;
-		"An error occurred on the computer running FileMaker Server as the file was being downloaded";
-	errorCode = 100;
-		"The external function definition for FMSAUC_UpdatePlugIn contains an invalid or empty parameter";
-	errorCode = 101;
-		"The function call from the client computer to the computer running FileMaker Server failed. The server computer might be running a previous version of FileMaker Server.";
-		
+Case (
+	errorNum = -1 ;
+		"The file to be downloaded is missing from the temporary folder." ;
+	errorNum = -2 ;
+		"The Extensions\Saved folder to contain the backup of the outdated plug-in or support file couldn’t be created on the client computer." ;
+	errorNum = -3 ;
+		"The file to be replaced on the client computer couldn’t be deleted from the current user’s FileMaker Extensions folder." ;
+	errorNum = -4 ;
+		"The file to be replaced couldn’t be moved to the Extensions\Saved folder." ;
+	errorNum = -5 ;
+		"The downloaded file can’t be copied to the current user’s FileMaker Extensions folder." ;
+	errorNum = -6 ;
+		"The download file must be a plug-in file." ;
+	errorNum = 3 ;
+		"The Auto Update plug-in is disabled in the FileMaker Server Admin Console." ;
+	errorNum = 5 ;
+		"The download file can’t be found in the AutoUpdate folder on the FileMaker Server computer." ;
+	errorNum = 6 ;
+		"An error occurred on the computer running FileMaker Server as the file was being downloaded." ;
+	errorNum = 100 ;
+		"The external function definition for FMSAUC_UpdatePlugIn contains an invalid or empty parameter." ;
+	errorNum = 101 ;
+		"The function call from the client computer to the computer running FileMaker Server failed. The server computer might be running a previous version of FileMaker Server." ;
+
 	"Unknown error"
 )
 
 /* —————————————————————————————— //
 NAME:
-	ErrorTextAutoUpdate
+	ErrorTextAutoUpdate ( errorNum )
 
 PURPOSE:
 	Returns error message corresponding to specified error code when using auto update external functions.
 
 EXAMPLES:
-	ErrorTextAutoUpdate( -6 ) = "The download file must be a plug-in file"
+	ErrorTextAutoUpdate ( -6 ) = "The download file must be a plug-in file"
 
 HISTORY:
 	Created: 2010-Sep-20 10h21 PST — Donovan A. Chandler
