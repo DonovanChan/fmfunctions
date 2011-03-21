@@ -1,0 +1,24 @@
+Substitute (
+	text ;
+	[ ¶	; " " ] ;
+	[ "|"	; " " ] ;
+	[ "<"	; " " ] ;
+	[ ">"	; " " ] ;
+	[ "..."	; "." ] ;
+	[ "\""	; "" ] ;
+	[ ","	; "" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextEncodeForFilePath ( text )
+
+PURPOSE:
+	Ensures all characters in text are valid for a file path
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Mar-03 17h47 PST — Donovan A. Chandler
+*/

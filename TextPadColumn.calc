@@ -1,0 +1,27 @@
+Let ([
+	length = Length ( col1Value ) ;
+	tabNum = Ceiling ( (tabMax*tabSize-length) / tabSize ) ;
+	tabNum = If ( tabNum < tabMin ; tabMin ; tabNum ) ;
+	placeholder = Substitute ( 10^(tabNum-1) ; "0" ; 1 ) ;
+	tabs = Substitute ( placeholder ; 1 ; "	" )
+	];
+	col1Value & tabs & col2Value
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextPadColumn ( col1Value ; col2Value ; tabMax ; tabMin ; tabSize )
+
+PURPOSE:
+	Pads col2 (second column) with tab characters so that it is left-aligned regardless of col1 width.
+	Requires monospaced font for effect to work.
+
+EXAMPLES:
+	List (
+		TextPadColumn ( "bold" ; "Darker text" ; 3 ; 1 ; 5 ) ;
+		TextPadColumn ( "lightest" ; "Not so dark" ; 3 ; 1 ; 5)
+	)
+
+HISTORY:
+	Created: 2011-Mar-18 18h33 PST — Donovan A. Chandler
+*/

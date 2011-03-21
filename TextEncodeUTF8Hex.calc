@@ -1,0 +1,40 @@
+Substitute ( text ;
+	[ "!"	; "\21" ] ; // EXCLAMATION MARK
+	[ "\""	; "\22" ] ; // QUOTATION MARK
+	[ "#"	; "\23" ] ; // NUMBER SIGN
+	[ "$"	; "\24" ] ; // DOLLAR SIGN
+	[ "%"	; "\25" ] ; // PERCENT SIGN
+	[ "&"	; "\26" ] ; // AMPERSAND
+	[ "'"	; "\27" ] ; // APOSTROPHE
+	[ "’"	; "\27" ] ; // APOSTROPHE (smart)
+	[ "("	; "\28" ] ; // LEFT PARENTHESIS
+	[ ")"	; "\29" ] ; // RIGHT PARENTHESIS
+	[ "*"	; "\2a" ] ; // ASTERISK
+	[ "+"	; "\2b" ] ; // PLUS SIGN
+	[ ","	; "\2c" ] ; // COMMA
+	[ "-"	; "\2d" ] ; // HYPHEN-MINUS
+	[ "."	; "\2e" ] ; // FULL STOP
+	[ ":"	; "\3a" ] ; // COLON
+	[ ";"	; "\3b" ] ; // SEMICOLON
+	[ "<"	; "\3c" ] ; // LESS-THAN SIGN
+	[ "="	; "\3d" ] ; // EQUALS SIGN
+	[ ">"	; "\3e" ] ; // GREATER-THAN SIGN
+	[ "?"	; "\3f" ] ; // QUESTION MARK
+	[ "@"	; "\40" ] ; // COMMERCIAL AT
+	[ "é"	; "\c3 a9" ] // LATIN SMALL LETTER E WITH ACUTE
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextEncodeUTF8Hex ( text )
+
+PURPOSE:
+	Replaces common text characters with UTF-8 hex codes.
+	Used for strings when querying LDAP from shell script.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Mar-15 16h21 PST — Donovan A. Chandler
+*/

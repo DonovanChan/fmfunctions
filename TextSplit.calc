@@ -1,0 +1,18 @@
+ListTrimValues (
+	Substitute ( text ; splitChar ; ¶ )
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextSplit ( text ; splitChar )
+
+PURPOSE:
+	Breaks text string on splitChar into return-delimited list.
+	Also strips whitespace from ends of each line.
+
+EXAMPLES:
+	TextSplit ( "dog, cat ,mouse" ; "," ) = "dog¶cat¶mouse"
+
+HISTORY:
+	Created: 2011-Mar-08 09h33 PST — Donovan A. Chandler
+*/

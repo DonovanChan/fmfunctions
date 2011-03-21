@@ -1,0 +1,25 @@
+Let ([
+	text = Get ( ActiveFieldContents ) ;
+	strNew = insertString ;
+	curStart = Get ( ActiveSelectionStart ) ;
+	curLen = Get ( ActiveSelectionSize ) ;
+	strLeft = Left ( text ; curStart -1 ) ;
+	strRight = Middle ( text ; curStart + curLen ; Length ( text ) )
+	] ;
+	strLeft & strNew & strRight
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextInsertAtCursor ( insertString )
+
+PURPOSE:
+	Returns contents of active field with insertString pasted at cursor.
+	Replaces selection.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Mar-03 17h19 PST — Donovan A. Chandler
+*/
