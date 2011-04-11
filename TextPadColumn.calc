@@ -5,12 +5,12 @@ Let ([
 	placeholder = Substitute ( 10^(tabNum-1) ; "0" ; 1 ) ;
 	tabs = Substitute ( placeholder ; 1 ; "	" )
 	];
-	col1Value & tabs & col2Value
+	If ( not hideCol1 ; col1Value ) & tabs & col2Value
 )
 
 /* —————————————————————————————— //
 NAME:
-	TextPadColumn ( col1Value ; col2Value ; tabMax ; tabMin ; tabSize )
+	TextPadColumn ( col1Value ; col2Value ; tabMax ; tabMin ; tabSize ; hideCol1 )
 
 PURPOSE:
 	Pads col2 (second column) with tab characters so that it is left-aligned regardless of col1 width.
