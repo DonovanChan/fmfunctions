@@ -1,0 +1,23 @@
+Position (
+	"xxJanFebMarAprMayJunJulAugSepOctNovDec"
+	; Left ( monthName; 3 )
+	; 1
+	; 1 
+) / 3
+
+/* —————————————————————————————— //
+NAME:
+	DateMonthNumber ( monthName )
+
+PURPOSE:
+	Returns month name corresponding to month number.
+
+EXAMPLES:
+	DateMonthName ( "February" ) = 2
+	DateMonthName ( "feb" ) = 2
+
+HISTORY:
+	Source:	http://www.briandunning.com/cf/805
+	Author:	David Head, uLearnIT .... http://www.ulearnit.com.au/
+	Adopted:	2011-Mar-25 12h16 PST — Donovan A. Chandler ; with formatting modifications
+*/
