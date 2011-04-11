@@ -1,0 +1,16 @@
+ListChunkLoop ( completeList ; chunkSize ; chunkName ; 1 ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	ListChunk ( completeList ; chunkSize ; chunkName )
+
+PURPOSE:
+	Breaks list into series of named values.
+
+EXAMPLES:
+	ListChunk ( "1¶2¶3¶4¶5" ; 2 ; "SET" )
+	= "<:SET:=1¶2:>¶<:SET:=3¶4:>¶<:SET:=5:>"
+
+HISTORY:
+	Created: 2011-Mar-24 17h14 PST — Donovan A. Chandler
+*/

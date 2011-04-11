@@ -1,0 +1,25 @@
+Let ( [
+	startCur = ( rep - 1 ) * chunkSize + 1 ;
+	listCur = MiddleValues ( completeList ; startCur ; chunkSize ) ;
+	listHash = # ( chunkName ; TrimCarriageReturns ( listCur ) ) ;
+	result = List ( previousResults ; listHash )
+	];
+	Case (
+		IsEmpty ( listCur ) ; previousResults ;
+		ListChunkLoop ( completeList ; chunkSize ; chunkName ; rep + 1 ; result )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListChunkLoop ( completeList ; chunkSize ; chunkName ; rep ; previousResults )
+
+PURPOSE:
+	Performs recursion for ListChunk.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Mar-24 16h54 PST — Donovan A. Chandler
+*/
