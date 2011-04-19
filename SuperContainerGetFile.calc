@@ -1,6 +1,9 @@
 Let ([
+	//-- Settings
 	host = "yourHost.com" ;
 	port = "" ; //Typically be 8020
+
+	//-- Logic
 	cred = If ( NotEmpty ( user ) ; user & ":" & password & "@" ) ;
 	subfolder = If ( NotEmpty ( folder ) ; Substitute ( "/" & folder ; "//" ; "/" ) ) ;
 	style = Substitute ( style ; ¶ ; "+" ) ;
