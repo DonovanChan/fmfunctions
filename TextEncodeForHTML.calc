@@ -1,0 +1,101 @@
+Substitute ( text ;
+	
+	//-- Insert entity placeholders
+	[ " "	; "‡‡‡09◊" ] ;	// Horizontal tab
+	[ " "	; "‡‡‡10◊" ] ;	// Line feed
+	[ " "	; "‡‡‡11; to ‡‡‡12◊" ] ;	// Unused
+	[ " "	; "‡‡‡13◊" ] ;	// Carriage Return
+	[ " "	; "‡‡‡14; to ‡‡‡31◊" ] ;	// Unused
+	[ " "	; "‡‡‡32◊" ] ;	// Space
+	[ "!"	; "‡‡‡33◊" ] ;	// Exclamation mark
+	[ "\""	; "‡‡‡34◊" ] ;	// Quotation mark
+	[ "#"	; "‡‡‡35◊" ] ;	// Number sign
+	[ ""	; "‡‡‡36◊" ] ;	// Dollar sign
+	[ "%"	; "‡‡‡37◊" ] ;	// Percent sign
+	[ "&"	; "‡‡‡38◊" ] ;	// Ampersand
+	[ "'"	; "‡‡‡39◊" ] ;	// Apostrophe
+	[ "("	; "‡‡‡40◊" ] ;	// Left parenthesis
+	[ ")"	; "‡‡‡41◊" ] ;	// Right parenthesis
+	[ "*"	; "‡‡‡42◊" ] ;	// Asterisk
+	[ "+"	; "‡‡‡43◊" ] ;	// Plus sign
+	[ ","	; "‡‡‡44◊" ] ;	// Comma
+	[ "-"	; "‡‡‡45◊" ] ;	// Hyphen
+	[ "."	; "‡‡‡46◊" ] ;	// Period (fullstop)
+	[ "/"	; "‡‡‡47◊" ] ;	// Solidus (slash)
+/*
+	[ "0"	; "‡‡‡48◊" ] ;	// Digit 0
+	[ "1"	; "‡‡‡49◊" ] ;	// Digit 1
+	[ "2"	; "‡‡‡50◊" ] ;	// Digit 2
+	[ "3"	; "‡‡‡51◊" ] ;	// Digit 3
+	[ "4"	; "‡‡‡52◊" ] ;	// Digit 4
+	[ "5"	; "‡‡‡53◊" ] ;	// Digit 5
+	[ "6"	; "‡‡‡54◊" ] ;	// Digit 6
+	[ "7"	; "‡‡‡55◊" ] ;	// Digit 7
+	[ "8"	; "‡‡‡56◊" ] ;	// Digit 8
+	[ "9"	; "‡‡‡57◊" ] ;	// Digit 9
+*/
+
+	[ ":"	; "‡‡‡58◊" ] ;	// Colon
+	[ ";"	; "‡‡‡59◊" ] ;	// Semi-colon
+	[ "<"	; "‡‡‡60◊" ] ;	// Less than
+	[ "="	; "‡‡‡61◊" ] ;	// Equals sign
+	[ ">"	; "‡‡‡62◊" ] ;	// Greater than
+	[ "?"	; "‡‡‡63◊" ] ;	// Question mark
+	[ "@"	; "‡‡‡64◊" ] ;	// Commercial at
+/*
+	[ "A"	; "‡‡‡65◊" ] ;	// Capital letter A
+	[ "B"	; "‡‡‡66◊" ] ;	// Capital letter B
+	[ "C"	; "‡‡‡67◊" ] ;	// Capital letter C
+	[ "D"	; "‡‡‡68◊" ] ;	// Capital letter D
+	[ "E"	; "‡‡‡69◊" ] ;	// Capital letter E
+	[ "F"	; "‡‡‡70◊" ] ;	// Capital letter F
+	[ "G"	; "‡‡‡71◊" ] ;	// Capital letter G
+	[ "H"	; "‡‡‡72◊" ] ;	// Capital letter H
+	[ "I"	; "‡‡‡73◊" ] ;	// Capital letter I
+	[ "J"	; "‡‡‡74◊" ] ;	// Capital letter J
+	[ "K"	; "‡‡‡75◊" ] ;	// Capital letter K
+	[ "L"	; "‡‡‡76◊" ] ;	// Capital letter L
+	[ "M"	; "‡‡‡77◊" ] ;	// Capital letter M
+	[ "N"	; "‡‡‡78◊" ] ;	// Capital letter N
+	[ "O"	; "‡‡‡79◊" ] ;	// Capital letter O
+	[ "P"	; "‡‡‡80◊" ] ;	// Capital letter P
+	[ "Q"	; "‡‡‡81◊" ] ;	// Capital letter Q
+	[ "R"	; "‡‡‡82◊" ] ;	// Capital letter R
+	[ "S"	; "‡‡‡83◊" ] ;	// Capital letter S
+	[ "T"	; "‡‡‡84◊" ] ;	// Capital letter T
+	[ "U"	; "‡‡‡85◊" ] ;	// Capital letter U
+	[ "V"	; "‡‡‡86◊" ] ;	// Capital letter V
+	[ "W"	; "‡‡‡87◊" ] ;	// Capital letter W
+	[ "X"	; "‡‡‡88◊" ] ;	// Capital letter X
+	[ "Y"	; "‡‡‡89◊" ] ;	// Capital letter Y
+	[ "Z"	; "‡‡‡90◊" ] ;	// Capital letter Z
+*/
+
+	[ "["	; "‡‡‡91◊" ] ;	// Left square bracket
+	[ "\\"	; "‡‡‡92◊" ] ;	// Reverse solidus (backslash)
+	[ "]"	; "‡‡‡93◊" ] ;	// Right square bracket
+	[ "^"	; "‡‡‡94◊" ] ;	// Caret
+	[ "_"	; "‡‡‡95◊" ] ;	// Horizontal bar
+	
+	//-- Insert proper entities
+	[ "‡‡‡"	; "&#" ] ;
+	[ "◊"	; ";" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextEncodeForHTML ( text )
+
+PURPOSE:
+	Escapes characters with numeric code equivalent for use in HTML.
+
+EXAMPLES:
+	
+
+NOTES:
+	Generated using http://www.december.com/html/spec/codes.html
+	Function does not support encoding of integers, so don't enable those lines unless you modify the function further.
+
+HISTORY:
+	Created: 2011-Apr-19 10h08 PST — Donovan A. Chandler
+*/
