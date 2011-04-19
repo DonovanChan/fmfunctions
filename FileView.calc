@@ -1,0 +1,38 @@
+Let ( [
+	path = folder ;
+	id = recID ;
+	nullMessage = "Data:text/html,Please select a file to view" ;
+	nullPathMessage = "Data:text/html,Path to file on server is invalid"
+	];
+	Case (
+		IsEmpty ( id ) ; nullMessage ;
+		IsEmpty ( path ) ; nullPathMessage ;
+		
+		SuperContainerGetFile ( 
+			SuperContainerUser ; 
+			SuperContainerPassword ; 
+			path ; 
+			height ; 
+			width ; 
+			resolution ;		// resolution
+			style ;		// style
+			backgroundColor		// bckgndColor
+		)
+	)
+	
+)
+
+/* —————————————————————————————— //
+NAME:
+	FileView ( recID ; folder ; height ; width ; resolution ; style ; backgroundcolor ) 
+
+PURPOSE:
+	Fetches file from SuperContainer for viewing in solution.
+	This is a wrapper for the core function, adding extra validation for record selection, etc.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Apr-14 09h52 PST — Donovan A. Chandler
+*/
