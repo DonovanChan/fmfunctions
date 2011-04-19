@@ -23,6 +23,7 @@ Substitute ( text ;
 	[ ">"	; "%3E" ] ;
 	[ "?"	; "%3F" ] ;
 	[ "@"	; "%40" ] ;
+	[ "`"	; "%60" ] ;
 	[ "["	; "%5B" ] ;
 	[ "\\"	; "%5C" ] ;
 	[ "]"	; "%5D" ] ;
@@ -30,7 +31,8 @@ Substitute ( text ;
 	[ "`"	; "%60" ] ;
 	[ "{"	; "%7B" ] ;
 	[ "|"	; "%7C" ] ;
-	[ "}"	; "%7D" ]
+	[ "}"	; "%7D" ] ;
+	[ "~"]	; "%7E" ]
 )
 
 /* —————————————————————————————— //
@@ -51,5 +53,6 @@ EXAMPLES:
 
 HISTORY:
 	Created by Jeremiah Small - http://www.briandunning.com/cf/165
-	Adapted: 2011-Apr-19 09h42 PST — Donovan A. Chandler
+	Modified: 2011-Apr-19 09h42 PST — Donovan A. Chandler ; formatting ; added "`~"
+ chars
 */
