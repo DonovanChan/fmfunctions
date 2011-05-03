@@ -1,9 +1,10 @@
-"CAST( " & 
-mFMb_DoSQL_Quote( Year( fmDate ) & "-" & Month( fmDate ) & "-" & Day( fmDate) ) & " AS DATE )"
+"CAST( " &
+mFMb_DoSQL_Quote( Year( fmDateString ) & "-" & Month( fmDateString ) & "-" & Day( fmDateString) ) &
+" AS DATE )"
 
 /* —————————————————————————————— //
 NAME:
-	SQLDate( fmDate )
+	SQLDate( fmDateStringString )
 
 PURPOSE:
 	Returns SQL expression that converts a FileMaker date to SQL format.
