@@ -1,0 +1,35 @@
+//  PasswordCreator ( HowManyChars ; Parameter ; String )
+//
+//  Recursive Custom Function programmed by Martin D. Brunner - mdb@mdb.bz
+//  18. August 2008
+//  
+//  Calculate any lenght of random caracter string with the special chars you desire.  
+//  Parameter: see below what possiblities for specification there are
+
+Let ( [
+Counter = HowManyChars ;
+Alpha =    "qwertzuiopasdfghjklyxcvbnm" ;
+Beta =      "QWERTZUIPASDFGHJKLYXCVBNM" ;
+Numeric = "123456789" ;
+Special =   ",.-;:_%&$=?!" ;
+
+xSet = Case(
+        Parameter =   1 ; Alpha ;
+        Parameter =   2 ; Beta ;
+        Parameter =   3 ; Numeric ;
+        Parameter =   4 ; Special ;
+        Parameter =   5 ; Alpha & Beta ;
+        Parameter =   6 ; Numeric & Alpha & Beta ;
+        Parameter =   7 ; Alpha & Beta & Numeric & Special ;
+        Parameter =   8 ; Numeric & Alpha ;
+        Parameter =   9 ; Beta & Numeric ;
+        Parameter = 10 ; Numeric & Special ) ;
+
+xLen= Length (xSet)]
+; 
+
+If ( Counter > 0 ; 
+Let(String = String & Middle( xSet ; Int(Random* xLen) + 1; 1); String) & PasswordCreator (Counter-1; Parameter; String) 
+; String )
+
+)

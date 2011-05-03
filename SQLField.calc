@@ -1,0 +1,20 @@
+Let ( [
+	fieldName = FieldNameShort ( fieldName )
+	];
+	Lower ( Quote ( fieldName ) )
+)
+
+/* —————————————————————————————— //
+NAME:
+	SQLField ( fieldName )
+
+PURPOSE:
+	Returns name of field for use in SQL statements.
+	Removes table name and wraps in quotes (in case field = reserved word)
+
+EXAMPLES:
+	SQLField ( "CONTACT::FIELD")
+
+HISTORY:
+	Created: 2011-Apr-27 11h47 PST — Donovan A. Chandler
+*/

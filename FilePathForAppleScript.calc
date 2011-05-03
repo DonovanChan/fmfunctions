@@ -1,0 +1,21 @@
+Let ( [
+	pathList = Substitute ( posixPath ; ":/" ; ¶ ) ;
+	path = GetValue ( pathList ; ValueCount ( pathList ) )
+	];
+	Substitute ( path ; "/" ; ":" )
+)
+
+/* —————————————————————————————— //
+NAME:
+	FilePathForAppleScript ( posixPath )
+
+PURPOSE:
+	Converts POSIX path into an AppleScript file reference.
+	This is to avoid converting the POSIX path to a valid file reference in AppleScript, which I was having trouble with.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Apr-29 18h13 PST — Donovan A. Chandler
+*/

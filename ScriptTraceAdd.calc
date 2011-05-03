@@ -1,0 +1,29 @@
+Let ( [
+	stack = traceStack ;
+	delim = "	" ;
+	lastEntry = RightValues ( stack ; 1 ) ;
+	entryNum = LeftWords ( lastEntry ; 1 ) + 1 ;
+	script = Get ( ScriptName ) ;
+	now = GetAsNumber ( Get ( CurrentTimeStamp ) ) ;
+	prev = MiddleWords ( lastEntry ; 2 ; 1 ) ;
+	duration = If ( prev < 1 ; 0 ; now - prev ) & " sec"
+	 ];
+	List (
+		stack ;
+		entryNum & delim & now & delim & duration & delim & comment & delim & script
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ScriptTraceAdd ( traceStack ; comment )
+
+PURPOSE:
+	Appends new entry to trace stack.  Used for monitoring script performance.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Apr-26 14h58 PST — Donovan A. Chandler
+*/
