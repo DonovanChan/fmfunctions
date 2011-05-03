@@ -1,93 +1,93 @@
 Let ( [
-  db = Get ( FileName ) ;
-  fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
-  table = GetValue ( fieldList ; 1 ) ;
-  field = GetValue ( fieldList ; 2 )
-  ] ;
-  "set fmResult to \"\"" & ¶ &
-  "set defaultColor to split(" & Quote( defaultColor ) & ",\";\")" & ¶ &
-  "set defaultColor to adjustColorArray(defaultColor,false)" & ¶ &
-  "try" & ¶ &
-  " set colorArray to choose color default color defaultColor" & ¶ &
-  "on error errText number errNum" & ¶ &
-  " set fmResult to 1" & ¶ &
-  "end try" & ¶ &
-  "if fmResult is \"\" then" & ¶ &
-  " set colorArrayNew to adjustColorArray(colorArray,true)" & ¶ &
-  " set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"" & ¶ &
-  "end if" & ¶ &
-  "setField(\"" & db & "\",\"" & table & "\",\"" & field & "\",fmResult)" & ¶ &
-  "" & ¶ &
-  "------------------------------------------------" & ¶ &
-  "-- HANDLERS" & ¶ &
-  "------------------------------------------------" & ¶ &
-  "" & ¶ &
-  "-- Handler: Converts RGB values to/from max of 65535 and 255" & ¶ &
-  "--   Required handlers: stripToInteger()" & ¶ &
-  "on adjustColorArray(array, to255)" & ¶ &
-  "  set factor to 257" & ¶ &
-  "  set newArray to {}" & ¶ &
-  "  repeat with i in array" & ¶ &
-  "    set num to my stripToInteger(i)" & ¶ &
-  "    if to255 is true then" & ¶ &
-  "      set end of newArray to ((num as integer) / factor) as integer" & ¶ &
-  "    else" & ¶ &
-  "      set end of newArray to ((num as integer) * factor) as integer" & ¶ &
-  "    end if" & ¶ &
-  "  end repeat" & ¶ &
-  "  return newArray" & ¶ &
-  "end adjustColorArray" & ¶ &
-  "" & ¶ &
-  "--Handler: Splits string into array by delimiter" & ¶ &
-  "to split(someText, delimiter)" & ¶ &
-  "  set AppleScript's text item delimiters to delimiter" & ¶ &
-  "  set someText to someText's text items" & ¶ &
-  "  set AppleScript's text item delimiters to {\"\"}" & ¶ &
-  "  return someText" & ¶ &
-  "end split" & ¶ &
-  "" & ¶ &
-  "-- Handler: Removes everything but integers from string" & ¶ &
-  "on stripToInteger(someText)" & ¶ &
-  "  set myResult to {}" & ¶ &
-  "  set textItems to text items of (someText as string)" & ¶ &
-  "  repeat with i in textItems" & ¶ &
-  "    try" & ¶ &
-  "      set end of myResult to (i as integer)" & ¶ &
-  "    end try" & ¶ &
-  "  end repeat" & ¶ &
-  "  myResult as string" & ¶ &
-  "end stripToInteger" & ¶ &
-  "" & ¶ &
-  "---- FileMaker Handlers ----" & ¶ &
-  "------------------------------------------------" & ¶ &
-  "" & ¶ &
-  "-- Handler: Sets FileMaker field value" & ¶ &
-  "on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
-  " tell application \"FileMaker Pro Advanced\"" & ¶ &
-  "   tell database (databaseName as text)" & ¶ &
-  "     tell table (tableName as text)" & ¶ &
-  "       set field fieldName to theValue" & ¶ &
-  "     end tell" & ¶ &
-  "   end tell" & ¶ &
-  " end tell" & ¶ &
-  "end setField"
+	db = Get ( FileName ) ;
+	fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
+	table = GetValue ( fieldList ; 1 ) ;
+	field = GetValue ( fieldList ; 2 )
+	] ;
+	"set fmResult to \"\"" & ¶ &
+	"set defaultColor to split(" & Quote( defaultColor ) & ",\";\")" & ¶ &
+	"set defaultColor to adjustColorArray(defaultColor,false)" & ¶ &
+	"try" & ¶ &
+	" set colorArray to choose color default color defaultColor" & ¶ &
+	"on error errText number errNum" & ¶ &
+	" set fmResult to 1" & ¶ &
+	"end try" & ¶ &
+	"if fmResult is \"\" then" & ¶ &
+	" set colorArrayNew to adjustColorArray(colorArray,true)" & ¶ &
+	" set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"" & ¶ &
+	"end if" & ¶ &
+	"setField(\"" & db & "\",\"" & table & "\",\"" & field & "\",fmResult)" & ¶ &
+	"" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"-- HANDLERS" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"" & ¶ &
+	"-- Handler: Converts RGB values to/from max of 65535 and 255" & ¶ &
+	"--	 Required handlers: stripToInteger()" & ¶ &
+	"on adjustColorArray(array, to255)" & ¶ &
+	"	set factor to 257" & ¶ &
+	"	set newArray to {}" & ¶ &
+	"	repeat with i in array" & ¶ &
+	"		set num to my stripToInteger(i)" & ¶ &
+	"		if to255 is true then" & ¶ &
+	"			set end of newArray to ((num as integer) / factor) as integer" & ¶ &
+	"		else" & ¶ &
+	"			set end of newArray to ((num as integer) * factor) as integer" & ¶ &
+	"		end if" & ¶ &
+	"	end repeat" & ¶ &
+	"	return newArray" & ¶ &
+	"end adjustColorArray" & ¶ &
+	"" & ¶ &
+	"--Handler: Splits string into array by delimiter" & ¶ &
+	"to split(someText, delimiter)" & ¶ &
+	"	set AppleScript's text item delimiters to delimiter" & ¶ &
+	"	set someText to someText's text items" & ¶ &
+	"	set AppleScript's text item delimiters to {\"\"}" & ¶ &
+	"	return someText" & ¶ &
+	"end split" & ¶ &
+	"" & ¶ &
+	"-- Handler: Removes everything but integers from string" & ¶ &
+	"on stripToInteger(someText)" & ¶ &
+	"	set myResult to {}" & ¶ &
+	"	set textItems to text items of (someText as string)" & ¶ &
+	"	repeat with i in textItems" & ¶ &
+	"		try" & ¶ &
+	"			set end of myResult to (i as integer)" & ¶ &
+	"		end try" & ¶ &
+	"	end repeat" & ¶ &
+	"	myResult as string" & ¶ &
+	"end stripToInteger" & ¶ &
+	"" & ¶ &
+	"---- FileMaker Handlers ----" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"" & ¶ &
+	"-- Handler: Sets FileMaker field value" & ¶ &
+	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
+	" tell application \"FileMaker Pro Advanced\"" & ¶ &
+	"	 tell database (databaseName as text)" & ¶ &
+	"		 tell table (tableName as text)" & ¶ &
+	"			 set field fieldName to theValue" & ¶ &
+	"		 end tell" & ¶ &
+	"	 end tell" & ¶ &
+	" end tell" & ¶ &
+	"end setField"
 
 )
 
 /* —————————————————————————————— //
 NAME:
-  AppleScriptChooseColor ( fullFieldName ; defaultColor )
+	AppleScriptChooseColor ( fullFieldName ; defaultColor )
 
 PURPOSE:
-  Shows color picker and sets RGB value to FileMaker field
+	Shows color picker and sets RGB value to FileMaker field
 
 EXAMPLES:
-  AppleScriptChooseColor ( "FOCUS::TEMP_TEXT_GT" ; "RGB(255;0;0)" ) 
-  Presents color picker defaulted to red and returns "RGB(255;255;255)" in FOCUS::TEMP_TEXT_GT
+	AppleScriptChooseColor ( "FOCUS::TEMP_TEXT_GT" ; "RGB(255;0;0)" ) 
+	Presents color picker defaulted to red and returns "RGB(255;255;255)" in FOCUS::TEMP_TEXT_GT
 
 HISTORY:
-  Created: 2010-Oct-14 10h26 PST — Donovan A. Chandler
+	Created: 2010-Oct-14 10h26 PST — Donovan A. Chandler
 
 NOTES:
-  defaultColor parameter currently not supported
+	defaultColor parameter currently not supported
 */
