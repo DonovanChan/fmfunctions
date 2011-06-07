@@ -1,0 +1,27 @@
+Let ( [
+	int = Int ( number ) ;
+	dec = Abs ( number - int )
+	] ;
+
+	If ( number < 0 ; "-" ) &
+	"$" &
+	TextInsertSeparator ( int ; "," ; 3 ) &
+	If ( dec ≠ 0 ; Right ( dec ; 3 ) )
+
+)
+
+/* —————————————————————————————— //
+NAME:
+	NumberAsDollars ( number )
+
+PURPOSE:
+	Formats number or text string as dollar value.
+
+EXAMPLES:
+	NumberAsDollars ( "5000.12" ) = "$5,000.12"
+	NumberAsDollars ( "5000.1" ) = "$5,000.1"
+	NumberAsDollars ( "5000" ) = "$5,000"
+
+HISTORY:
+	Created: 2011-Jun-01 16h25 PST — Donovan Chandler based on function by Will Baker
+*/

@@ -1,0 +1,24 @@
+ListSortByListLoop (
+	listToSort ;
+	ListUniqueValues ( sortedList ) ;
+	1 ;
+	ValueCount ( sortedList ) ;
+	"" 
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListSortByList ( listToSort ; sortedList )
+
+PURPOSE:
+	Sorts list in order designated by another list
+
+EXAMPLES:
+	
+
+NOTES:
+	Omits values that do not appear in sorted list.
+
+HISTORY:
+	Created: 2011-May-24 16h07 PST — Donovan A. Chandler
+*/

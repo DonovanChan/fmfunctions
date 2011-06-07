@@ -1,0 +1,24 @@
+Let ([
+	$_field_name = fieldName ;
+	listFull = ListCustom ( 1 ; Get ( FoundCount ) ; "GetNthRecord ( GetField ( $_field_name ) ; [n])" )
+	] ;
+	Case (
+		uniqueValuesOnly ;
+			ListUniqueValues ( listFull ) ;
+		listFull
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListFoundValues ( fieldName ; uniqueValuesOnly )
+
+PURPOSE:
+	Returns values from field for current found set. Not for use on large data sets!
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Jun-07 15h40 PST — Donovan A. Chandler
+*/

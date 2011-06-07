@@ -1,0 +1,29 @@
+Let ( [
+	val = GetValue ( sortedList ; rep )
+	];
+	Case (
+		rep ≤ rep_max ;
+			ListSortByListLoop (
+				listToSort ;
+				sortedList ;
+				rep + 1 ;
+				rep_max ;
+				ListTrimCR ( List ( previousResults ; FilterValues ( listToSort ; val ) ) )
+			) ;
+		previousResults
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListSortByListLoop ( listToSort ; sortedList ; rep ; rep_max ; previousResults )
+
+PURPOSE:
+	Performs recursive operations for ListSortByList()
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-May-24 16h02 PST — Donovan A. Chandler
+*/
