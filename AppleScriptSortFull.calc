@@ -1,0 +1,43 @@
+Let ( [
+	$fieldHash = fieldHash ;
+	doc = Get ( FileName ) ;
+	fieldCount = #ValueCount ( fieldHash ; "FIELD" ) ;
+	fieldExpression = "\"field \" & Quote ( #Node( $fieldHash ; \"FIELD[\" & [n] & \"]/NAME\" ) )" ;
+	fieldArray = ListCustom ( 1 ; fieldCount ; fieldExpression ) ;
+	fieldArray = Substitute ( TrimCarriageReturns ( fieldArray ) ; ¶ ; ", " ) ;
+	sortExpression =
+"Case(
+	#Node( $fieldHash ; \"FIELD[\" & [n] & \"]/DESCENDING\" ); \"descending\";
+	\"ascending\"
+)" ;
+	sortArray = ListCustom ( 1 ; fieldCount ; sortExpression ) ;
+	sortArray = Substitute ( TrimCarriageReturns ( sortArray ) ; ¶ ; ", " )
+	];
+	"tell current layout of document " & "\"" & doc & "\"" & ¶ &
+	"	sort by {" & fieldArray & "} in order {" & sortArray & "}" & ¶ &
+	"end tell"
+)
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptSortFull ( fieldHash )
+
+PURPOSE:
+	Generates AppleScript used to sort records in active window by one or more fields.
+
+EXAMPLES:
+	AppleScriptSortFull (
+		# ( "FIELD" ; # ( "NAME" ; "CONTACT::NAME" ) & # ( "DESCENDING" ; True ) ) &
+		# ( "FIELD" ; # ( "NAME" ; "CONTACT::COMPANY" ) )
+	) =
+"tell current layout of document \"MyDatabase\"
+	sort by {field \"CONTACT::NAME\", field \"CONTACT::COMPANY\"} in order {descending, ascending}
+end tell"
+
+HISTORY:
+	Created: 2011-May-10 17h19 PST — Donovan A. Chandler
+
+NOTES:
+	BEWARE, fields must be visible on layout!
+
+*/

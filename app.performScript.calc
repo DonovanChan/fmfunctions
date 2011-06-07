@@ -3,8 +3,13 @@ Let([
 	_field_name_full = result_field_name;
 	_callback_script_name = callback_script_name;
 	
-	_filemaker_version = "FileMaker Pro Advanced";
+	_filemaker_version =
+		Case (
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
+			"FileMaker Pro"
+		) ;
 	_file_name = Get ( FileName );
+	_file_path = FilePathForAppleScript ( Get ( FilePath ) );
 	
 	_field_name_full_list = Substitute( _field_name_full; "::"; ¶ );
 	_table_name = GetValue( _field_name_full_list; 1 );
@@ -17,53 +22,77 @@ Let([
 	
 	"-- Perform designated script" & ¶ &
 	"tell application \"" & _filemaker_version & "\"" & ¶ &
+	
+	If ( restart_file ;
+	"	close database \"" & _file_name & "\"" & ¶ &
+	"	delay 5" & ¶ &
+	"	open file \"" & _file_path & "\"" & ¶ &
+	"	-- Pause until file is finished launching" & ¶ &
+	"	repeat" & ¶ &
+	"		try" & ¶ &
+	"			setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)" & ¶ &
+	"			exit repeat" & ¶ &
+	"		end try" & ¶ &
+	"	end repeat" & ¶
+	) &
 	"	tell database \"" & _file_name & "\"" & ¶ &
 	"		try" & ¶ &
 	"			do script \"" & _script_name & "\"" & ¶ &
-	"		on error _errorText number _errorNumber from _object partial result _partial to _to" & ¶ &
-	"			set _result to (\"Error \" & _errorNumber & \": \" & _errorText & return & ¬" & ¶ &
-	"				\"Object: \" & _object & return & ¬" & ¶ &
-	"				\"Expected Type: \" & _to & return & ¬" & ¶ &
-	"				\"Partial Result: \" & _partial) as text" & ¶ &
+	"		on error _errorText number _errorNumber" & ¶ &
+	"			set _result to (\"Error \" & _errorNumber & \": \" & _errorText) as text" & ¶ &
 	"		end try" & ¶ &
 	"	end tell" & ¶ &
 	"end tell" & ¶ &
 	"delay 1" & ¶ &
 
 	"-- Store result in designated global field" & ¶ &
-	"tell application \"" & _filemaker_version & "\"" & ¶ &
-	"   tell database \"" & _file_name & "\"" & ¶ &
-	"		tell table \"" & _table_name & "\"" & ¶ &
-	"			set field \"" & _field_name & "\" to _result" & ¶ &
-	"		end tell" & ¶ &
-	"	end tell" & ¶ &
-	"end tell" & ¶ &
+	"setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)" & ¶ &
 	
 	"-- Perform callback script" & ¶ &
 	"tell application \"" & _filemaker_version & "\"" & ¶ &
 	"	tell database \"" & _file_name & "\"" & ¶ &
 	"		do script \"" & _callback_script_name & "\"" & ¶ &
 	"	end tell" & ¶ &
-	"end tell"
+	"end tell" & ¶ &
+	"" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"-- HANDLERS" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"" & ¶ &
+	"---- FileMaker Handlers ----" & ¶ &
+	"------------------------------------------------" & ¶ &
+	"" & ¶ &
+	"-- Handler: Sets FileMaker field value" & ¶ &
+	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
+	" tell application \"" & _filemaker_version & "\"" & ¶ &
+	"	 tell database (databaseName as text)" & ¶ &
+	"		 tell table (tableName as text)" & ¶ &
+	"			 set field fieldName to theValue" & ¶ &
+	"		 end tell" & ¶ &
+	"	 end tell" & ¶ &
+	" end tell" & ¶ &
+	"end setField"
 
 )
 
 /* —————————————————————————————— //
 NAME:
-	app.performScript ( script_name; result_field_name; callback_script_name )
+	app.performScript ( script_name; result_field_name; callback_script_name; restart_file )
 
 PURPOSE:
-	Returns AppleScript command that performs named script in current file
+	Generates AppleScript script.
+	When performed, AppleScript will perform designated FileMaker script, then the callback script.
+	AppleScript output (error messages) sent to designated global field.
 
 DEPENDENCIES:
 	Requires Mac OS to run AppleScript
 
 HISTORY:
 	Created: 2010-May-25 18h00 PST — Donovan A. Chandler
+	Modified: 2011-May-02 14h13 PST — Donovan Chandler
 	
 TO DO:
 	- Fix error preventing global result field from being found
-	- Add test of FileMaker Pro or FileMaker Pro Advanced
 	- Add support for parameters (using name of global field?)
 		- Consider bBox plugin instead if using parameters and returns
 */

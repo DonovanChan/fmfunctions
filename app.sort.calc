@@ -1,32 +1,32 @@
-Let([
-  field = sortField;
-  order =
-    Case(
-      sortDescending; "descending";
-      "ascending"
-    );
-  doc = Get( FileName )
-  ];
+Let ( [
+	field = sortField ;
+	order =
+		Case (
+			sortDescending ; "descending" ;
+			"ascending"
+		) ;
+	doc = Get ( FileName )
+	] ;
 
-   "tell current layout of document " & "\"" & doc & "\"" & ¶ &
-      "sort by field " & "\"" & field & "\"" & " in order " & order & ¶ &
-   "end tell"
+	"tell current layout of document " & "\"" & doc & "\"" & ¶ &
+	"	sort by field " & "\"" & field & "\"" & " in order " & order & ¶ &
+	"end tell"
 
 )
 
 /* —————————————————————————————— //
 NAME:
-  AppleScriptSort ( sortField ; sortDescending )
+	AppleScriptSort ( sortField ; sortDescending )
 
 PURPOSE:
-  Provides dynamic sort on Mac OS using AppleScript.
+	Provides dynamic sort on Mac OS using AppleScript.
 
 EXAMPLES:
-  
+	
 
 HISTORY:
-  Created: 2010-May-25 18h16 PST — Donovan A. Chandler
-  
+	Created: 2010-May-25 18h16 PST — Donovan A. Chandler
+	
 NOTES:
-  BEWARE, sortField must be visible on layout!
+	BEWARE, sortField must be visible on layout!
 */
