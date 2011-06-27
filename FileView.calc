@@ -16,7 +16,8 @@ Let ( [
 			width ; 
 			resolution ;		// resolution
 			style ;		// style
-			backgroundColor		// bckgndColor
+			backgroundColor ;		// bckgndColor
+			False
 		)
 	)
 	

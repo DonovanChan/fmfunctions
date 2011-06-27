@@ -1,18 +1,20 @@
 Let([
-  field_name_full = Substitute ( fieldName ; "::" ; ¶ ) ;
-  field_name = GetValue ( field_name_full ; ValueCount ( field_name_full ) )
-  ] ;
-  Proper (
-    Substitute (
-      field_name ;
-      [ "_FLAG" ; "" ] ;
-      [ "ID_" ; "" ] ;
-      [ "_CT" ; "" ] ;
-      [ "_CN" ; "" ] ;
-      [ "_AT" ; "" ] ;
-      [ "_" ; " " ]
-    )
-  )
+	field_name_full = Substitute ( fieldName ; "::" ; ¶ ) ;
+	field_name = GetValue ( field_name_full ; ValueCount ( field_name_full ) )
+	] ;
+	Proper (
+		Substitute (
+			field_name ;
+			[ "_FLAGGED" ; "‡FLAGGED" ] ;
+			[ "_FLAG" ; "" ] ;
+			[ "‡FLAGGED" ; "_FLAGGED" ] ;
+			[ "ID_" ; "" ] ;
+			[ "_CT" ; "" ] ;
+			[ "_CN" ; "" ] ;
+			[ "_AT" ; "" ] ;
+			[ "_" ; " " ]
+		)
+	)
 )
 
 /* —————————————————————————————— //
