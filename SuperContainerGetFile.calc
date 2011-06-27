@@ -17,14 +17,14 @@ Let ([
 		)
 	] ;
 	"http://" & cred & host & If ( port ; ":" & port ) &
-	"/" & "SuperContainer/Files" & subfolder & "?" &
+	"/" & "SuperContainer/" & If ( showRawData ; "RawData" ; "Files" ) & subfolder & "?" &
 	Substitute ( paramList ; ¶ ; "&" )
 )
 
 
 /* —————————————————————————————— //
 NAME:
-	SuperContainerGetFile ( user ; password ; folder ; height ; width ; resolution ; style ; backgroundColor )
+	SuperContainerGetFile ( user ; password ; folder ; height ; width ; resolution ; style ; backgroundColor ; showRawData )
 
 PURPOSE:
 	Constructs path for retrieving SuperContainer files.
@@ -37,7 +37,8 @@ EXAMPLES:
 		500 ; 400 ;
 		300 ;
 		"noapplet+bold¶left" ;
-		"rgb(10,10,255)"
+		"rgb(10,10,255)" ;
+		False
 	)
 	="http://user:password@yourServer.com/SuperContainer/Files/Folder/Subfolder?height=500&width=400&resolution=300&style=noapplet+bold&background-color=rgb(10,10,255)"
 
