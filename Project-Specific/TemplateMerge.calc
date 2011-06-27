@@ -1,0 +1,31 @@
+Let ([
+	isHot = GetAsBoolean ( CAR_CONTENT::Hot_Flag ) ;
+	comment = If ( not IsEmpty ( $_template_comment ) ; $_template_comment ; "N/A" )
+	];
+	Substitute ( text ;
+		[ "::CAR_ProjectNo::" ; CAR_CONTENT::ProjectNo_ct ] ;
+		[ "::CAR_ProjectNoAndCO::" ; CAR_CONTENT::ProjectNoDisplay_ct ] ;
+		[ "::CAR_ProjectName::" ; CAR_CONTENT::ProjectName_ct ] ;
+		[ "::CAR_ProjectManager::" ; CAR::ProjectMgr_ct ] ;
+		[ "::Comment::" ; comment ] ;
+		[ ":: (HOT!)::" ; If ( isHot ; " (HOT!)" ) ] ;
+		[ "::ExpeditedMessage::" ; If ( isHot ; "  Your immediate response is requested." ) ]
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	TemplateMerge ( text )
+
+PURPOSE:
+	Replaces labels in text with field values.
+
+EXAMPLES:
+	Where CAR::ProjectMgr_ct = "Bill Banks"
+
+	TemplateMerge ( "Dear ::CAR_ProjectManager::" )
+	= "Dear Bill Banks"
+
+HISTORY:
+	Created: 2011-Feb-25 10h47 PST — Donovan A. Chandler
+*/

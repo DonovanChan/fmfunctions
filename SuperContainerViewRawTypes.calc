@@ -1,0 +1,18 @@
+List (
+	"pdf" ;
+	""
+)
+
+/* —————————————————————————————— //
+NAME:
+	SuperContainerViewRawTypes
+
+PURPOSE:
+	Provides central list of all types of files to view in raw view.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-May-13 13h32 PST — Donovan A. Chandler
+*/

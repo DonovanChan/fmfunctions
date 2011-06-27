@@ -1,6 +1,6 @@
 /*
 WARNING:
-This function needs refinement.  It may leave trailing spaces and may have returned unexpected results (this not is being entered as an afterthough).
+This function needs refinement.  It may leave trailing spaces and may return unexpected results.
 
 Try using list.uniqueValuesCustom instead
 */

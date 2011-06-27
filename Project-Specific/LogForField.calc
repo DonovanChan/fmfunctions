@@ -1,0 +1,37 @@
+Let ([
+  incidentID =
+    If ( 
+      not IsEmpty ( incidentID ) ; incidentID ;
+      INCIDENT__FOCUS::ID
+    ) ;
+  action =
+    If (
+      not IsEmpty ( action ) ; action ;
+      "MODIFY"
+    )
+  ];
+  # ( "ID_INCIDENT" ; incidentID ) &
+  # ( "ACTION" ; action ) &
+  # ( "FIELD_NAME" ; Get ( ActiveFieldName ) ) &
+  # ( "VALUE" ; Get ( ActiveFieldContents ) ) &
+  # ( "BOOLEAN" ; isBoolean ) &
+  # ( "ID_CHILD" ; childID ) &
+  # ( "CHILD_CODE" ; childCode )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ParamLogForRelatedField ( incidentID ; action ; isBoolean ; childID ; childCode )
+
+PURPOSE:
+	Creates parameter for script that logs field modifications, etc.
+
+EXAMPLES:
+	ParamLogForRelatedField ( )
+
+NOTES:
+  action, childID and childCode are only required for related records
+
+HISTORY:
+	Created: 2011-Jan-21 15h02 PST — Donovan A. Chandler
+*/

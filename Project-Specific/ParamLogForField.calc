@@ -1,0 +1,24 @@
+# ( "ID_INCIDENT" ;
+  If ( 
+    not IsEmpty ( incidentID ) ; incidentID ;
+    INCIDENT__FOCUS::ID
+  )
+) &
+# ( "ACTION" ; "MODIFY" ) &
+# ( "FIELD_NAME" ; Get ( ActiveFieldName ) ) &
+# ( "VALUE" ; Get ( ActiveFieldContents ) ) &
+# ( "BOOLEAN" ; isBoolean )
+
+/* —————————————————————————————— //
+NAME:
+	ParamLogForField ( incidentID ; isBoolean )
+
+PURPOSE:
+	Creates parameter for script that logs field modifications, etc.
+
+EXAMPLES:
+	ParamLogForField ( )
+
+HISTORY:
+	Created: 2011-Jan-21 15h02 PST — Donovan A. Chandler
+*/

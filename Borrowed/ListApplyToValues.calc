@@ -1,0 +1,285 @@
+/*
+CUSTOM FUNCTION: ApplyToList ( function ; listOfValues ; separator )
+© 2008 Debi Fuchs of Aptworks Consulting, debi@aptworks.com
+
+Speedily (using limited recursion and avoiding GetValue) apply an "inline" function across a list of up to one million items, handling them either as numbers/expression or as text. 
+
+EXAMPLES:
+  ApplyToList( "[n]^2"; "3¶2¶7"; ¶ ) 
+  // --> "9¶4¶49"
+
+  ApplyToList( "Length([t])"; "Robin¶Pat¶Chris"; ¶) 
+  // --> "5¶3¶5"
+
+  Let( 
+    number_me = "[i]&\". \"&[t]"; 
+    ApplyToList( number_me; "Robin¶Pat¶Chris"; ¶)
+  ) 
+  // --> "1. Robin¶2. Pat¶3. Chris"
+
+  Let( 
+    add_30 = "GetAsDate([n])+30"; 
+    ApplyToList( add_30; "Date(1;1;2000)¶Date(1;15;2000)"; ¶)
+  ) 
+  // --> "1/31/2000¶2/14/2000"
+
+
+CREDITS: Thanks to Agnès Barouh for the idea of the "[n]" style function call syntax, to Ray Cologon for ideas about local variables within custom functions, and to Darren Terry for inspring this function.
+
+USAGE: ApplyToList returns the results, delimited by "separator", of repeatedly evaluating the string "function" across the list "listOfValues", each time assigning to placeholders "[t]" or "[n]" one item from the list. Use "[t]" to treat items as text; Use "[n]" to evaluate them before application. For convenience in creating numbered lists, use placeholder "[i]" to represent the position of the item within the list, starting with an index of 1.  IMPORTANT: Use "[n]" over "[t]" where possible, as this is faster, and do NOT use BOTH "[n]"  and "[t]" placeholders (or BOTH "[t]" and "evaluate([t])" in one function), as this slows the calculation engine to a crawl.
+
+EXAMPLES:
+
+  ApplyToList( "[t] & 1"; "a¶b¶¶c"; ¶) 
+  // --> ("a" & 1) & ¶ & ("b" & 1) & ¶ & ("" & 1) & ¶ & ("c" & 1)
+  // --> "a1¶b1¶1¶d1"
+
+  ApplyToList( "Length([t])"; "Robin¶Pat"; ¶) 
+  // --> (Length("Robin")) & ¶ & (Length("Pat"))
+  // --> "5¶3"
+
+  ApplyToList( "Length([n])"; "Robin¶Pat"; ¶) 
+  // --> (Length(Robin)) & ¶ & (Length(Pat))
+  // --> "[ERROR]"
+
+  ApplyToList("[n] + [n]"; "01+2¶3+2"; ¶)
+  // --> (01+2 + 01+2) & ¶ & (3+2 + 3+2) 
+  // --> "6¶10"
+
+  ApplyToList("[t] + [t]"; "01+2¶3+2"; ¶)
+  // --> ("01+2" + "01+2") & ¶ & ("3+2" + "3+2") 
+  // --> (12 + 12) & ¶ & (32 + 32) 
+  // --> "24¶64"
+
+THIS IS VERY VERY VERY (!!!!!) SLOW... (see above)
+  ApplyToList("[t] + [n]"; "01+2¶3+2"; ¶)
+  // --> ("01+2" + 01+2) & ¶ & ("3+2" + 3+2) 
+  // --> (12 + 01+2) & ¶ & (32 + 3+2) 
+  // --> "15¶37"
+
+THIS IS VERY VERY VERY (!!!!!) SLOW... (see above)
+  ApplyToList("[t] + evaluate([t])"; "01+2¶3+2"; ¶)
+  // --> ("01+2" + evaluate("01+2") & ¶ & ("3+2" + evalute("3+2")) 
+  // --> ("01+2" + 3) & ¶ & ("3+2" + 5) 
+  // --> (12 + 3) & ¶ & (32 + 5) 
+  // --> "15¶37"
+
+
+IMPLEMENTATION: ApplyToList creates long strings of Let statements and then evaluates them.  It does not recurse at all unless it is called on a list larger than 1000 items, and then it does so in binary fashion (calling itself twice not once).  Thus, the CF stack grows logarithmically, reaching (for example) a depth of only 10 CF stack frames and 1000 CF calls when called on a list of one million items. This leaves room to use other custom functions (including ApplyToList) within the "function" argument of ApplyToList. ApplyToList is maximized for speed. Suggestions for further optimization welcome!
+
+NOTE: See "ApplyToRange" to apply a function to a range of numbers. See "Apply" to apply a function to a single value.
+ 
+LAST MODIFIED: 13-AUG-2008 by Debi Fuchs of Aptworks Consulting
+*/
+
+
+Let(
+  [
+    // set up some sizes and limits
+    
+    range_limit = 1000000; // set a practical limit...can be higher
+    batch_size = 1000; // avoid the FM Evaluation function limit
+
+    // determine what is involved
+    
+    value_count = ValueCount( listOfValues );
+    has_i = Position( function; "[i]"; 0; 1 );
+    has_t = Position( function; "[t]"; 0; 1 );
+    has_n = Position( function; "[n]"; 0; 1 );
+    
+    // In the top-level call to this function, if it looks like an
+    // index is made use of in the function, modify the "function"
+    // argument to track the index value by including it in comments.
+    // This way we can pass it in our recursive calls without
+    // disturbing anything.
+     
+    is_first_call = Left( function; 4 ) <> "/*##";
+
+    function =
+      Case(
+        has_i and is_first_call;
+        "/*##" & "00000000" & "##*/"
+      ) & function;
+
+    start_index = Case( has_i; Middle(function; 5; 8))
+
+  ];
+
+  Case(
+  
+    // Simulate an "out of range" error if the list parameter is huge. 
+    
+    value_count > range_limit;
+    Evaluate( "Factorial( -1 )" );
+    
+    // If there is data to be processed, process one batch; Then use
+    // two recursive calls to process subsequent batches.
+    
+    value_count > 0;
+    Let(
+      [
+      
+        // Transform the input list into a string of "Let" statements,
+        // each one mapping our function to a single item in the list.
+        // Include an "i" value so we can access the index to each item
+        // if needed. If the [i] placeholder is used, include some
+        // some local variables assignments that will auto-increment
+        // the index value as the let statements are evaluated later
+        // on.
+
+        // Determine if the function might require quoting the items before
+        // referring to them (this slows things down).
+        
+       
+        // Set up the "Let" statement syntax:
+        prefix = "Let(["  & Case( has_t; "atl_t="; has_n; "atl_n="; "dummy=");
+        suffix = 
+                    Case( 
+                       has_t and has_n; 
+                       ";atl_n=evaluate(atl_t)" //very slow...
+                     ) &
+                    Case( 
+                       has_i; 
+                       ";atl_i=$atl_c;$atl_c=$atl_c+1"
+                     ) & 
+                    "];" &
+                    Substitute( 
+                      function; 
+                      [ "[t]"; "atl_t" ]; 
+                      [ "[i]"; "atl_i" ];
+                      [ "[n]"; "atl_n" ]
+                    ) & 
+                    ")";
+        
+        // Isolate the current batch of list values, wrapping them
+        // in quotes if only needed (much faster if not needed!)
+
+        batch_of_values =
+          Let(
+              subset =
+              Case(
+                  value_count <= batch_size;
+                  listOfValues;
+                  Let(
+                      l = LeftValues( listOfValues; batch_size );
+                      Left( l; Length( l ) - 1 )
+                  )
+              );
+              Case(
+                  has_t or not(has_n);
+                  Substitute(
+                      Quote( Substitute( subset; ¶; "##**##" ) );
+                      "##**##";
+                      "\"¶\""
+                  );
+                  subset
+              )
+          );
+        
+       
+        // Build our huge string of "Let" statements:
+        evaluation_expression = prefix &
+        Substitute(
+          batch_of_values;
+          ¶;
+          suffix & "&\¶&" & prefix
+        ) & suffix
+        
+        
+      ];
+      
+      // Evaluate the "Lets" before moving on to the next set of
+      // data. Initialize and restore our local variable counter
+      // before/after the evaluation. Insert our separator into
+      // the evaluation result before moving on.
+      
+      Let( 
+        [old_atl_c = $atl_c; $atl_c = start_index + 1];
+        Substitute(  Evaluate( evaluation_expression ); ¶; separator ) &
+          Let( $atl_c = old_atl_c; "" )
+      ) &
+
+      // Process the remaining data.  If there are at least two batches
+      // remaining, use two recursive calls so stack depth will grow
+      // logarithmically rather than linearly. Split the list roughly in
+      // two, updating the starting index value in the comment of the
+      // "function" argument in both calls.
+
+      Let(
+        [
+          remaining_batches = Int( ( value_count - batch_size ) / batch_size );
+          
+          range_size_A =
+            Case(
+              remaining_batches >= 2;
+              Ceiling( remaining_batches / 2 ) * batch_size;
+              value_count - batch_size
+            );
+            
+          range_size_B = value_count - batch_size - range_size_A
+        ];
+      
+        Case(
+        
+          range_size_A >= 1;
+          
+          Let(
+            [
+              function_A =
+                Case( 
+                        has_i; 
+                        Let(
+                           index_A=Right("00000000" & (start_index+batch_size); 8);
+                           Replace( function; 5; 8; index_A )
+                        );
+                function
+              ); 
+              
+              batch_A =
+                Let(
+                  l = MiddleValues( listOfValues; 1+batch_size; range_size_A );
+                  Left( l; Length( l ) - 1 )
+              )
+            ];
+            
+            separator &
+              ApplyToList( function_A; batch_A; separator )
+              
+          )
+        ) &
+
+        Case(
+        
+          range_size_B >= 1;
+          
+          Let(
+            [
+              function_B =
+                Case( 
+                        has_i; 
+                        Let(
+                           index_B = 
+                             Right( 
+                               "00000000" & ( start_index+batch_size+range_size_A ); 
+                               8 
+                             );
+                           Replace( function; 5; 8; index_B )
+                        );
+                function
+              ); 
+              
+              batch_B = 
+                Let(
+                  l = RightValues( listOfValues; range_size_B );
+                  Left( l; Length( l ) - 1 )
+                )
+            ];
+            
+            separator & 
+              ApplyToList( function_B; batch_B; separator )
+          )
+        )
+      )
+    )
+  )
+)

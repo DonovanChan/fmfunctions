@@ -1,0 +1,23 @@
+"Special characters to use in your search:¶
+¶
+...	range (\"1/1/2011...2/1/2011\")¶
+//	today's date (\"1/1/2010...//\")¶
+@	any one character¶
+#	any one digit (number)¶
+*	zero or more characters¶
+\	escape next character (to match a special char literally)¶
+\"\"	match phrase (from word start)¶
+*\"\"	match phrase (from anywhere)¶
+¶
+<date-months:N>	today minus N months"
+
+/* —————————————————————————————— //
+NAME:
+	TooltipQueryTips
+
+PURPOSE:
+	Stores text describing tips for for building queries.
+
+HISTORY:
+	Created: 2011-Apr-22 15h12 PST — Donovan A. Chandler
+*/
