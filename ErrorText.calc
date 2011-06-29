@@ -220,7 +220,67 @@ errorNum = 1506	; "Email(s) could not be sent successfully" ;
 errorNum = 1507	; "Unable to log in to the SMTP server" ;
 
 //-- AppleScript errors ;
-errorNum = -1728	; "From AppleScript: Object not found"
+errorNum = -2700	; "From AppleScript: Unknown error." ;
+errorNum = -2701	; "From AppleScript: Can’t divide <number> by zero." ;
+errorNum = -2702	; "From AppleScript: The result of a numeric operation was too large." ;
+errorNum = -2703	; "From AppleScript: <reference> can't be launched because it is not an application." ;
+errorNum = -2704	; "From AppleScript: <reference> isn't scriptable." ;
+errorNum = -2705	; "From AppleScript: The application has a corrupted dictionary." ;
+errorNum = -2706	; "From AppleScript: Stack overflow." ;
+errorNum = -2707	; "From AppleScript: Internal table overflow." ;
+errorNum = -2708	; "From AppleScript: Attempt to create a value larger than the allowable size." ;
+errorNum = -2709	; "From AppleScript: Can't get the event dictionary." ;
+errorNum = -2720	; "From AppleScript: Can't both consider and ignore <attribute>." ;
+errorNum = -2721	; "From AppleScript: Can't perform operation on text longer than 32K bytes." ;
+errorNum = -2729	; "From AppleScript: Message size too large for the 7.0 Finder." ;
+errorNum = -2740	; "From AppleScript: A <language element> can't go after this <language element>." ;
+errorNum = -2741	; "From AppleScript: Expected <language element> but found <language element>." ;
+errorNum = -2750	; "From AppleScript: The <name> parameter is specified more than once." ;
+errorNum = -2751	; "From AppleScript: The <name> property is specified more than once." ;
+errorNum = -2752	; "From AppleScript: The <name> handler is specified more than once." ;
+errorNum = -2753	; "From AppleScript: The variable <name> is not defined." ;
+errorNum = -2754	; "From AppleScript: Can't declare <name> as both a local and global variable." ;
+errorNum = -2755	; "From AppleScript: Exit statement was not in a repeat loop." ;
+errorNum = -2760	; "From AppleScript: Tell statements are nested too deeply." ;
+errorNum = -2761	; "From AppleScript: <name> is illegal as a formal parameter." ;
+errorNum = -2762	; "From AppleScript: <name> is not a parameter name for the event <event>." ;
+errorNum = -2763	; "From AppleScript: No result was returned for some argument of this expression." ;
+
+//-- Operating System Errors
+errorNum = -34	; "From System: Disk <name> full." ;
+errorNum = -35	; "From System: Disk <name> wasn’t found." ;
+errorNum = -37	; "From System: Bad name for file" ;
+errorNum = -38	; "From System: File <name> wasn’t open." ;
+errorNum = -39	; "From System: End of file error." ;
+errorNum = -42	; "From System: Too many files open." ;
+errorNum = -43	; "From System: File <name> wasn’t found." ;
+errorNum = -44	; "From System: Disk <name> is write protected." ;
+errorNum = -45	; "From System: File <name> is locked." ;
+errorNum = -46	; "From System: Disk <name> is locked." ;
+errorNum = -47	; "From System: File <name> is busy." ;
+errorNum = -48	; "From System: Duplicate file name." ;
+errorNum = -49	; "From System: File <name> is already open." ;
+errorNum = -50	; "From System: Parameter error." ;
+errorNum = -51	; "From System: File reference number error." ;
+errorNum = -61	; "From System: File not open with write permission." ;
+errorNum = -108	; "From System: Out of memory." ;
+errorNum = -120	; "From System: Folder <name> wasn’t found." ;
+errorNum = -124	; "From System: Disk <name> is disconnected." ;
+errorNum = -128	; "From System: User cancelled." ;
+errorNum = -192	; "From System: A resource wasn’t found." ;
+errorNum = -600	; "From System: Application isn’t running" ;
+errorNum = -601	; "From System: Not enough room to launch application with special requirements." ;
+errorNum = -602	; "From S	ystem: Application is not 32-bit clean." ;
+errorNum = -605	; "From System: More memory needed than is specified in the size resource." ;
+errorNum = -606	; "From System: Application is background-only." ;
+errorNum = -607	; "From System: Buffer is too small." ;
+errorNum = -608	; "From System: No outstanding high-level event." ;
+errorNum = -609	; "From System: Connection is invalid." ;
+errorNum = -904	; "From System: Not enough system memory to connect to remote application." ;
+errorNum = -905	; "From System: Remote access is not allowed." ;
+errorNum = -906	; "From System: <name> isn’t running or program linking isn’t enabled." ;
+errorNum = -915	; "From System: Can’t find remote machine." ;
+errorNum = -30720	; "From System: Invalid date and time <date string>."
 
 //-- Custom errors (add your own here)
 
@@ -238,8 +298,12 @@ PURPOSE:
 EXAMPLES:
 	ErrorText ( 112 ) = "Window is missing"
 
+NOTES:
+	For AppleScript and System error codes, see http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_error_codes.html%23//apple_ref/doc/uid/TP40000983-CH220-SW5
+
 HISTORY:
 	Created: ? — Jeremiah Small, Soliant Consulting, from briandunning.com.  Updated for FMP10.
 	Modified: 2010-Jan-29 17h00 PST — Will M. Baker.  Added white space and indents.
 	Modified: 2011-Mar-31 09h57 PST — Donovan Chandler.  Added AppleScript and Custom sections.  Replaced FileMaker Calc section with definitions for FMP 11.
+	Modified: 2011-Jun-29 10h32 PST — Donovan Chandler.  Added complete AppleScript and OS sections.
 */
