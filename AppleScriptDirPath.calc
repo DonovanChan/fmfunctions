@@ -9,21 +9,37 @@ Let ( [
 	showInvisibles = (showInvisibles = True) ;
 	multipleSelection = (multipleSelection = True)
 	];
+	"set message to \"" & message & "\"" & ¶ &
+	"set showInvisibles to " & showInvisibles & " as boolean" & ¶ &
+	"set multipleSelection to " & multipleSelection & " as boolean" & ¶ &
+	"set resultError to null" & ¶ &
 	"set myFolder to {}" & ¶ &
-	"set myFolder to myFolder & choose folder with prompt \"" & message & "\" ¬" & ¶ &
-		If ( not IsEmpty ( defaultDirPath ) ;
-			"default location posixPath(stripStartupDisk(\"" & defaultDirPath & "\")) ¬" & ¶
-		) &
-		"invisibles " & showInvisibles & " ¬" & ¶ &
-		"multiple selections allowed " & multipleSelection & ¶ &
-	"tell application \"Finder\"" & ¶ &
-	"	set theItems to {}" & ¶ &
-	"	repeat with dir in myFolder" & ¶ &
-	"		set theItems to theItems & (dir as text)" & ¶ &
-	"	end repeat" & ¶ &
-	"	set dirPaths to my fileListToText(theItems,true)" & ¶ &
-	"end tell" & ¶ &
-	"setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", dirPaths)" & ¶ &
+	"-- Prompt for folder" & ¶ &
+	"try" & ¶ &
+	"	set myFolder to myFolder & choose folder with prompt message ¬" & ¶ &
+			If ( not IsEmpty ( defaultDirPath ) ;
+				"default location POSIX file stripStartupDisk(POSIX path \"" & defaultDirPath & "\") ¬" & ¶
+				) &
+			"invisibles showInvisibles ¬" & ¶ &
+			"multiple selections allowed multipleSelection" & ¶ &
+	"	tell application \"Finder\"" & ¶ &
+	"		set theItems to {}" & ¶ &
+	"		repeat with dir in myFolder" & ¶ &
+	"			set theItems to theItems & (dir as text)" & ¶ &
+	"		end repeat" & ¶ &
+	"		set dirPaths to my fileListToText(theItems,true)" & ¶ &
+	"	end tell" & ¶ &
+	"on error errMsg number errNum" & ¶ &
+	"	set resultError to \"Error \" & errNum & \": \" & errMsg" & ¶ &
+	"end try" & ¶ &
+	"" & ¶ &
+	"-- Determine result" & ¶ &
+	"if resultError is not null then" & ¶ &
+	"	set resultFinal to resultError" & ¶ &
+	"else" & ¶ &
+	"	set resultFinal to dirPaths" & ¶ &
+	"end if" & ¶ &
+	"setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)" & ¶ &
 	"" & ¶ &
 	"-- Handler: Returns list of files as return-delimited text string" & ¶ &
 	"--	addStartupDrive allows prepending of disk name to each path" & ¶ &
@@ -39,11 +55,6 @@ Let ( [
 	"	end repeat" & ¶ &
 	"	return theText" & ¶ &
 	"end fileListToText" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns POSIX path of file" & ¶ &
-	"to posixPath(filePath)" & ¶ &
-	"	return POSIX file (POSIX path of filePath)" & ¶ &
-	"end posixPath" & ¶ &
 	"" & ¶ &
 	"--Handler: Sets FileMaker field value" & ¶ &
 	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
@@ -63,6 +74,9 @@ Let ( [
 	"		set hdName to name of startup disk" & ¶ &
 	"	end tell" & ¶ &
 	"	set hdLen to length of hdName" & ¶ &
+	"	set colonPos to offset of \":\" in pathText" & ¶ &
+	"	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText" & ¶ &
+	"	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText" & ¶ &
 	"	if text 1 thru hdLen of pathText is equal to hdName then" & ¶ &
 	"		set pathText to text (hdLen + 1) thru -1 of pathText" & ¶ &
 	"	end if" & ¶ &
