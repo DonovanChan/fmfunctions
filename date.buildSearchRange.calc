@@ -1,36 +1,81 @@
-Let([
-	_start = GetAsDate( startDate );
-	_end = GetAsDate( endDate );
-	_searchEnd = 
-		Case(
-			searchType = "month";
-				Date( Month(_end)+1; 0; Year(_end) );
-			_end
-		);
-	_startNext = Date( Month(_start)+1; Day(_start); Year(_start) );
-	_searchDate = Month(_start) & "/*/" & Year(_start)
-	
-	];
-	_searchDate &
-	Case(
-		_startNext < _end;
-		¶ & date.buildSearchRange( _startNext; _searchEnd; searchType )
+Let ( [
+	start = GetAsDate ( startDate ) ;
+	startMonth = Month ( start ) ;
+	startYear = Year ( start ) ;
+	startDay = Day ( start ) ;
+	end = GetAsDate ( endDate ) ;
+	searchString =
+		Case (
+			interval = "month" ;
+				Let ( [
+					searchEnd = Date ( startMonth + 1 ; 0 ; startYear ) ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					If (
+						$searchEnd = end ; start & "..." & end ;
+						startMonth & "/*/" & startYear
+					)
+				) ;
+			interval = "week" ;
+				Let ( [
+					searchEnd = Date ( startMonth ; startDay + 7 ; startYear ) ;
+					nextYearStart = Date ( 1 ; 1 ; startYear + 1 ) ;
+					$searchEnd =
+						Case (
+							searchEnd > nextYearStart ;
+								GetAsDate ( nextYearStart - 1 ) ;
+							searchEnd > end ;
+								end ;
+							searchEnd
+						) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					start & "..." & $searchEnd
+				) ;
+			interval = "day" ;
+				Let ( [
+					searchEnd = start ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					$searchEnd
+				) ;
+			interval = "year" ;
+				Let ( [
+					searchEnd = Date ( startMonth ; startDay ; startYear + 1 ) ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					If (
+						$searchEnd = end ; start & "..." & end ;
+						"*/*/" & startYear
+					)
+				) ;
+			end
+		)
+	] ;
+	searchString &
+	Case (
+		$searchEnd < end ;
+		¶ & DateSearchRange ( $searchNext ; end ; interval )
 	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	date.buildSearchRange ( startDate; endDate; searchType )
+	DateSearchRange ( startDate; endDate; interval )
 
 PURPOSE:
 	Builds return-delimited list of dates for purpose of searching
 
 EXAMPLES:
-	date.buildSearchRange ( "1/1/10"; "3/8/10") = "1/ * /10¶2/ * /10¶3/ * /10" (without spaces)
+	DateSearchRange ( "1/1/10"; "3/8/10" ; month ) = "1/ * /10¶2/ * /10¶3/ * /10" (without spaces)
 
 HISTORY:
 	Created: 2010-Aug-05 15h07 PST — Donovan A. Chandler
+	Modified: 2011-Jul-14 18h29 PST — Donovan Chandler ; Added support for interval types
 	
 NOTES:
-	searchType parameter intended for future enhancement
+	
 */
