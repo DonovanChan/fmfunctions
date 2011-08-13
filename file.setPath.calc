@@ -38,7 +38,7 @@ Let ( [
 		) ;
 	result_rough =
 		Case (
-			IsEmpty ( typePath ) ; "Error: Invalid pathType ( " & Quote ( pathType ) & ")" ;
+//			IsEmpty ( typePath ) ; "Error: Invalid pathType ( " & Quote ( pathType ) & ")" ;
 			IsEmpty ( dirPathA ) ; "Error: Invalid directory ( " & Quote ( directory ) & ")" ;
 			typePath & directoryPath & file
 		) ;
