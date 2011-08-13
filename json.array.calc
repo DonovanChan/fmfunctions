@@ -1,16 +1,21 @@
-"[" &
-Substitute( JSONArrayLoop( stringToEnclose ); ¶; "," ) &
-"]"
+If ( not IsEmpty ( stringToEnclose ) ;
+	"[" &
+	Substitute ( JSONArrayLoop ( stringToEnclose ) ;
+		[ ",¶" ; "¶" ] ;
+		[ ¶ ; "," ]
+	) &
+	"]"
+)
 
 /* —————————————————————————————— //
 NAME:
-	JSONArray( stringToEnclose )
+	JSONArray ( stringToEnclose )
 
 PURPOSE:
 	Ensures stringToEnclose is formatted as a JSON array
 
 EXAMPLES:
-	
+
 
 HISTORY:
 	Created: 2010-Aug-18 12h21 PST — Donovan A. Chandler
