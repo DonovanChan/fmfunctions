@@ -1,44 +1,36 @@
-Let([
-	/*--Enable when debugging--
-	text = text;
-	openChar = openChar;
-	closeChar = closeChar;
-	occurrence = occurrence;
-	*/
-	
-	_rep = occurrence;
-	_sOpen = Position ( text; openChar; 1; _rep );
-	_sString = _sOpen + Length ( openChar );
-	_sClose = Position ( text; closeChar; _sString; 1 );
-	_lenString = _sClose - _sString
-	
-	];
-	
+Let ( [
+	rep = occurrence ;
+	sOpen = Position ( text ; openChar ; 1 ; rep ) ;
+	sString = sOpen + Length ( openChar ) ;
+	sClose = Position ( text ; closeChar ; sString ; 1 ) ;
+	lenString = sClose - sString
+	] ;
 	Case (
 		//-- Search characters not found
-		_sOpen = 0 or _sClose = 0;
-			"";
-		
+		sOpen = 0 or sClose = 0 ;
+			"" ;
+
 		//-- Default: Return enclosed string
-		Middle ( text; _sString; _lenString )
+		Middle ( text ; sString ; sClose - sString )
 	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	text.getBetween ( text; openChar; closeChar; occurrence )
+	TextBetween ( text ; openChar ; closeChar ; occurrence )
 
 PURPOSE:
 	Returns text between specified characters
 
 HISTORY:
 	Created 2010.04.27 by Donovan Chandler
+	Modified 2011.08.10 by Donovan Chandler ; Updated formatting
 
 EXAMPLE:
-	text.getBetween ( 
-		"<a href='#'>Link</a>"
-		; "href="
-		; ">" 
-		; 1 
-		) => "'#'"
+	text.getBetween (
+		"<a href='#'>Link</a>" ;
+		"href=" ;
+		">" ;
+		1
+	) => "'#'"
 */
