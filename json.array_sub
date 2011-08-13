@@ -1,32 +1,32 @@
-Let([
-	_value_orig = GetValue( listOfValues; 1 );
-	_isText = ( GetAsNumber( _value_orig ) ≠ _value_orig );
-	_char1 = Left( _value_orig; 1 );
-	_value = 
-		Case( 
-			_isText and _char1 ≠ "{" and _char1 ≠ "["; 
-				Quote( _value_orig );
-			_value_orig 
-		);
-	_value_count = ValueCount( listOfValues )
-	];
+Let ( [
+	_value_orig = GetValue ( listOfValues ; 1 ) ;
+	_isText = ( GetAsNumber ( _value_orig ) ≠ _value_orig ) ;
+	_char1 = Left ( _value_orig ; 1 ) ;
+	_value =
+		Case (
+			_isText and _char1 ≠ "{" and _char1 ≠ "[ " ;
+				Quote ( _value_orig ) ;
+			_value_orig
+		) ;
+	_value_count = ValueCount ( listOfValues )
+	] ;
 	_value &
-	Case(
-		_value_count - 1 > 0;
-			¶ & JSONArrayLoop( RightValues( listOfValues; _value_count - 1 ))
+	Case (
+		_value_count - 1 > 0 ;
+			¶ & JSONArrayLoop ( RightValues ( listOfValues ; _value_count - 1 ) )
 	)
 )
 
 
 /* —————————————————————————————— //
 NAME:
-	JSONArrayLoop( listOfValues )
+	JSONArrayLoop ( listOfValues )
 
 PURPOSE:
 	Used by JSONArray. Iterates over array values adding quotations.
 
 EXAMPLES:
-	
+
 
 HISTORY:
 	Created: 2010-Aug-18 22h06 PST — Donovan A. Chandler

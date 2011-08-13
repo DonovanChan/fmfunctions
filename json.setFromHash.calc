@@ -1,22 +1,22 @@
-Let([
-	_name = GetValue( listOfNames; 1 );
-	_value_orig = #Value( text; _name );
+Let ( [
+	_name = GetValue ( listOfNames ; 1 ) ;
+	_value_orig = #Value ( text ; _name ) ;
 	_value =
-		Case(
-			PatternCount( _value_orig; ¶ );
-				JSONArray( _value_orig );
+		Case (
+			PatternCount ( _value_orig ; ¶ ) ;
+				JSONArray ( _value_orig ) ;
 			_value_orig
-		);
-	_list_count = ValueCount( listOfNames )
-	];
-	Case(
-		not IsEmpty( _value );
-			JSONSet( Lower( _name ); _value )
+		) ;
+	_list_count = ValueCount ( listOfNames )
+	] ;
+	Case (
+		not IsEmpty ( _value ) ;
+			JSONSet ( Lower ( _name ) ; _value )
 	) &
-	Case(
-		_list_count - 1 > 0;
-		JSONSetFromHash ( text; 
-			RightValues( listOfNames; _list_count - 1 )
+	Case (
+		_list_count - 1 > 0 ;
+		JSONSetFromHash ( text ;
+			RightValues ( listOfNames ; _list_count - 1 )
 		)
 	)
 )
@@ -24,7 +24,7 @@ Let([
 
 /* —————————————————————————————— //
 NAME:
-	JSONSetFromHash ( text; listOfNames )
+	JSONSetFromHash ( text ; listOfNames )
 
 PURPOSE:
 	Converts text from hash to JSON
@@ -33,7 +33,7 @@ EXAMPLES:
 
 HISTORY:
 	Created: 2010-Aug-18 21h51 PST — Donovan A. Chandler
-	
+
 NOTES:
 	Names with empty values will be skipped.
 */

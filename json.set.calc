@@ -1,34 +1,34 @@
-Let([
-	_char1 = Left( value; 1 );
-	_value = 
+Let ( [
+	_char1 = Left ( value ; 1 ) ;
+	_value =
 		Case (
 			//-- Pass thru if already an array or object
-			_char1 = "[" or _char1 = "{" or _char1 = "\"";
-				value;
+			_char1 = "[" or _char1 = "{" or _char1 = "\"" ;
+				value ;
 			//-- If empty, return ""
-			IsEmpty( value );
-				Quote( value );
+			IsEmpty ( value ) ;
+				Quote ( value ) ;
 			//-- If a number, do not quote
-			Filter( value; ".0123456789" ) = value;
-				value;
+			Filter ( value ; ".0123456789" ) = value ;
+				value ;
 			//-- Else, escape characters
-			Quote( value )
+			Quote ( value )
 		)
-	];
-	Quote( name ) & ":" & _value
+	] ;
+	Quote ( name ) & ":" & _value
 )
 
 
 /* —————————————————————————————— //
 NAME:
-	JSONSet( name; value )
+	JSONSet ( name ; value )
 
 PURPOSE:
 	Creates name-value pair in JSON format.
 	Does NOT enclose in brackets - use JSONObject or JSONArray for that.
 
 EXAMPLES:
-	JSONSet( "animal"; "dog" ) = "\"animal\":\"dog\""
+	JSONSet ( "animal" ; "dog" ) = "\"animal\":\"dog\""
 
 HISTORY:
 	Created: 2010-Aug-18 12h26 PST — Donovan A. Chandler
