@@ -27,7 +27,7 @@ PURPOSE:
 EXAMPLES:
 	(Where today = "1/1/10")
 	CriterionDecode( "<date-months:24>" ) = "1/1/2008"
-	CriterionDecode( "6/1/10...<date>" ) = "1/1/2010"
+	CriterionDecode( "6/1/10...<date>" ) = "6/1/09...7/19/2011"
 
 HISTORY:
 	Created: 2010-Sep-14 17h36 PST — Donovan A. Chandler
