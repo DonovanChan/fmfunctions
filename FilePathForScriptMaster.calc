@@ -1,17 +1,25 @@
 Let([
-	pathCur = GetValue ( pathList ; 1 ) ;
+	path = GetValue ( pathList ; 1 ) ;
 	pathCount = ValueCount ( pathList ) ;
 	
 	//-- Remove prefixes
-	pathStart = Position ( pathCur ; ":" ; 1 ; 1 ) + 1 ;
-	pathStart = If ( pathStart = 1 ; 1 ; pathStart + 1 ) ; // Move past leading slash
-	pathCur = Middle ( pathCur ; pathStart ; 9999 ) ;
+	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
+	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
+	path = If ( Left ( path ; 1 ) ≠ "/" ; path ; Middle ( path ; 2 ; 999 ) ) ;
 	
-	//-- Determine how much to remove from beginning of path
-	desktopPath = Get ( DesktopPath ) ;
-	usersStart = Position ( desktopPath ; "/Users" ; 1 ; 1 ) ;
-	
-	pathNew = Middle ( pathCur ; usersStart + 1 ; Length ( pathCur ) ) ;
+	//-- Remove disk name
+	hdName = 
+		GetValue (
+			Substitute ( Get ( DesktopPath ) ; "/" ; ¶ ) ;
+			2
+		) ;
+	hdNameLen = Length ( hdName ) ;
+	pathNew = 
+		If ( 
+			Left ( path ; hdNameLen + 1 ) = hdName & "/" ;
+			 	Middle ( path ; hdNameLen + 2 ; 999 ) ;
+			path
+		) ;
 	pathEncoded = If ( not encode ; pathNew ; TextEncodeForFilePath ( pathNew ) )
 	];
 	List (
@@ -42,4 +50,5 @@ EXAMPLES:
 
 HISTORY:
 	Created: 2011-Feb-24 21h13 PST — Donovan A. Chandler
+	Modified: 2011-Jul-13 12h30 PST — Donovan A. Chandler ; improved removal of disk name
 */
