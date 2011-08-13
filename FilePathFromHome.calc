@@ -1,7 +1,10 @@
 Let ( [
+	//-- Remove prefixes
 	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
 	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
 	path = If ( Left ( path ; 1 ) ≠ "/" ; path ; Middle ( path ; 2 ; 999 ) ) ;
+	
+	//-- Remove disk name
 	hdName = 
 		GetValue (
 			Substitute ( Get ( DesktopPath ) ; "/" ; ¶ ) ;

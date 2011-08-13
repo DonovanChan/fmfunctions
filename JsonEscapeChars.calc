@@ -1,0 +1,28 @@
+Substitute ( Quote ( text ) ;
+	[ "“" ; "\"" ] ;
+	[ "”" ; "\"" ] ;
+
+	[ "\¶" ; ":‡:" ] ;
+	[ "¶" ; "
+" ] ;
+	[ ":‡:" ; "¶" ]
+)
+
+/* —————————————————————————————— //
+NAME:
+	JsonEscapeChars ( text )
+
+PURPOSE:
+	Escapes or removes invalid characters in JSON
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Jul-22 14h14 PST — Donovan Chandler
+
+NOTES:
+	Code ( "
+	" ) = 32
+	Code ( "¶" ) = 13
+*/

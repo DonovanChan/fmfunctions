@@ -1,0 +1,25 @@
+Let ( [
+	delimiter = "::‡::"
+	] ;
+	Substitute (
+		Trim (
+			Substitute ( text ;
+				[ " " ; delimiter ] ;
+				[ charToTrim ; " " ]
+			)
+		) ;
+		[ " " ; charToTrim ] ;
+		[ delimiter ; " " ]
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	TrimChar ( text ; charToTrim )
+	
+PURPOSE:
+	Trims leading and trailing occurrences of character from text
+	
+HISTORY:
+	Created: 2011-Jul-09 21h26 PST — Donovan Chandler
+*/
