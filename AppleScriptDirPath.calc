@@ -9,79 +9,87 @@ Let ( [
 	showInvisibles = (showInvisibles = True) ;
 	multipleSelection = (multipleSelection = True)
 	];
-	"set message to \"" & message & "\"" & ¶ &
-	"set showInvisibles to " & showInvisibles & " as boolean" & ¶ &
-	"set multipleSelection to " & multipleSelection & " as boolean" & ¶ &
-	"set resultError to null" & ¶ &
-	"set myFolder to {}" & ¶ &
-	"-- Prompt for folder" & ¶ &
-	"try" & ¶ &
-	"	set myFolder to myFolder & choose folder with prompt message ¬" & ¶ &
-			If ( not IsEmpty ( defaultDirPath ) ;
-				"default location POSIX file stripStartupDisk(POSIX path \"" & defaultDirPath & "\") ¬" & ¶
-				) &
-			"invisibles showInvisibles ¬" & ¶ &
-			"multiple selections allowed multipleSelection" & ¶ &
-	"	tell application \"Finder\"" & ¶ &
-	"		set theItems to {}" & ¶ &
-	"		repeat with dir in myFolder" & ¶ &
-	"			set theItems to theItems & (dir as text)" & ¶ &
-	"		end repeat" & ¶ &
-	"		set dirPaths to my fileListToText(theItems,true)" & ¶ &
-	"	end tell" & ¶ &
-	"on error errMsg number errNum" & ¶ &
-	"	set resultError to \"Error \" & errNum & \": \" & errMsg" & ¶ &
-	"end try" & ¶ &
-	"" & ¶ &
-	"-- Determine result" & ¶ &
-	"if resultError is not null then" & ¶ &
-	"	set resultFinal to resultError" & ¶ &
-	"else" & ¶ &
-	"	set resultFinal to dirPaths" & ¶ &
-	"end if" & ¶ &
-	"setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns list of files as return-delimited text string" & ¶ &
-	"--	addStartupDrive allows prepending of disk name to each path" & ¶ &
-	"to fileListToText(theList, addStartupDrive)" & ¶ &
-	"	set theText to \"\"" & ¶ &
-	"	tell application \"Finder\"" & ¶ &
-	"		set hdName to get name of startup disk" & ¶ &
-	"	end tell" & ¶ &
-	"	repeat with i in theList" & ¶ &
-	"		set myPath to POSIX path of (i as alias)" & ¶ &
-	"		if addStartupDrive is true then set myPath to hdName & (myPath as text)" & ¶ &
-	"		set theText to theText & myPath & return" & ¶ &
-	"	end repeat" & ¶ &
-	"	return theText" & ¶ &
-	"end fileListToText" & ¶ &
-	"" & ¶ &
-	"--Handler: Sets FileMaker field value" & ¶ &
-	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
-	"	tell application \"FileMaker Pro Advanced\"" & ¶ &
-	"		tell database (databaseName as text)" & ¶ &
-	"			tell table (tableName as text)" & ¶ &
-	"				set field fieldName to theValue" & ¶ &
-	"			end tell" & ¶ &
-	"		end tell" & ¶ &
-	"	end tell" & ¶ &
-	"end setField" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns path as text with startup disk removed" & ¶ &
-	"to stripStartupDisk(thePath)" & ¶ &
-	"	set pathText to thePath as text" & ¶ &
-	"	tell application \"Finder\"" & ¶ &
-	"		set hdName to name of startup disk" & ¶ &
-	"	end tell" & ¶ &
-	"	set hdLen to length of hdName" & ¶ &
-	"	set colonPos to offset of \":\" in pathText" & ¶ &
-	"	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText" & ¶ &
-	"	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText" & ¶ &
-	"	if text 1 thru hdLen of pathText is equal to hdName then" & ¶ &
-	"		set pathText to text (hdLen + 1) thru -1 of pathText" & ¶ &
-	"	end if" & ¶ &
-	"	return pathText" & ¶ &
-	"end stripStartupDisk"
+"set message to \"" & message & "\"¶
+set showInvisibles to " & showInvisibles & " as boolean¶
+set multipleSelection to " & multipleSelection & " as boolean¶
+set resultError to null¶
+set myFolder to {}¶
+-- Prompt for folder¶
+try¶
+	set myFolder to myFolder & choose folder with prompt message ¬¶" &
+		If ( not IsEmpty ( defaultDirPath ) ;
+			"default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") ¬¶"
+			) &
+		"invisibles showInvisibles ¬¶
+		multiple selections allowed multipleSelection¶
+	tell application \"Finder\"¶
+		set theItems to {}¶
+		repeat with dir in myFolder¶
+			set theItems to theItems & (dir as text)¶
+		end repeat¶
+		set dirPaths to my fileListToText(theItems,true)¶
+	end tell¶
+on error errMsg number errNum¶
+	set resultError to \"Error \" & errNum & \": \" & errMsg¶
+end try¶
+¶
+-- Determine result¶
+if resultError is not null then¶
+	set resultFinal to resultError¶
+else¶
+	set resultFinal to dirPaths¶
+end if¶
+setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+¶
+-- Handler: Returns list of files as return-delimited text string¶
+--	addStartupDrive allows prepending of disk name to each path¶
+to fileListToText(theList, addStartupDrive)¶
+	set theText to \"\"¶
+	tell application \"Finder\"¶
+		set hdName to get name of startup disk¶
+	end tell¶
+	repeat with i in theList¶
+		set myPath to POSIX path of (i as alias)¶
+		if addStartupDrive is true then set myPath to hdName & (myPath as text)¶
+		set theText to theText & myPath & return¶
+	end repeat¶
+	return trimLinesRight(theText)¶
+end fileListToText¶
+¶
+--Handler: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application \"FileMaker Pro Advanced\"¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField¶
+¶
+-- Handler: Returns path as text with startup disk removed¶
+to stripStartupDisk(thePath)¶
+	set pathText to thePath as text¶
+	tell application \"Finder\"¶
+		set hdName to name of startup disk¶
+	end tell¶
+	set hdLen to length of hdName¶
+	set colonPos to offset of \":\" in pathText¶
+	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
+	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
+	if text 1 thru hdLen of pathText is equal to hdName then¶
+		set pathText to text (hdLen + 1) thru -1 of pathText¶
+	end if¶
+	return pathText¶
+end stripStartupDisk
+¶
+-- Handler: Removes trailing newlines¶
+to trimLinesRight(theText)¶
+	repeat while theText ends with return¶
+		set theText to theText's text 1 thru -2¶
+	end repeat¶
+	return theText¶
+end trimLinesRight"
 )
 
 /* —————————————————————————————— //

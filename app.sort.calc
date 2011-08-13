@@ -8,9 +8,9 @@ Let ( [
 	doc = Get ( FileName )
 	] ;
 
-	"tell current layout of document " & "\"" & doc & "\"" & ¶ &
-	"	sort by field " & "\"" & field & "\"" & " in order " & order & ¶ &
-	"end tell"
+"tell current layout of document " & "\"" & doc & "\"¶
+	sort by field " & "\"" & field & "\"" & " in order " & order & "¶
+end tell"
 
 )
 

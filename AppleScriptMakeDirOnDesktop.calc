@@ -1,0 +1,18 @@
+"tell application \"Finder\"¶
+	set dirPath to path to desktop¶
+	make new folder at dirPath with properties {name:\"" & folderName & "\"}¶
+end tell"
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptMakeDirOnDesktop ( folderName )
+
+PURPOSE:
+	Creates file on user's desktop
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Jul-22 10h17 PST — Donovan A. Chandler
+*/

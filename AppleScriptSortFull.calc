@@ -13,9 +13,9 @@ Let ( [
 	sortArray = ListCustom ( 1 ; fieldCount ; sortExpression ) ;
 	sortArray = Substitute ( TrimCarriageReturns ( sortArray ) ; ¶ ; ", " )
 	];
-	"tell current layout of document " & "\"" & doc & "\"" & ¶ &
-	"	sort by {" & fieldArray & "} in order {" & sortArray & "}" & ¶ &
-	"end tell"
+"tell current layout of document " & "\"" & doc & "\"¶
+	sort by {" & fieldArray & "} in order {" & sortArray & "}¶
+end tell"
 )
 
 /* —————————————————————————————— //

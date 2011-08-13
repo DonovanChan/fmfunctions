@@ -17,61 +17,61 @@ Let([
 	_result_default = 0
 	];
 	
-	"-- Define vars" & ¶ &
-	"set _result to " & _result_default & ¶ &
-	
-	"-- Perform designated script" & ¶ &
-	"tell application \"" & _filemaker_version & "\"" & ¶ &
-	
-	If ( restart_file ;
-	"	close database \"" & _file_name & "\"" & ¶ &
-	"	delay 5" & ¶ &
-	"	open file \"" & _file_path & "\"" & ¶ &
-	"	-- Pause until file is finished launching" & ¶ &
-	"	repeat" & ¶ &
-	"		try" & ¶ &
-	"			setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)" & ¶ &
-	"			exit repeat" & ¶ &
-	"		end try" & ¶ &
-	"	end repeat" & ¶
-	) &
-	"	tell database \"" & _file_name & "\"" & ¶ &
-	"		try" & ¶ &
-	"			do script \"" & _script_name & "\"" & ¶ &
-	"		on error _errorText number _errorNumber" & ¶ &
-	"			set _result to (\"Error \" & _errorNumber & \": \" & _errorText) as text" & ¶ &
-	"		end try" & ¶ &
-	"	end tell" & ¶ &
-	"end tell" & ¶ &
-	"delay 1" & ¶ &
+"-- Define vars¶
+set _result to " & _result_default & "¶
+¶
+-- Perform designated script¶
+tell application \"" & _filemaker_version & "\"¶" &
 
-	"-- Store result in designated global field" & ¶ &
-	"setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)" & ¶ &
-	
-	"-- Perform callback script" & ¶ &
-	"tell application \"" & _filemaker_version & "\"" & ¶ &
-	"	tell database \"" & _file_name & "\"" & ¶ &
-	"		do script \"" & _callback_script_name & "\"" & ¶ &
-	"	end tell" & ¶ &
-	"end tell" & ¶ &
-	"" & ¶ &
-	"------------------------------------------------" & ¶ &
-	"-- HANDLERS" & ¶ &
-	"------------------------------------------------" & ¶ &
-	"" & ¶ &
-	"---- FileMaker Handlers ----" & ¶ &
-	"------------------------------------------------" & ¶ &
-	"" & ¶ &
-	"-- Handler: Sets FileMaker field value" & ¶ &
-	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
-	" tell application \"" & _filemaker_version & "\"" & ¶ &
-	"	 tell database (databaseName as text)" & ¶ &
-	"		 tell table (tableName as text)" & ¶ &
-	"			 set field fieldName to theValue" & ¶ &
-	"		 end tell" & ¶ &
-	"	 end tell" & ¶ &
-	" end tell" & ¶ &
-	"end setField"
+If ( restart_file ;
+"	close database \"" & _file_name & "\"¶
+	delay 5¶
+	open file \"" & _file_path & "\"¶
+	-- Pause until file is finished launching¶
+	repeat¶
+		try¶
+			setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)¶
+			exit repeat¶
+		end try¶
+	end repeat¶"
+) &
+"	tell database \"" & _file_name & "\"¶
+		try¶
+			do script \"" & _script_name & "\"¶
+		on error _errorText number _errorNumber¶
+			set _result to (\"Error \" & _errorNumber & \": \" & _errorText) as text¶
+		end try¶
+	end tell¶
+end tell¶
+delay 1¶
+¶
+-- Store result in designated global field¶
+setField(\"" & _file_name & "\",\"" & _table_name & "\",\"" & _field_name & "\", _result)¶
+¶
+-- Perform callback script¶
+tell application \"" & _filemaker_version & "\"¶
+	tell database \"" & _file_name & "\"¶
+		do script \"" & _callback_script_name & "\"¶
+	end tell¶
+end tell¶
+¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+---- FileMaker Handlers ----¶
+------------------------------------------------¶
+¶
+-- Handler: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+ tell application \"" & _filemaker_version & "\"¶
+	 tell database (databaseName as text)¶
+		 tell table (tableName as text)¶
+			 set field fieldName to theValue¶
+		 end tell¶
+	 end tell¶
+ end tell¶
+end setField"
 
 )
 
