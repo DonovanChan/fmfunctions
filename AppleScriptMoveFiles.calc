@@ -4,116 +4,131 @@ Let ([
 	tableName = GetValue ( fieldSplit ; 1 ) ;
 	fieldName = GetValue ( fieldSplit ; 2 )
 	];
-	"set resultError to null" & ¶ &
-	"set filePaths to trimLinesRight(\"" & filePaths & "\")" & ¶ &
-	"set destinationPath to stripStartupDisk(trimLinesRight(\"" & destinationPath & "\"))" & ¶ &
-	"set destinationFile to POSIX file destinationPath" & ¶ &
-	"set createDestination to " & createDestination & " as boolean" & ¶ &
-	"set copySourceFiles to " & copySourceFiles & " as boolean" & ¶ &
-	"" & ¶ &
-	"-- Create or validate directory" & ¶ &
-	"if createDestination then" & ¶ &
-	"	do shell script \"mkdir -p \" & quoted form of (POSIX path of destinationFile)" & ¶ &
-	"else if not fileExists(destinationPath) then" & ¶ &
-	"	set resultFinal to \"Error: destinationPath not valid (\" & POSIX path of destinationFile & \")\"" & ¶ &
-	"	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)" & ¶ &
-	"	return" & ¶ &
-	"end if" & ¶ &
-	"" & ¶ &
-	"set fileList to paragraphs of filePaths" & ¶ &
-	"set resultPathList to {}" & ¶ &
-	"" & ¶ &
-	"-- Move each file" & ¶ &
-	"repeat with theFileString in fileList" & ¶ &
-	"	try" & ¶ &
-	"		set theFile to POSIX file stripStartupDisk(theFileString)" & ¶ &
-	"		tell application \"Finder\"" & ¶ &
-	"			if copySourceFiles then" & ¶ &
-	"				copy file theFile to folder destinationFile" & ¶ &
-	"			else" & ¶ &
-	"				move theFile to destinationFile" & ¶ &
-	"			end if" & ¶ &
-	"		end tell" & ¶ &
-	"		set end of resultPathList to theFile" & ¶ &
-	"	on error errMsg number errNum" & ¶ &
-	"		-- Don't worry if file already exists" & ¶ &
-	"		if errNum is not -15267 then" & ¶ &
-	"			set resultError to \"Error \" & errNum & \": \" & errMsg" & ¶ &
-	"		end if" & ¶ &
-	"	end try" & ¶ &
-	"end repeat" & ¶ &
-	"" & ¶ &
-	"-- Determine result" & ¶ &
-	"if resultError is not null then" & ¶ &
-	"	set resultFinal to resultError" & ¶ &
-	"else" & ¶ &
-	"	set resultFinal to my fileListToText(resultPathList, true)" & ¶ &
-	"end if" & ¶ &
-	"" & ¶ &
-	"-- Send result to FileMaker" & ¶ &
-	"	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns list of files as return-delimited text string" & ¶ &
-	"--	addStartupDrive allows prepending of disk name to each path" & ¶ &
-	"to fileListToText(theList, addStartupDrive)" & ¶ &
-	"	set theText to \"\"" & ¶ &
-	"	tell application \"Finder\"" & ¶ &
-	"		set hdName to get name of startup disk" & ¶ &
-	"	end tell" & ¶ &
-	"	repeat with i in theList" & ¶ &
-	"		--set myPath to POSIX path of (i as alias)" & ¶ &
-	"		set myPath to POSIX path of i" & ¶ &
-	"		if addStartupDrive is true then set myPath to hdName & (myPath as text)" & ¶ &
-	"		set theText to theText & myPath & return" & ¶ &
-	"	end repeat" & ¶ &
-	"	return theText" & ¶ &
-	"end fileListToText" & ¶ &
-	"" & ¶ &
-	"--Handler: Sets FileMaker field value" & ¶ &
-	"on setField(databaseName, tableName, fieldName, theValue)" & ¶ &
-	"	tell application \"FileMaker Pro Advanced\"" & ¶ &
-	"		tell database (databaseName as text)" & ¶ &
-	"			tell table (tableName as text)" & ¶ &
-	"				set field fieldName to theValue" & ¶ &
-	"			end tell" & ¶ &
-	"		end tell" & ¶ &
-	"	end tell" & ¶ &
-	"end setField" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns path as text with startup disk removed" & ¶ &
-	"to stripStartupDisk(thePath)" & ¶ &
-	"	set pathText to thePath as text" & ¶ &
-	"	tell application \"Finder\"" & ¶ &
-	"		set hdName to name of startup disk" & ¶ &
-	"	end tell" & ¶ &
-	"	set hdLen to length of hdName" & ¶ &
-	"	set colonPos to offset of \":\" in pathText" & ¶ &
-	"	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText" & ¶ &
-	"	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText" & ¶ &
-	"	if text 1 thru hdLen of pathText is equal to hdName then" & ¶ &
-	"		set pathText to text (hdLen + 1) thru -1 of pathText" & ¶ &
-	"	end if" & ¶ &
-	"	return pathText" & ¶ &
-	"end stripStartupDisk" & ¶ &
-	"" & ¶ &
-	"-- Handler: Returns true if file or folder exists" & ¶ &
-	"on fileExists(fileOrFolderPOSIXPath)" & ¶ &
-	"	try" & ¶ &
-	"		alias (POSIX file fileOrFolderPOSIXPath)" & ¶ &
-	"		return true" & ¶ &
-	"	on error" & ¶ &
-	"		return false" & ¶ &
-	"	end try" & ¶ &
-	"end fileExists" & ¶ &
-	"" & ¶ &
-	"-- Handler: Removes trailing newlines" & ¶ &
-	"to trimLinesRight(theText)" & ¶ &
-	"	repeat while theText ends with \"" & ¶ &
-	"\"" & ¶ &
-	"		set theText to theText's text 1 thru -2" & ¶ &
-	"	end repeat" & ¶ &
-	"	return theText" & ¶ &
-	"end trimLinesRight"
+"set resultError to null¶
+set filePaths to trimLinesRight(\"" & filePaths & "\")¶
+set destinationPath to stripStartupDisk(trimLinesRight(\"" & destinationPath & "\"))¶
+set destinationFile to POSIX file destinationPath¶
+set createDestination to " & GetAsBoolean ( createDestination ) & " as boolean¶
+set copySourceFiles to " & GetAsBoolean ( copySourceFiles ) & " as boolean¶
+¶
+-- Create or validate directory¶
+if createDestination then¶
+	do shell script \"mkdir -p \" & quoted form of (POSIX path of destinationFile)¶
+else if not fileExists(destinationPath) then¶
+	set resultFinal to \"Error: destinationPath not valid (\" & POSIX path of destinationFile & \")\"¶
+	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+	return¶
+end if¶
+¶
+set fileList to paragraphs of filePaths¶
+set resultPathList to {}¶
+¶
+-- Move each file¶
+repeat with theFileString in fileList¶
+	try¶
+		set theFile to POSIX file stripStartupDisk(theFileString)¶
+		tell application \"Finder\"¶
+			if copySourceFiles then¶
+				copy file theFile to folder destinationFile¶
+				set newFile to (destinationFile as text) & lastOffset(theFile as text, \":\")¶
+			else¶
+				set newFile to move theFile to destinationFile¶
+			end if¶
+		end tell¶
+		set end of resultPathList to newfile¶
+	on error errMsg number errNum¶
+		-- Don't worry if file already exists¶
+		if errNum is not -15267 then¶
+			set resultError to \"Error \" & errNum & \": \" & errMsg¶
+		end if¶
+	end try¶
+end repeat¶
+¶
+-- Determine result¶
+if resultError is not null then¶
+	set resultFinal to resultError¶
+else¶
+	set resultFinal to my fileListToText(resultPathList, true)¶
+end if¶
+¶
+-- Send result to FileMaker¶
+	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+¶
+-- Handler: Returns list of files as return-delimited text string¶
+--	addStartupDrive allows prepending of disk name to each path¶
+to fileListToText(theList, addStartupDrive)¶
+	set theText to \"\"¶
+	tell application \"System Events\"¶
+		set hdName to get name of startup disk¶
+	end tell¶
+	repeat with i in theList¶
+		set myPath to POSIX path of (i as alias)¶
+		--set myPath to POSIX path of i¶
+		if addStartupDrive is true then set myPath to hdName & (myPath as text)¶
+		set theText to theText & myPath & return¶
+	end repeat¶
+	return trimLinesRight(theText)¶
+end fileListToText¶
+¶
+--Handler: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application \"FileMaker Pro Advanced\"¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField¶
+¶
+-- Handler: Returns path as text with startup disk removed¶
+to stripStartupDisk(thePath)¶
+	set pathText to thePath as text¶
+	tell application \"System Events\"¶
+		set hdName to name of startup disk¶
+	end tell¶
+	set hdLen to length of hdName¶
+	set colonPos to offset of \":\" in pathText¶
+	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
+	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
+	if text 1 thru hdLen of pathText is equal to hdName then¶
+		set pathText to text (hdLen + 1) thru -1 of pathText¶
+	end if¶
+	return pathText¶
+end stripStartupDisk¶
+¶
+-- Handler: Returns true if file or folder exists¶
+on fileExists(fileOrFolderPOSIXPath)¶
+	try¶
+		alias (POSIX file fileOrFolderPOSIXPath)¶
+		return true¶
+	on error¶
+		return false¶
+	end try¶
+end fileExists¶
+¶
+-- Handler: Removes trailing newlines¶
+to trimLinesRight(theText)¶
+	repeat while theText ends with return¶
+		set theText to theText's text 1 thru -2¶
+	end repeat¶
+	return theText¶
+end trimLinesRight¶
+¶
+-- HANDLER: Returns offset of last occurrence of character¶
+on lastOffset(theText, char)¶
+	try¶
+		set len to count of theText¶
+		set reversed to reverse of characters of theText as string¶
+		set last_occurrence to len - (offset of char in reversed) + 1¶
+		if last_occurrence > len then¶
+			return 0¶
+		end if¶
+	on error¶
+		return 0¶
+	end try¶
+	return last_occurrence¶
+end lastOffset"
 )
 
 /* —————————————————————————————— //
@@ -121,7 +136,7 @@ NAME:
 	AppleScriptMoveFiles ( resultFieldName ; filePaths ; destinationPath ; createDestination ; copySourceFiles )
 
 PURPOSE:
-	Moves files to new directory
+	Moves files to new directory. Returns list of paths to new file locations.
 
 EXAMPLES:
 	
