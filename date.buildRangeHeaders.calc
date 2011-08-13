@@ -1,37 +1,71 @@
-Let([
-	_start = GetAsDate( startDate );
-	_end = GetAsDate( endDate );
-	
-	_start_month = Month( _start );
-	_start_year = Year( _start );
+Let ( [
+	start = GetAsDate ( startDate ) ;
+	startMonth = Month ( start ) ;
+	startYear = Year ( start ) ;
+	startDay = Day ( start ) ;
+	end = GetAsDate ( endDate ) ;
 	
 	//-- Adjust here for incrementations beside "month"
-	_startNext = Date( _start_month + 1; 1; Year(_start) );
-	
-	_month_short = DateMonthName( _start_month; 1 );
-	_year_short = Right( _start_year; 2 );
-	_result =
-		Case(
-			format = "short"; _month_short & " " & _year_short;
-			_month_short & " " & _year_short
+	string =
+		Case (
+			interval = "month" ;
+				Let ( [
+					searchEnd = Date ( startMonth + 1 ; 0 ; startYear ) ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					DateMonthName ( startMonth ; 1 )  & " '" & Right ( startYear ; 2 )
+				) ;
+			interval = "week" ;
+				Let ( [
+					searchEnd = Date ( startMonth ; startDay + 7 ; startYear ) ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					"'" & Right ( startYear ; 2 ) & " Week " & WeekOfYear ( start )
+				) ;
+			interval = "day" ;
+				Let ( [
+					searchEnd = start ;
+					$searchEnd = If ( searchEnd > end ; end ; searchEnd ) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					DateMonthName ( startMonth ; 1 ) & " " & startDay & ", " & startYear
+				) ;
+			interval = "year" ;
+				Let ( [
+					searchEnd = Date ( startMonth ; startDay ; startYear + 1 ) ;
+					$searchEnd =
+						Case (
+							searchEnd > nextYearStart ;
+								GetAsDate ( nextYearStart - 1 ) ;
+							searchEnd > end ;
+								end ;
+							searchEnd
+						) ;
+					$searchNext = GetAsDate ( $searchEnd + 1 )
+					];
+					startYear
+				) ;
+			end
 		)
-	];
-	_result &
-	Case(
-		_startNext < _end;
-		¶ & date.buildRangeHeaders( _startNext; endDate; incrementSize; format )
+	] ;
+	string &
+	Case (
+		$searchEnd < end ;
+		¶ & DateBuildRangeHeaders ( $searchNext ; end ; interval ; format )
 	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	date.buildRangeHeaders ( startDate; endDate; incrementSize; format )
+	DateBuildRangeHeaders ( startDate ; endDate ; interval ; format ) 
 
 PURPOSE:
 	Builds return-delimited list of dates in designated format
 
 EXAMPLES:
-	date.buildSearchRange ( "1/1/10"; "3/8/10") = "1/ * /10¶2/ * /10¶3/ * /10" (without spaces)
+	
 
 HISTORY:
 	Created: 2010-Aug-05 15h07 PST — Donovan A. Chandler
