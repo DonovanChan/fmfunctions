@@ -1,0 +1,14 @@
+PatternCount ( Get ( ApplicationVersion ) ; "server" ) > 0
+
+/* —————————————————————————————— //
+NAME:
+	IsServer ( )
+
+PURPOSE:
+	Returns TRUE if current user is the server
+
+EXAMPLES:
+
+HISTORY:
+	Created: 2011-Feb-25 09h45 PST — Donovan Chandler
+*/
