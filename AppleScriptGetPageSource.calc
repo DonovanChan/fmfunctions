@@ -1,0 +1,67 @@
+Let ( [
+	dbName = Get ( FileName ) ;
+	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	tableName = GetValue ( fieldSplit ; 1 ) ;
+	fieldName = GetValue ( fieldSplit ; 2 )
+	];
+	"set theURL to \"" & url & "\"¶
+	set dbName to \"" & dbName & "\"¶
+	set tableName to \"" & tableName & "\"¶
+	set fieldName to \"" & fieldName & "\"¶
+	¶
+	tell application \"Safari\"¶
+		set newDoc to make new document with properties {URL:theURL}¶
+		¶
+		-- Wait until page has loaded¶
+		if my page_loaded(30) then¶
+			delay 2¶
+			set theText to the source of document 1¶
+		end if¶
+		close document 1¶
+	end tell¶
+	¶
+	-- Set value to field¶
+	setField(dbName,tableName,fieldName,theText)¶
+	¶
+	-- HANDLER: Waits for page to load in Safari¶
+	on page_loaded(timeout_value) -- in seconds¶
+		delay 2¶
+		repeat with i from 1 to timeout_value¶
+			tell application \"Safari\"¶
+				if (do JavaScript \"document.readyState\" in document 1) is \"complete\" then¶
+					return true¶
+				else if i is timeout_value then¶
+					return false¶
+				else¶
+					delay 1¶
+				end if¶
+			end tell¶
+		end repeat¶
+		return false¶
+	end page_loaded¶
+	¶
+	-- HANDLER: Sets FileMaker field value¶
+	on setField(databaseName, tableName, fieldName, theValue)¶
+		tell application \"FileMaker Pro Advanced\"¶
+			tell database (databaseName as text)¶
+				tell table (tableName as text)¶
+					set field fieldName to theValue¶
+				end tell¶
+			end tell¶
+		end tell¶
+	end setField"
+)
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptGetPageSource ( resultFieldName ; url )
+
+PURPOSE:
+	Returns HTML source of page at specified url and sends ot to specified field in FileMaker.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Aug-18 13h28 PST — Donovan A. Chandler
+*/

@@ -1,0 +1,21 @@
+"set theURL to \"" & url & "\"¶
+tell application \"Safari\" to activate¶
+tell front window of application \"Safari\"¶
+	set newTab to make new tab¶
+	set the URL of newTab to theURL¶
+	set the current tab to newTab¶
+end tell"
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptOpenInSafari ( url )
+
+PURPOSE:
+	Opens URL in new tab in Safari
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Aug-18 10h59 PST — Donovan A. Chandler
+*/
