@@ -1,0 +1,25 @@
+Let ( [
+	row = FilterRegex ( text ; "(<tr.((?<!tr).)*?" & rowMatch & ".*?tr>)" ; 1 ) ;
+	cell = FilterRegex ( row ; "(?:<td.*?){" & columnNum & "}(?:.(?!</))*.?>(.*?)<" ; 1 )
+	];
+	LeftWords ( cell ; 9999 )
+)
+
+/* —————————————————————————————— //
+NAME:
+	HTMLGetRowCell ( text ; rowMatch ; columnNum )
+
+PURPOSE:
+	Returns innermost text value of nth column in matched row.
+	Also trims leading and trailing whitespace.
+
+EXAMPLES:
+	HTMLGetColumn (
+		"<tr><td><b>Dog</b></td><td>Rufus</td><td>7yrs</td></tr>" ;
+		">Rufus<" ;
+		1
+	) = "Dog"
+
+HISTORY:
+	Created: 2011-Aug-23 12h55 PST — Donovan A. Chandler
+*/
