@@ -1,9 +1,27 @@
 "set theURL to \"" & url & "\"¶
-tell application \"Safari\" to activate¶
+tell application \"Safari\"¶
+	activate¶
+	-- Ensure we're not working in the Downloads window¶
+	if name of front window is \"Downloads\" then¶
+		make new document with properties {URL:\"\"}¶
+	end if¶
+end tell¶
 tell front window of application \"Safari\"¶
-	set newTab to make new tab¶
-	set the URL of newTab to theURL¶
-	set the current tab to newTab¶
+	try¶
+		-- If in blank tab, use that one¶
+		set myURL to URL of front document¶
+		try¶
+			set test to myURL¶
+			set newTab to make new tab¶
+		on error¶
+			set newTab to current tab¶
+		end try¶
+		set the URL of newTab to theURL¶
+		set the current tab to newTab¶
+		set miniaturized to false¶
+	on error errText number errNum¶
+		display alert \"Error \" & errNum & \": \" & errText¶
+	end try¶
 end tell"
 
 /* —————————————————————————————— //
