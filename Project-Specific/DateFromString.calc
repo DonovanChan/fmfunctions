@@ -1,15 +1,20 @@
-Let([
-	_string = dateAsText
-	];
+Let ( [
+	_string = dateAsString
+	] ;
 	Case (
-		PatternCount ( _string; "." );
-			Let([
-				_list = Substitute ( _string; ["."; ¶]; [" "; ¶] )
-				];
-				Date ( 
-					GetValue ( _list; 2 );
-					GetValue ( _list; 3 );
-					GetValue ( _list; 1 )
+		Position ( _string ; "." ; 1 ; 1 )
+		+ Position ( _string ; "-" ; 1 ; 1 ) ;
+			Let ( [
+				_list = Substitute ( _string ;
+					[ "." ; ¶ ] ;
+					[ " " ; ¶ ] ;
+					[ "-" ; ¶ ]
+				)
+				] ;
+				Date (
+					GetValue ( _list ; 2 ) ;
+					GetValue ( _list ; 3 ) ;
+					GetValue ( _list ; 1 )
 				)
 			)
 	)
@@ -20,10 +25,11 @@ NAME:
 	DateFromString ( dateAsString )
 
 PURPOSE:
-	Converts strings into FileMaker-recognized dates
+	Converts strings into FileMaker-recognized dates.
+	Formats accepted: yyyy.mm.dd or yyyy-mm-dd
 
 EXAMPLES:
-	DateFromString ( "2008.01.07 (1.5)" ) = 01/07/2008
+	DateFromString ( "2008.01.07 ( 1.5 ) " ) = 01/07/2008
 
 HISTORY:
 	Created: 2010-Jul-21 12h48 PST — Donovan A. Chandler
