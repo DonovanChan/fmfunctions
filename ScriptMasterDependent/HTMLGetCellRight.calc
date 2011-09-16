@@ -4,9 +4,13 @@ Let ( [
 		& ".+?<td.*?>"			// Open cell to right
 		& "(?:.*?>)?"			// Skip inner tags
 		& "(.*?)"				// Capture
-		& "<.*?</td>"		// Close cell to right;
+		& "<.*?</td>"		// Close cell to right
+	; value = FilterRegex( html ; pattern ; 1 )
 	] ;
-	FilterRegex( html ; pattern )
+	Case (
+		value = "ERROR" ; "" ;
+		LeftWords ( value ; 9999 )
+	)
 )
 
 /* —————————————————————————————— //
