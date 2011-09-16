@@ -1,33 +1,35 @@
-Let([
-	tag = TextBetween( queryString; "<"; ">"; 1 );
-	number = Filter( tag; "0123456789" );
-	merged = 
-		Case(
-			Left( tag; 12 ) = "date-months:";
-				DateMinusMonths( Get( CurrentDate ); number );
-			Left( tag; 4 ) = "date";
-				Get( CurrentDate )
-		);
-	text = Substitute( queryString; "<" & tag & ">"; merged )
-	];
-	Case(
-		PatternCount( text; "<" ) and PatternCount( text; ">" );
-			CriterionDecode( Substitute( text; tag; merged ) );
+Let ( [
+	tag = TextBetween ( queryString ; "<" ; ">" ; 1 ) ;
+	number = Filter ( tag ; "0123456789" ) ;
+	merged =
+		Case (
+			Left ( tag ; 12 ) = "date-months:" ;
+				DateMinusMonths ( Get ( CurrentDate ) ; number ) ;
+			Left ( tag ; 4 ) = "date" ;
+				Get ( CurrentDate ) ;
+			tag = "account_name" ;
+				Get ( AccountName )
+		) ;
+	text = Substitute ( queryString ; "<" & tag & ">" ; merged )
+	] ;
+	Case (
+		PatternCount ( text ; "<" ) and PatternCount ( text ; ">" ) ;
+			CriterionDecode ( Substitute ( text ; tag ; merged ) ) ;
 		text
 	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	CriterionDecode( queryString )
+	CriterionDecode ( queryString )
 
 PURPOSE:
 	Translates merge tag into searchable string
 
 EXAMPLES:
-	(Where today = "1/1/10")
-	CriterionDecode( "<date-months:24>" ) = "1/1/2008"
-	CriterionDecode( "6/1/10...<date>" ) = "6/1/09...7/19/2011"
+	(Where today = "1/1/10" )
+	CriterionDecode ( "<date-months:24>" ) = "1/1/2008"
+	CriterionDecode ( "6/1/10...<date>" ) = "6/1/09...7/19/2011"
 
 HISTORY:
 	Created: 2010-Sep-14 17h36 PST — Donovan A. Chandler
