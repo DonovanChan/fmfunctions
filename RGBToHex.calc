@@ -1,0 +1,28 @@
+Let ( [
+	Hex = "0123456789ABCDEF" ;
+	RedHex =
+		Middle ( Hex ; ( R - Mod ( R ; 16 ) ) / 16 + 1 ; 1 )
+		& Middle ( Hex ; Mod ( R ; 16 ) + 1 ; 1 ) ;
+	GreenHex =
+		Middle ( Hex ; ( G - Mod ( G ; 16 ) ) / 16 + 1 ; 1 )
+		& Middle ( Hex ; Mod ( G ; 16 ) + 1 ; 1 ) ;
+	BlueHex = Middle ( Hex ; ( B - Mod ( B ; 16 ) ) / 16 + 1 ; 1 ) & Middle ( Hex ; Mod ( B ; 16 ) + 1 ; 1 )
+	] ;
+	RedHex & GreenHex & BlueHex
+)
+
+/* —————————————————————————————— //
+NAME:
+	RGBToHex ( R ; G ; B )
+
+PURPOSE:
+	Converts RGB values to Hex.
+	Assumes valid R/G/B values between 0-255
+
+EXAMPLES:
+	RGBToHex ( 255 ; 255 ; 255 ) = "FFFFFF"
+
+HISTORY:
+	Created: Daniel Wood, Digital Fusion Ltd
+	Modified: 2011-Sep-12 19h00 PST — Donovan Chandler ; formatting
+*/

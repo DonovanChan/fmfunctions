@@ -1,0 +1,30 @@
+Let ( [
+	row = FilterRegex ( text ; "(<tr.((?<!tr).)*?" & rowMatch & ".*?tr>)" ; occurrence )
+	];
+	Case (
+		row = "ERROR" ; "" ;
+		row
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	HTMLGetRow ( text ; rowMatch ; occurrence )
+
+PURPOSE:
+	Returns nth row that matches rowMatch expression (regex).
+	Leave occurrence parameter blank to receive all matching rows.
+
+EXAMPLES:
+	HTMLGetRow (
+		"<table>
+			<tr><td><b>Dog</b></td><td>Rufus</td><td>7yrs</td></tr>
+			<tr><td><b>Cat</b></td><td>Susie</td><td>9yrs</td></tr>
+		</table>" ;
+		">Rufus<" ;
+		1
+	) = "<tr><td><b>Dog</b></td><td>Rufus</td><td>7yrs</td></tr>"
+
+HISTORY:
+	Created: 2011-Aug-26 13h54 PST — Donovan Chandler
+*/
