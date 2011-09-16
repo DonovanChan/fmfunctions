@@ -2,7 +2,10 @@ Let ( [
 	row = FilterRegex ( text ; "(<tr.((?<!tr).)*?" & rowMatch & ".*?tr>)" ; 1 ) ;
 	cell = FilterRegex ( row ; "(?:<td.*?){" & columnNum & "}(?:.(?!</))*.?>(.*?)<" ; 1 )
 	];
-	LeftWords ( cell ; 9999 )
+	Case (
+		cell = "ERROR" ; "" ;
+		LeftWords ( cell ; 9999 )
+	)
 )
 
 /* —————————————————————————————— //
@@ -14,9 +17,15 @@ PURPOSE:
 	Also trims leading and trailing whitespace.
 
 EXAMPLES:
-	HTMLGetColumn (
+	HTMLGetRowCell (
 		"<tr><td><b>Dog</b></td><td>Rufus</td><td>7yrs</td></tr>" ;
 		">Rufus<" ;
+		1
+	) = "Dog"
+
+	HTMLGetRowCell (
+		"<tr><td><b>Dog</b></td><td>Rufus</td><td>7yrs</td></tr>" ;
+		"" ;
 		1
 	) = "Dog"
 
