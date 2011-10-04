@@ -1,0 +1,40 @@
+Let ( [
+	delimiter = "::‡::" ;
+	result1 = 
+		Substitute (
+			Trim (
+				Substitute ( text ;
+					[ " " ; delimiter ] ;
+					[ ¶ ; " " ]
+				)
+			) ;
+			[ " " ; ¶ ] ;
+			[ delimiter ; " " ]
+		) ;
+	result2 =
+		Substitute (
+			Trim (
+				Substitute ( result1 ;
+					[ " " ; delimiter ] ;
+					[ Char ( 10 ) ; " " ]
+				)
+			) ;
+			[ " " ; Char ( 10 ) ] ;
+			[ delimiter ; " " ]
+		)
+	] ;
+	result2
+)
+
+/* —————————————————————————————— //
+NAME:
+	TrimCRLF ( text )
+	
+PURPOSE:
+	Trims leading and trailing carriage returns and line feeds from text
+	
+HISTORY:
+	Created: 2009-Jan-13 — Charlie (http://www.fmfunctions.com/mid/132)
+	Adapted: 2010-Aug-09 10h17 PST — Donovan A. Chandler
+	Adapted: 2011-Sep-28 14h38 PST — Donovan Chandler ; added LF removal
+*/

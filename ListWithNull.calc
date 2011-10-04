@@ -1,0 +1,31 @@
+ListCustom ( 1 ; Count ( GetField ( relatedIDFieldName ) ) ; 
+"Let ( [
+val = GetNthRecord ( " & relatedValueFieldName & " ; [n] )
+] ;
+If ( IsEmpty ( val ) ; " & Quote ( nullPlaceholder ) & " ; val )
+)"
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListWithNull ( relatedIDFieldName ; relatedValueFieldName ; nullPlaceholder )
+
+PURPOSE:
+	Returns list of related values, accounting for empty values.
+	(FileMaker's native List function omits empty values.)
+
+NOTES:
+	nullPlaceholder cannot contain only carriage returns.
+
+EXAMPLES:
+	ListWithNull (
+		GetFieldName ( contact::id ) ;
+		GetFieldName ( contact::name ) ;
+		$_null
+	)
+	= "Fred¶<null>¶Cindy" // where $_null = "<null>"
+	= "Fred¶Cindy" // where $_null = "¶"
+
+HISTORY:
+	Created: 2011-Sep-29 09h50 PST — Donovan A. Chandler
+*/
