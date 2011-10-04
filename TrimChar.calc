@@ -1,25 +1,42 @@
 Let ( [
-	delimiter = "::‡::"
-	] ;
-	Substitute (
-		Trim (
-			Substitute ( text ;
-				[ " " ; delimiter ] ;
-				[ charToTrim ; " " ]
-			)
+	delimiter = "::‡::" ;
+	char = GetValue ( charsToTrimList ; 1 ) ;
+	char = 
+		Case (
+			not IsEmpty ( char ) ; char ;
+			not IsEmpty ( charsToTrimList ) ; charsToTrimList ; // accounts for LF
+			""
 		) ;
-		[ " " ; charToTrim ] ;
-		[ delimiter ; " " ]
+	result =
+		Substitute (
+			Trim (
+				Substitute ( text ;
+					[ " " ; delimiter ] ;
+					[ char ; " " ]
+				)
+			) ;
+			[ " " ; char ] ;
+			[ delimiter ; " " ]
+		)
+	] ;
+	Case (
+		ValueCount ( charsToTrimList ) > 1 ;
+			TrimChars ( result ; LeftWords ( MiddleValues ( charsToTrimList ; 2 ; 999 ) ; 999 ) ) ;
+		result
 	)
 )
 
 /* —————————————————————————————— //
 NAME:
-	TrimChar ( text ; charToTrim )
+	TrimChars ( text ; charsToTrimList )
 	
 PURPOSE:
 	Trims leading and trailing occurrences of character from text
-	
+
+NOTES:
+	Does NOT work with consecutive line terminators like CR and LF
+
 HISTORY:
 	Created: 2011-Jul-09 21h26 PST — Donovan Chandler
+	Modified: 2011-Sep-28 14h22 PST — Donovan Chandler ; now accepts list of chars to trim
 */
