@@ -1,0 +1,25 @@
+Let ( [
+	value = GetNthRecord ( GetField ( relatedValueFieldName ) ; rep ) ;
+	result = If ( IsEmpty ( value ) ; nullPlaceholder ; value ) ;
+	resultFull = If ( rep = 1 ; result ; previousResults & ¶ & result )
+	] ;
+	Case (
+		rep < rep_max ;
+			ListWithNullLoop ( relatedIDFieldName ; relatedValueFieldName ; nullPlaceholder ; rep + 1 ; rep_max ; resultFull ) ;
+		resultFull
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListWithNullLoop ( relatedIDFieldName ; relatedValueFieldName ; nullPlaceholder ; rep ; rep_max ; previousResults )
+
+PURPOSE:
+	Performs recursion for ListWithNull () 
+
+NOTES:
+	nullPlaceholder cannot contain only carriage returns.
+
+HISTORY:
+	Created: 2011-Sep-29 09h50 PST — Donovan A. Chandler
+*/
