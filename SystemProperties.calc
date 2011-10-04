@@ -91,6 +91,8 @@ List (
 	; # ( "WindowVisible"			; Get ( WindowVisible ) )
 //	; # ( "WindowWidth"			; Get ( WindowWidth ) )
 //	; # ( "WindowZoomLevel"		; Get ( WindowZoomLevel ) )
+
+	; # ( "FMSAUC_Version"		; FMSAUC_Version( 0 ) )
 )
 
 /* —————————————————————————————— //
