@@ -5,12 +5,11 @@ NAME:
 	SetNotEmpty ( existingValue ; newValue )
 
 PURPOSE:
-	Analogous to "||=" assignment operator in Ruby;
 	Replaces existingValue with newValue only if newValue isn't empty.
 
 EXAMPLES:
-	SetNotEmpty ( "" ; "foo" ) = "foo"
-	SetNotEmpty ( "foo" ; "fum" ) = "foo"
+	SetNotEmpty ( "" ; "fum" ) = "fum"
+	SetNotEmpty ( "foo" ; "fum" ) = "fum"
 
 HISTORY:
 	Created: 2011-Aug-26 14h42 PST — Donovan A. Chandler
