@@ -1,0 +1,36 @@
+Let ( [
+	path = GetValue ( filePaths ; 1 ) ;
+	dirList = Substitute ( path ; "/" ; ¶ ) ;
+	count = ValueCount ( dirList ) ;
+	file = GetValue ( dirList ; count ) ;
+	file =
+		Case (
+			IsEmpty ( file ) ;
+				GetValue ( dirList ; count - 1 ) ;
+			file
+		) ;
+	newResult = List ( previousResults ; file )
+	] ;
+	Case (
+		ValueCount ( filePaths ) > 0 ;
+			FileNameFromPathsLoop (
+				RightValues ( filePaths ; ValueCount ( filePaths ) - 1 ) ;
+				newResult
+			) ;
+		newResult
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	FileNameFromPathsLoop ( filePaths ; previousResults )
+
+PURPOSE:
+	Performs recursion for FileNameFromPaths
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Oct-06 13h09 PST — Donovan A. Chandler
+*/

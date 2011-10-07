@@ -1,0 +1,25 @@
+Let ([
+	day = LeftWords ( text ; 1 ) ;
+	month = DateMonthNumber ( MiddleWords ( text ; 2 ; 1 ) ) ;
+	year = MiddleWords ( text ; 3 ; 1 ) ;
+	time = Middle ( text ; Position ( text ; " " ; 1 ; 1 ) ; 999 )
+	];
+	If (
+		not IsEmpty ( text ) ; 
+		Timestamp ( Date ( month ; day ; year ) ; GetAsTime ( time ) )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	TimestampFromText ( text )
+
+PURPOSE:
+	Converts text from text timestamp into a date
+
+EXAMPLES:
+	TimestampFromText ( "23-JUL-2010 16:02" ) = "7/23/2010 4:02 PM"
+
+HISTORY:
+	Created: 2011-Jun-14 11h51 PST — Donovan A. Chandler
+*/

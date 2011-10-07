@@ -1,0 +1,16 @@
+GetAsBoolean ( $$_errors_suppressed )
+
+/* —————————————————————————————— //
+NAME:
+	ErrorsAreSuppressed ( )
+
+PURPOSE:
+	Returns true if errors message are currently being suppressed.
+	For example, if you are looping through records and building a temp error log instead of showing a dialog for each error.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Oct-07 09h44 PST — Donovan A. Chandler
+*/
