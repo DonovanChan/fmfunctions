@@ -54,12 +54,17 @@ Let([
 			; endTime
 		);
 	_isAllDay = isAllDay;
-	_showEvent = showEvent
+	_showEvent = showEvent;
+	fmpVersion =
+		Case (
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
+			"FileMaker Pro"
+		)
 	
 	];
 
 "-- grab the data from Filemaker¶
-tell application \"FileMaker Pro Advanced\"¶
+tell application \"" & fmpVersion & "\"¶
 	tell current record¶
 		-- alternate method below uses field name instead of value
 		-- set theCalendarTitle to cellValue of cell " & Quote( "Field_Name" ) & "¶

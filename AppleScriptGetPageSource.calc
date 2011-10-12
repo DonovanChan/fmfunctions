@@ -20,8 +20,27 @@ Let ( [
 		close document 1¶
 	end tell¶
 	¶
+	-- Update log (for debugging)¶
+	--my replaceLog(theURL & return & theText,\"~/Desktop/last_page.html\")¶
+	¶
 	-- Set value to field¶
-	setField(dbName,tableName,fieldName,theText)¶
+	try¶
+		setField(dbName, tableName, fieldName, theText)¶
+	on error¶
+		-- Continue process if crash occurred¶
+		--	Requires launcher file to be on desktop. It opens SafetyNet and continues the process.¶
+		if not checkAppExists(\"FileMaker Pro Advanced\") then¶
+			tell application \"FileMaker Pro Advanced\"¶
+				activate¶
+				tell application \"FileMaker Pro Advanced\"¶
+					open ((path to desktop as text) & \"PDCA_Launcher.fp7\") as alias¶
+				end tell¶
+			end tell¶
+		end if¶
+	end try
+	¶
+	-- Clear variable (to clear memory)¶
+	set theText to missing value¶
 	¶
 	-- HANDLER: Waits for page to load in Safari¶
 	on page_loaded(timeout_value) -- in seconds¶
@@ -49,7 +68,14 @@ Let ( [
 				end tell¶
 			end tell¶
 		end tell¶
-	end setField"
+	end setField¶
+	¶
+	-- HANDLER: Replaces file with timestamped entry¶
+	--	Alternative file name or location must be modified in the code¶
+	on replaceLog(logEntry, logPath)¶
+		do shell script \"TEXT=$(echo \" & quoted form of logEntry & \" );echo \\\"`date '+%Y.%m.%d %H:%M:%S'`¶
+	$TEXT\\\" > \" & logPath¶
+	end replaceLog"
 )
 
 /* —————————————————————————————— //

@@ -3,6 +3,11 @@ Let ( [
 	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
 	tableName = GetValue ( fieldSplit ; 1 ) ;
 	fieldName = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion =
+		Case (
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
+			"FileMaker Pro"
+		) ;
 	
 	message = If ( IsEmpty ( message ) ; "Please select a folder." ; message ) ;
 	defaultDirPath = GetValue ( defaultDirPath ; 1 ) ;
@@ -42,7 +47,7 @@ end fileListToText¶
 ¶
 --Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
-	tell application \"FileMaker Pro Advanced\"¶
+	tell application \"" & fmpVersion & "\"¶
 		tell database (databaseName as text)¶
 			tell table (tableName as text)¶
 				set field fieldName to theValue¶

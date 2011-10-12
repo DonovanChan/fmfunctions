@@ -2,9 +2,15 @@ Let ( [
 	db = Get ( FileName ) ;
 	fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
 	table = GetValue ( fieldList ; 1 ) ;
-	field = GetValue ( fieldList ; 2 )
+	field = GetValue ( fieldList ; 2 ) ;
+	fmpVersion =
+		Case (
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
+			"FileMaker Pro"
+		)
 	] ;
-"set fmResult to \"\"¶
+"set fmpVersion to \"" & fmpVersion & "\"¶
+set fmResult to \"\"¶
 set defaultColor to split(" & Quote( defaultColor ) & ",\";\")¶
 set defaultColor to adjustColorArray(defaultColor,false)¶
 try¶
@@ -63,7 +69,7 @@ end stripToInteger¶
 ¶
 -- Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
- tell application \"FileMaker Pro Advanced\"¶
+ tell application fmpVersion¶
 	 tell database (databaseName as text)¶
 		 tell table (tableName as text)¶
 			 set field fieldName to theValue¶

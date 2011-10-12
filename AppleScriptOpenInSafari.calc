@@ -2,9 +2,13 @@
 tell application \"Safari\"¶
 	activate¶
 	-- Ensure we're not working in the Downloads window¶
-	if name of front window is \"Downloads\" then¶
+	try¶
+		set frontName to name of front window¶
+		if frontName is \"Downloads\" then 1/0¶
+		if frontName begins with \"Source\" then 1/0¶
+	on error¶
 		make new document with properties {URL:\"\"}¶
-	end if¶
+	end try¶
 end tell¶
 tell front window of application \"Safari\"¶
 	try¶
@@ -20,9 +24,18 @@ tell front window of application \"Safari\"¶
 		set the current tab to newTab¶
 		set miniaturized to false¶
 	on error errText number errNum¶
-		display alert \"Error \" & errNum & \": \" & errText¶
+		set errMessage to \"Error \" & errNum & \": \" & errText¶
+		display alert errMessage & errText giving up after 60¶
+		-- Write error to text file (for debugging)¶
+		--my updateLog(errMessage,\"~/Desktop/error_log.txt\")¶
 	end try¶
-end tell"
+end tell¶
+¶
+-- HANDLER: Appends new timestamped line to log file¶
+--	Alternative file name or location must be modified in the code¶
+on updateLog(logEntry)¶
+	do shell script \"TEXT=$(echo \" & quoted form of logEntry & \" ); echo \\\"`date '+%Y.%m.%d %H:%M:%S'`\t$TEXT\\\" >> ~/Desktop/error_log.txt\"¶
+end updateLog"
 
 /* —————————————————————————————— //
 NAME:
