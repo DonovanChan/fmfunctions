@@ -10,12 +10,13 @@ Substitute ( searchString ;
 
 	[ "\!"	; "!" ] ;
 	[ "!"		; "\!" ] ;
-	
+
 	[ "\?"	; "?" ] ;
 	[ "?"		; "\?" ] ;
-	
-	[ "\//"	; "//" ] ;
-	[ "//"	; "\//" ] ;
+
+// Disabled because it was destroying the "today" operator (//)
+//	[ "\/"	; "/" ] ;
+//	[ "/"	; "\/" ] ;
 
 	[ "\<"	; "<" ] ;
 	[ "<"	; "\<" ] ;
