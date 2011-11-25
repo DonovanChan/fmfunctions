@@ -1,0 +1,23 @@
+Let ( [
+	row  = GetValue ( array ; 1 ) ;
+	cell = GetValue ( Substitute ( row ; columnDelimiter ; ¶ ) ; columnIndex ) ;
+	rowsRemaining = RightValues ( array ; ValueCount ( array ) - 1 ) ;
+	result = If ( not IsEmpty ( previousResults ) ; previousResults & ¶ ) & cell
+	] ;
+	Case (
+		not IsEmpty ( rowsRemaining ) ;
+			ArrayColumnLoop ( rowsRemaining ; columnIndex ; columnDelimiter ; result ) ;
+		previousResults
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ArrayColumnLoop ( array ; columnIndex ; columnDelimiter ; previousResults )
+
+PURPOSE:
+	Performs recursion for ArrayColumn()
+
+HISTORY:
+	Created: 2011-Oct-24 19h43 PST — Donovan Chandler
+*/

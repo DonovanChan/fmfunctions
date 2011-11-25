@@ -1,0 +1,16 @@
+Case (
+	Left ( text ; 1 ) = charToStrip ;
+		TextStripLeft ( Right ( text ; Length ( text ) - 1 ) ; charToStrip ) ;
+	text
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextStripLeft ( text ; charToStrip )
+	
+PURPOSE:
+	Strips all occurrences of character from beginning of text
+	
+HISTORY:
+	Created: 2011-Jul-09 21h26 PST — Donovan Chandler
+*/

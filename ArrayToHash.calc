@@ -1,0 +1,49 @@
+Let ( [
+	rowCount = PatternCount ( array ; rowDelimiter ) ;
+	row =
+		TextBetween (
+			rowDelimiter & array & rowDelimiter ;
+			rowDelimiter ;
+			rowDelimiter ;
+			1
+		) ;
+	row =
+		If (
+			Left ( row ; 1 ) = columnDelimiter ; row ;
+			columnDelimiter & row & columnDelimiter
+		) ;
+	name = TextBetween ( row ; columnDelimiter ; columnDelimiter ; nameColumn ) ;
+	value = TextBetween ( row ; columnDelimiter  ; columnDelimiter ; valueColumn )
+	] ;
+	# ( name ; value )
+	& If ( 
+		rowCount > 1 ;
+			¶ & ArrayToHash (
+				TextBetween ( array ; rowDelimiter ; "" ; 1 ) ;
+				rowDelimiter ;
+				columnDelimiter ;
+				nameColumn ;
+				valueColumn
+			)
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	ArrayToHash ( array ; rowDelimiter ; columnDelimiter ; nameColumn ; valueColumn )
+
+PURPOSE:
+	Generates list of name-value pairs using columns in tabular array
+
+EXAMPLES:
+	ArrayToHash (
+		"dog|woof|chow¶cat|meow|kibble" ;
+		"¶"
+		"|" ;
+		1 ;
+		3
+	) = "<:dog:=chow:>¶<:cat:=kibble:>"
+
+HISTORY:
+	Created: 2011-Nov-10 10h26 PST — Donovan A. Chandler
+*/

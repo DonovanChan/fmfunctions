@@ -1,0 +1,54 @@
+Let([
+	path = GetValue ( pathList ; 1 ) ;
+	pathCount = ValueCount ( pathList ) ;
+	
+	//-- Remove prefixes
+	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
+	path2 = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
+	path3 = If ( Left ( path2 ; 1 ) ≠ "/" ; path2 ; Middle ( path2 ; 2 ; 999 ) ) ;
+	
+	//-- Remove disk name
+	hdName = 
+		GetValue (
+			Substitute ( Get ( DesktopPath ) ; "/" ; ¶ ) ;
+			2
+		) ;
+	hdNameLen = Length ( hdName ) ;
+	pathNew = 
+		If ( 
+			Left ( path3 ; hdNameLen + 1 ) = hdName & "/" ;
+			 	Middle ( path3 ; hdNameLen + 1 ; 999 ) ;
+			path
+		) ;
+		
+	//-- Strip invalid characters
+	pathEncoded = If ( not stripInvalidChars ; pathNew ; TextEncodeForFilePath ( pathNew ) ) ;
+	
+	//-- Escape characters for shell
+	pathEncoded =
+		Substitute ( pathEncoded ;
+			[ " "	; "\ " ]
+		)
+	];
+	List (
+		If ( not IsEmpty ( pathEncoded ) ; pathEncoded ) ;
+		If ( pathCount > 1 ;
+			FilePathForShell ( RightValues ( pathList ; pathCount - 1 ) ; stripInvalidChars )
+		)
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	FilePathForShell ( pathList ; stripInvalidChars )
+
+PURPOSE:
+	Returns path usable in shell
+
+EXAMPLES:
+	FilePathForShell ( "HD/Library/FileMaker Server/Data" )
+	= "/Library/FileMaker\ Server/Data"
+
+HISTORY:
+	Created: 2011-Nov-04 14h28 PST — Donovan Chandler
+*/

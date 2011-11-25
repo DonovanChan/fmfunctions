@@ -1,0 +1,16 @@
+ArrayTransposeLoop ( array ; columnDelimiter ; "" )
+
+/* —————————————————————————————— //
+NAME:
+	ArrayTranspose ( array ; columnDelimiter )
+
+PURPOSE:
+	Inverts axis of tabular array by moving first row to first column and so forth.
+
+EXAMPLES:
+	ArrayTranspose ( "A-B-C¶1-2-3" ; "-" )
+	= "A-1¶B-2¶C-3"
+
+HISTORY:
+	Created: 2011-Oct-24 20h21 PST — Donovan A. Chandler
+*/

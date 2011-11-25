@@ -1,0 +1,42 @@
+Let([
+	path = GetValue ( pathList ; 1 ) ;
+	pathCount = ValueCount ( pathList ) ;
+	hdName = Get ( SystemDrive ) ;
+	
+	//-- Add disk name
+	pathNew = 
+		If (
+			Position ( "/" & path & "/" ; hdName ; 1 ; 1 ) = 0 ;
+				hdName & TextStripLeft ( path ; "/" ) ;
+			path
+		) ;
+	
+	//-- Undo shell escapes
+	pathNew =
+		Substitute ( pathNew ;
+			[ "\ "	; " " ]
+		)
+	];
+	List (
+		If ( not IsEmpty ( pathNew ) ; pathNew ) ;
+		If ( pathCount > 1 ;
+			FilePathForFMP ( RightValues ( pathList ; pathCount - 1 ) )
+		)
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	FilePathForFMP ( pathList )
+
+PURPOSE:
+	Returns path usable in FileMaker.
+	Adds system drive to shell paths.
+
+EXAMPLES:
+	FilePathForShell ( "/Library/FileMaker\ Server/Data" )
+	= "HD/Library/FileMaker Server/Data"
+
+HISTORY:
+	Created: 2011-Nov-04 14h28 PST — Donovan Chandler
+*/

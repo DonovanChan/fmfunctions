@@ -1,0 +1,37 @@
+"	<style type=\"text/css\">¶
+		th {¶
+			text-align: left;¶
+			white-space: nowrap;¶
+			vertical-align: top;¶
+			padding: 5px 5px 5px 0;¶
+		}¶
+		td {¶
+			padding: 5px 5px 5px 0;¶
+		}¶
+	</style>
+"
+
+// Trailing lines to leave space before attachment
+
+
+/* —————————————————————————————— //
+NAME:
+	EmailCSSForTable ( )
+
+PURPOSE:
+	Returns style element for generic tables used in HTML emails.
+
+EXAMPLES:
+	"<head>¶
+	" & EmailCSSForTable & "¶
+	</head>¶
+	<body>¶
+		<p>Dear person. Please see table below.</p>¶
+		<table>¶
+			<tr><th>Name</th><td>"	& CONTACT::NAME & "</td></tr>¶
+		</table>¶
+	</body>""
+
+HISTORY:
+	Created: 2011-Nov-23 14h12 PST — Donovan Chandler
+*/

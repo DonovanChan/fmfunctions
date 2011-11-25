@@ -1,0 +1,32 @@
+Let ( [
+	$fields = listOfFieldNames ;
+	ex =
+		"Let ( [ name = GetValue ( $fields ; [n] )
+			; value = GetField ( name )
+		] ; If ( IsEmpty ( value ) or value = \"?\" ; name )
+		)" ;
+	result = ListCustom ( 1 ; ValueCount ( $fields ) ; ex )
+	] ;
+	result
+)
+
+/* —————————————————————————————— //
+NAME:
+	FieldsEmpty ( listOfFieldNames )
+
+PURPOSE:
+	Given list of field names, returns list of fields that are empty or unrelated.
+
+EXAMPLES:
+	Given that NAME_FIRST is the only field containing a value...
+
+	FieldsEmpty ( List (
+		GetFieldName ( CONTACT::NAME_FIRST ) ;
+		GetFieldName ( CONTACT::NAME_LAST ) ;
+		GetFieldName ( CONTACT::TITLE )
+	) )
+	= "CONTACT::NAME_LAST¶CONTACT::TITLE"
+
+HISTORY:
+	Created: 2011-Nov-23 11h59 PST — Donovan Chandler
+*/

@@ -1,0 +1,205 @@
+Let ( [
+	dbName = Get ( FileName ) ;
+	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	tableName = GetValue ( fieldSplit ; 1 ) ;
+	fieldName = GetValue ( fieldSplit ; 2 ) ;
+	
+	message = If ( IsEmpty ( message ) ; "Select file you'd like to get the contents of." ; message ) ;
+	defaultDirPath = GetValue ( defaultDirPath ; 1 ) ;
+	fmpVersion =
+		Case (
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
+			"FileMaker Pro"
+		)
+	] ;
+"-- Localize parameters¶
+set dbName to \"" & dbName & "\"¶
+set fieldName to \"" & fieldName & "\"¶
+set pathToFile to \"" & pathToFile & "\"¶
+set promptMessage to \"" & message & "\"¶
+set tableName to \"" & tableName & "\"¶
+¶
+-- Instantiate variables¶
+set fileAlias to missing value¶
+set fileText to missing value¶
+set errMessage to missing value¶
+¶
+if length of pathToFile ≠ 0 then¶
+	try¶
+		set fileAlias to POSIX file stripStartupDisk(pathToFile) as alias¶
+	end try¶
+end if¶
+¶
+try¶
+	-- Prompt for file if necessary¶
+	if fileAlias is missing value then¶
+		set fileAlias to choose file with prompt promptMessage" &
+			If ( not IsEmpty ( defaultDirPath ) ;
+				"¬¶default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") as alias"
+			) &
+			If ( not IsEmpty ( fileTypes ) ;
+				"¬¶of type utiList(\"" & fileTypes & "\")¶"
+			) &
+"	¶
+	end if¶
+	¶
+	-- Read file¶
+	set fileText to readFile(fileAlias)¶
+on error errText number errNumber¶
+	set errMessage to \"Error \" & errNumber & \": \" & errText¶
+end try¶
+¶
+-- Set to FileMaker record¶
+if errMessage ≠ missing value¶
+	set resultText to errMessage¶
+else¶
+	set resultText to fileText¶
+end¶
+set filePath to completePath(POSIX path of fileAlias)¶
+set fileName to stripPath(fileAlias as text)¶
+setField(dbName, tableName, fieldName, 1, resultText)¶
+setField(dbName, tableName, fieldName, 2, filePath)¶
+setField(dbName, tableName, fieldName, 3, fileName)¶
+¶
+-- Clear variable to ensure memory is clean¶
+set fileText to missing value¶
+¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+-- HANDLER: Prepends drive name to path¶
+on completePath(pathFromUsers)¶
+	tell application \"Finder\"¶
+		set hdName to name of startup disk¶
+	end tell¶
+	hdName & pathFromUsers¶
+end completePath¶
+¶
+-- HANDLER: Returns offset of last occurrence of character¶
+on lastOffset(theString, theCharacter)¶
+	set strRev to (reverse of characters of theString) as text¶
+	set s to (length of theString) - (offset of theCharacter in strRev) + 1¶
+end lastOffset¶
+¶
+-- HANDLER: Returns text from file.  Prompts for file if no alias specified.¶
+on readFile(fileAlias)¶
+	if fileAlias = \"\" then¶
+		set theFile to choose file with prompt (localized string \"chooseFile\")¶
+	else¶
+		set theFile to fileAlias¶
+	end if¶
+	try¶
+		tell application \"System Events\"¶
+			open for access theFile¶
+			set fileText to (read theFile)¶
+			close access theFile¶
+			return fileText¶
+		end tell¶
+	on error errMsg number errNum¶
+		try¶
+			close access theFile¶
+		end try¶
+		display dialog errMsg & return & errNum¶
+	end try¶
+end readFile¶
+¶
+-- HANDLER: Searches and replaces string within text block¶
+--	Accepts lists in searchString and replaceString¶
+to searchReplaceText(theText, searchString, replaceString)¶
+	set searchString to searchString as list¶
+	set replaceString to replaceString as list¶
+	set theText to theText as text¶
+	¶
+	set oldTID to AppleScript's text item delimiters¶
+	repeat with i from 1 to count searchString¶
+		set AppleScript's text item delimiters to searchString's item i¶
+		set theText to theText's text items¶
+		set AppleScript's text item delimiters to replaceString's item i¶
+		set theText to theText as text¶
+	end repeat¶
+	set AppleScript's text item delimiters to oldTID¶
+	¶
+	return theText¶
+end searchReplaceText¶
+¶
+-- HANDLER: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, fieldRep, theValue)¶
+	tell application \"" & fmpVersion & "\"¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set repetition fieldrep of cell fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField¶
+¶
+-- HANDLER: Strips directories from file path, leaving name only¶
+--	Note: requires lastOffset() handler¶
+on stripPath(thePath)¶
+	set nameStart to (my lastOffset(thePath, \":\")) + 1¶
+	return text nameStart thru (length of thePath) of thePath¶
+end stripPath¶
+¶
+-- HANDLER: Returns path as text with startup disk removed¶
+to stripStartupDisk(thePath)¶
+	set pathText to thePath as text¶
+	tell application \"System Events\"¶
+		set hdName to name of startup disk¶
+	end tell¶
+	set hdLen to length of hdName¶
+	set colonPos to offset of \":\" in pathText¶
+	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
+	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
+	if text 1 thru hdLen of pathText is equal to hdName then¶
+		set pathText to text (hdLen + 1) thru -1 of pathText¶
+	end if¶
+	return pathText¶
+end stripStartupDisk¶
+¶
+-- HANDLER: Converts return-delimited list of labels into list of UTI's¶
+--	Required Handlers: searchReplaceText¶
+--	Use 'info for' command to see type idenfier of a file¶
+--	More info: http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW4¶
+on utiList(labelText)¶
+	set labels to {\"txt\",\"xml\",\"html\",\"log\"}¶
+	set values to {\"public.plain-text\",\"public.xml\",\"public.html\",\"com.apple.log\"}¶
+	set newText to searchReplaceText(labelText,labels,values)¶
+	set myResult to paragraphs of newText¶
+end¶
+"
+)
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptReadFile ( resultFieldName ; message ; defaultDirPath ; pathToFile ; fileTypes )
+
+PURPOSE:
+	Returns text contents and name of file.
+	Script will prompt for file if 'pathToFile' parameter is empty.
+
+	Returns two results - one to each repetition of the supplied result field.
+		rep 1: text from file
+		rep 2: path to file
+		rep 3: name of file
+
+NOTES:
+	resultFieldName:	Name of field AppleScript will return its results to
+		For best results, use a global field.
+		Field must be on layout when AS is performed.
+	defaultDirPath:	Path to default folder.
+		Any of following formats are fine:
+			"filemac:HD/Users/donovan/Desktop/test.txt"
+			"/HD/Users/donovan/Desktop/test.txt"
+			"/Users/donovan/Desktop/test.txt"
+	pathToFile:	(Optional) Path to file to read.
+	pathToFile:	(Optional) List of file types user is permitted to select
+		Current options: html, log, txt, html
+		You can add new types by adding new type identifiers to utiList() handler
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Oct-27 11h38 PST — Donovan Chandler
+*/

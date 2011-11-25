@@ -1,0 +1,43 @@
+Let ( [
+	ex = "echo $(java -version 2>&1)" ; // echo necessary for reporting errors
+	textRaw = BE_ExecuteShellCommand ( ex ) ; // replace with any plug-in
+	text =
+		Substitute ( textRaw ;
+			[ "\" Java(" ; "\"¶Java(" ] ;
+			[ ") Java " ; ")¶Java " ]
+		)
+	] ;
+	Case (
+		IsEmpty ( attribute ) ;
+			text ;
+		attribute = "version" ;
+			TextBetween ( GetValue ( text ; 1 ) ; "\"" ; "\"" ; 1 ) ;
+		attribute = "environment" ;
+			GetValue ( text ; 2 ) ;
+		attribute = "server" ;
+			GetValue ( text ; 3 )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	JavaVersion ( attribute )
+
+PURPOSE:
+	Returns version information about Java installation on OS X operating system
+
+EXAMPLES:
+	When attribute = ""
+		"java version \"1.6.0_26\"
+		Java(TM) SE Runtime Environment (build 1.6.0_26-b03-384-10M3425)
+		Java HotSpot(TM) 64-Bit Server VM (build 20.1-b02-384, mixed mode)"
+	When attribute = "version"
+		"1.6.0_26"
+	When attribute = "environment"
+		"Java(TM) SE Runtime Environment (build 1.6.0_26-b03-384-10M3425)"
+	When attribute = "server"
+		"Java HotSpot(TM) 64-Bit Server VM (build 20.1-b02-384, mixed mode)"
+
+HISTORY:
+	Created: 2011-Nov-15 15h31 PST — Donovan A. Chandler
+*/

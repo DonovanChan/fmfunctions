@@ -1,0 +1,20 @@
+Let ( [
+	$list = listToDelimit ;
+	quoted = ListCustom ( 1 ; ValueCount ( $list ) ; "quoteSingle( GetValue( $list ; [n] ) )" )
+	] ;
+	"( " & Substitute ( quoted ; ¶ ; "," ) & " )"
+)
+
+/* —————————————————————————————— //
+NAME:
+	sqlList ( listToDelimit )
+
+PURPOSE:
+	Converts return-delimited list into comma-delimited list for use in SQL statements.
+
+EXAMPLES:
+	sqlList ( "dog¶cat¶mouse" ) = "(dog,cat,mouse)"
+
+HISTORY:
+	Created: 2011-Oct-26 16h23 PST — Donovan A. Chandler
+*/
