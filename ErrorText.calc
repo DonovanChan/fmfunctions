@@ -219,6 +219,67 @@ errorNum = 1505	; "Specified authentication is not supported by SMTP server" ;
 errorNum = 1506	; "Email(s) could not be sent successfully" ;
 errorNum = 1507	; "Unable to log in to the SMTP server" ;
 
+//-- Apple event registry errors
+errorNum = -10000	; "AppleEvent handler failed." ;
+errorNum = -10001	; "A descriptor type mismatch occurred." ;
+errorNum = -10002	; "Invalid key form." ;
+errorNum = -10003	; "Can't set <object or data> to <object or data>. Access not allowed." ;
+errorNum = -10004	; "A privilege violation occurred." ;
+errorNum = -10005	; "The read operation wasn't allowed." ;
+errorNum = -10006	; "Can't set <object or data> to <object or data>." ;
+errorNum = -10007	; "The index of the event is too large to be valid." ;
+errorNum = -10008	; "The specified object is a property, not an element." ;
+errorNum = -10009	; "Can't supply the requested descriptor type for the data." ;
+errorNum = -10010	; "The AppleEvent handler can't handle objects of this class." ;
+errorNum = -10011	; "Couldn't handle this command because it wasn't part of the current transaction." ;
+errorNum = -10012	; "The transaction to which this command belonged isn't a valid transaction." ;
+errorNum = -10013	; "There is no user selection." ;
+errorNum = -10014	; "Handler only handles single objects." ;
+errorNum = -10015	; "Can't undo the previous AppleEvent or user action." ;
+
+//-- Apple event errors
+errorNum = -1700	; "Can't make some data into the expected type." ;
+errorNum = -1701	; "Some parameter is missing for <commandName>" ;
+errorNum = -1702	; "Some data could not be read" ;
+errorNum = -1703	; "Some data was the wrong type." ;
+errorNum = -1704	; "Some parameter was invalid." ;
+errorNum = -1705	; "Operation involving a list item failed." ;
+errorNum = -1706	; "Need a newer version of the AppleEvent manager." ;
+errorNum = -1707	; "Event isn't an AppleEvent." ;
+errorNum = -1708	; "<reference> doesn't understand the <commandName> message." ;
+errorNum = -1709	; "AEResetTimer was passed an invalid reply." ;
+errorNum = -1710	; "Invalid sending mode was passed." ;
+errorNum = -1711	; "User canceled out of wait loop for reply or receipt." ;
+errorNum = -1712	; "AppleEvent timed out." ;
+errorNum = -1713	; "No user interaction allowed." ;
+errorNum = -1714	; "Wrong keyword for a special function." ;
+errorNum = -1715	; "Some parameter wasn't understood." ;
+errorNum = -1716	; "Unknown AppleEvent address type." ;
+errorNum = -1717	; "The handler <identifier> is not defined." ;
+errorNum = -1718	; "Reply has not yet arrived." ;
+errorNum = -1719	; "Can't get <reference>. Invalid index." ;
+errorNum = -1720	; "Invalid range." ;
+errorNum = -1721	; "<expression> doesn't match the parameters <parameterNames> for <commandName>." ;
+errorNum = -1723	; "Can't get <expression>. Access not allowed." ;
+errorNum = -1725	; "Illegal logical operator called." ;
+errorNum = -1726	; "Illegal comparison or logical." ;
+errorNum = -1727	; "Expected a reference." ;
+errorNum = -1728	; "Can't get <reference>." ;
+errorNum = -1729	; "Object counting procedure returned a negative count." ;
+errorNum = -1730	; "Container specified was an empty list." ;
+errorNum = -1731	; "Unknown object type." ;
+errorNum = -1750	; "Scripting component error." ;
+errorNum = -1751	; "Invalid script id." ;
+errorNum = -1752	; "Script doesn't seem to belong to AppleScript." ;
+errorNum = -1753	; "Script error." ;
+errorNum = -1754	; "Invalid selector given." ;
+errorNum = -1755	; "Invalid access." ;
+errorNum = -1756	; "Source not available." ;
+errorNum = -1757	; "No such dialect." ;
+errorNum = -1758	; "Data couldn't be read because its format is obsolete." ;
+errorNum = -1759	; "Data couldn't be read because its format is too new." ;
+errorNum = -1760	; "Recording is already on." ;
+
 //-- AppleScript errors ;
 errorNum = -2700	; "From AppleScript: Unknown error." ;
 errorNum = -2701	; "From AppleScript: Can’t divide <number> by zero." ;
@@ -306,4 +367,5 @@ HISTORY:
 	Modified: 2010-Jan-29 17h00 PST — Will M. Baker.  Added white space and indents.
 	Modified: 2011-Mar-31 09h57 PST — Donovan Chandler.  Added AppleScript and Custom sections.  Replaced FileMaker Calc section with definitions for FMP 11.
 	Modified: 2011-Jun-29 10h32 PST — Donovan Chandler.  Added complete AppleScript and OS sections.
+	Modified: 2011-Nov-14 11h17 PST — Donovan Chandler.  Added Apple event errors.
 */
