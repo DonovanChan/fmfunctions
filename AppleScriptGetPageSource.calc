@@ -2,7 +2,8 @@ Let ( [
 	dbName = Get ( FileName ) ;
 	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
 	tableName = GetValue ( fieldSplit ; 1 ) ;
-	fieldName = GetValue ( fieldSplit ; 2 )
+	fieldName = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" )
 	];
 	"set theURL to \"" & url & "\"¶
 	set dbName to \"" & dbName & "\"¶
@@ -24,20 +25,7 @@ Let ( [
 	--my replaceLog(theURL & return & theText,\"~/Desktop/last_page.html\")¶
 	¶
 	-- Set value to field¶
-	try¶
-		setField(dbName, tableName, fieldName, theText)¶
-	on error¶
-		-- Continue process if crash occurred¶
-		--	Requires launcher file to be on desktop. It opens SafetyNet and continues the process.¶
-		if not checkAppExists(\"FileMaker Pro Advanced\") then¶
-			tell application \"FileMaker Pro Advanced\"¶
-				activate¶
-				tell application \"FileMaker Pro Advanced\"¶
-					open ((path to desktop as text) & \"PDCA_Launcher.fp7\") as alias¶
-				end tell¶
-			end tell¶
-		end if¶
-	end try
+	setField(dbName, tableName, fieldName, theText)¶
 	¶
 	-- Clear variable (to clear memory)¶
 	set theText to missing value¶
@@ -61,7 +49,7 @@ Let ( [
 	¶
 	-- HANDLER: Sets FileMaker field value¶
 	on setField(databaseName, tableName, fieldName, theValue)¶
-		tell application \"FileMaker Pro Advanced\"¶
+		tell application \"" & fmpVersion & "\"¶
 			tell database (databaseName as text)¶
 				tell table (tableName as text)¶
 					set field fieldName to theValue¶
