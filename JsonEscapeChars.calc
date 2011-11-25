@@ -1,11 +1,12 @@
 Substitute ( Quote ( text ) ;
-	[ "“" ; "\"" ] ;
-	[ "”" ; "\"" ] ;
+	[ Char ( 147 )	; "\"" ] ;	// left curly quote
+	[ Char ( 148 )	; "\"" ] ;	// right curly quote
+	[ Char ( 8220 )	; "\"" ] ;	// left curly quote
+	[ Char ( 8221 )	; "\"" ] ;	// right curly quote
 
-	[ "\¶" ; ":‡:" ] ;
-	[ "¶" ; "
-" ] ;
-	[ ":‡:" ; "¶" ]
+	[ "\¶"	; ":‡:" ] ;
+	[ "¶"	; Char ( 32 ) ] ;	// CR to space
+	[ ":‡:"	; "¶" ]
 )
 
 /* —————————————————————————————— //
