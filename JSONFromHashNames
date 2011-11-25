@@ -1,33 +1,32 @@
 Let ( [
 	_name = GetValue ( listOfNames ; 1 ) ;
-	_value_orig = #Value ( text ; _name ) ;
+	_valueRaw = #Value ( text ; _name ) ;
 	_value =
 		Case (
-			PatternCount ( _value_orig ; ¶ ) ;
-				JSONArray ( _value_orig ) ;
-			_value_orig
+			Position ( _valueRaw ; ¶ ; 1 ; 1 ) > 0 ;
+				JSONArray ( _valueRaw ) ;
+			_valueRaw
 		) ;
-	_list_count = ValueCount ( listOfNames )
+	_listCount = ValueCount ( listOfNames )
 	] ;
 	Case (
 		not IsEmpty ( _value ) ;
 			JSONSet ( Lower ( _name ) ; _value )
 	) &
 	Case (
-		_list_count - 1 > 0 ;
-		JSONSetFromHash ( text ;
-			RightValues ( listOfNames ; _list_count - 1 )
+		_listCount - 1 > 0 ;
+		JSONFromHashNames ( text ;
+			RightValues ( listOfNames ; _listCount - 1 )
 		)
 	)
 )
 
-
 /* —————————————————————————————— //
 NAME:
-	JSONSetFromHash ( text ; listOfNames )
+	JSONFromHashNames ( text ; listOfNames )
 
 PURPOSE:
-	Converts text from hash to JSON
+	Converts text from hash to JSON for named nodes at top level.
 
 EXAMPLES:
 

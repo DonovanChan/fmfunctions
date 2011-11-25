@@ -1,22 +1,21 @@
 Let ( [
-	_value_orig = GetValue ( listOfValues ; 1 ) ;
-	_isText = ( GetAsNumber ( _value_orig ) ≠ _value_orig ) ;
-	_char1 = Left ( _value_orig ; 1 ) ;
+	_valueRaw = GetValue ( listOfValues ; 1 ) ;
+	_isText = ( GetAsNumber ( _valueRaw ) ≠ _valueRaw ) ;
+	_char1 = Left ( _valueRaw ; 1 ) ;
 	_value =
 		Case (
 			_isText and _char1 ≠ "{" and _char1 ≠ "[ " ;
-				Quote ( _value_orig ) ;
-			_value_orig
+				Quote ( _valueRaw ) ;
+			_valueRaw
 		) ;
-	_value_count = ValueCount ( listOfValues )
+	_valueCount = ValueCount ( listOfValues )
 	] ;
 	_value &
 	Case (
-		_value_count - 1 > 0 ;
-			¶ & JSONArrayLoop ( RightValues ( listOfValues ; _value_count - 1 ) )
+		_valueCount - 1 > 0 ;
+			¶ & JSONArrayLoop ( RightValues ( listOfValues ; _valueCount - 1 ) )
 	)
 )
-
 
 /* —————————————————————————————— //
 NAME:

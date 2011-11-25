@@ -1,0 +1,15 @@
+JSONFromHashNames ( text ; #NameAll ( text ) )
+
+/* —————————————————————————————— //
+NAME:
+	JSONFromHash ( text )
+
+PURPOSE:
+	Converts text from hash to JSON
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Nov-18 13h34 PST — Donovan Chandler
+*/
