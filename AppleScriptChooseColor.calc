@@ -3,11 +3,7 @@ Let ( [
 	fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
 	table = GetValue ( fieldList ; 1 ) ;
 	field = GetValue ( fieldList ; 2 ) ;
-	fmpVersion =
-		Case (
-			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
-			"FileMaker Pro"
-		)
+	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" )
 	] ;
 "set fmpVersion to \"" & fmpVersion & "\"¶
 set fmResult to \"\"¶
@@ -16,13 +12,13 @@ set defaultColor to adjustColorArray(defaultColor,false)¶
 try¶
 	set colorArray to choose color default color defaultColor¶
 on error errText number errNum¶
-	set fmResult to 1¶
+	set fmResult to \"Error \" & errNum & \": \" & errText¶
 end try¶
 if fmResult is \"\" then¶
 	set colorArrayNew to adjustColorArray(colorArray,true)¶
 	set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"¶
 end if¶
-setField(\"\" & db & \"\",\"\" & table & \"\",\"\" & field & \"\",fmResult)¶
+setField(\"" & db & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
 ¶
 ------------------------------------------------¶
 -- HANDLERS¶
@@ -69,7 +65,7 @@ end stripToInteger¶
 ¶
 -- Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
- tell application fmpVersion¶
+ tell application " & Quote ( fmpVersion ) & "¶
 	 tell database (databaseName as text)¶
 		 tell table (tableName as text)¶
 			 set field fieldName to theValue¶
