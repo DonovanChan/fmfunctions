@@ -3,9 +3,16 @@ Let ( [
 	sOpen = Position ( text ; openChar ; 1 ; rep ) ;
 	sString = sOpen + Length ( openChar ) ;
 	sClose = Position ( text ; closeChar ; sString ; 1 ) ;
+	sClose = If ( sClose = 0 ; Length ( text ) ; sClose ) ;
 	lenString = sClose - sString
 	] ;
 	Case (
+		//-- Empty characters - use text boundary
+		IsEmpty ( openChar ) ;
+			Left ( text ; Position ( text ; closeChar ; 1 ; occurrence ) - 1 ) ;
+		IsEmpty ( closeChar ) ;
+			Middle ( text ; Position ( text ; openChar ; 1 ; occurrence ) + 1 ; Length ( text ) ) ;
+
 		//-- Search characters not found
 		sOpen = 0 or sClose = 0 ;
 			"" ;
@@ -25,6 +32,7 @@ PURPOSE:
 HISTORY:
 	Created 2010.04.27 by Donovan Chandler
 	Modified 2011.08.10 by Donovan Chandler ; Updated formatting
+	Modified 2011.11.10 by Donovan Chandler ; Now supports empty open and close chars
 
 EXAMPLE:
 	text.getBetween (
