@@ -24,13 +24,14 @@ Let([
 
 /* —————————————————————————————— //
 NAME:
-	date.getMonthName( monthNum; shortFormat )
+	DateMonthName ( monthNum; shortFormat )
 
 PURPOSE:
-	
+	Converts month number to full name
 
 EXAMPLES:
-	
+	DateMonthName ( 1 ; False ) = "January"
+	DateMonthName ( 1 ; True ) = "Jan"
 
 HISTORY:
 	Created: 2010-Aug-06 19h22 PST — Donovan A. Chandler
