@@ -30,7 +30,7 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-	list.addRemove ( currentList ; value )
+	ListAddRemove ( currentList ; value )
 
 PURPOSE:
 	Adds or removes value from return-delimited list.

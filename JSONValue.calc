@@ -23,7 +23,7 @@ Let([
 				"child";
 			
 			//--Array value occurrence index---
-			Length( Filter( vSubscript; "0123456789" ) ) = Length( subscript );
+			Length( Filter( vSubscript; "0123456789" ) ) = Length( Subscript );
 				"arrayIndex"
 			
 		);
@@ -155,7 +155,7 @@ INPUT:
 	path:	 JSONPath to desired node/value
 	
 DEPENDENCIES:
-	Custom Functions: TextClosePosition(), TextNthNodePosition()
+	Custom Functions: TextCleanQuotes(), TextClosePosition(), TextNthNodePosition()
 
 NOTES:
 	For JSONPath, see http://goessner.net/articles/JsonPath/

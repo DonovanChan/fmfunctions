@@ -1,7 +1,7 @@
 Let([
 	//-- Parameters --
 	//buttonList = "foo¶fum";
-	_button_color = bubbleColor;
+	_button_color = bubbleClass ;
 	_background_color = backgroundColor;
 	
 	//-- Settings --
@@ -227,7 +227,7 @@ Let([
 
 /* —————————————————————————————— // 
 NAME:
-	web.bubbleButtons ( buttonList ; bubbleColor ; backgroundColor )
+	web.bubbleButtons ( buttonList ; bubbleClass ; backgroundColor )
 
 PURPOSE:
 	Creates bubble backgrounds to each value supplied in buttonList
@@ -235,7 +235,7 @@ PURPOSE:
 EXAMPLES:
 	web.bubbleButtons ( 
 		"Button1¶Button2";
-		"white";
+		"white rounded";	// must map to classes defined in CSS
 		"red"
 	)
 	
