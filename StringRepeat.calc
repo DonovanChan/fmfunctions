@@ -1,4 +1,8 @@
-StringRepeatLoop ( string ; 1 ; repetitions )
+Case (
+	repetitions ≤ 0 ; "" ;
+	repetitions = 1 ; string ;
+	string & StringRepeat ( string ; repetitions -1 )
+)
 
 /* —————————————————————————————— //
 NAME:
