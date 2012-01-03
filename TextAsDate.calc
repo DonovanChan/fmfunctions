@@ -3,12 +3,13 @@ Let ( [
 	mapping = characterMapping ;
 	
 	//---- MEASURE VARIABLE WIDTH VALUES FIRST
+	//---- must process in order they appear in mapping
 	//-- Month number or name
 	sMon = Position ( mapping ; "mon" ; 1 ; 1 ) ;
 	sMMM = Position ( mapping ; "mmm" ; 1 ; 1 ) ;
 	sMM = Position ( mapping ; "m" ; 1 ; 1 ) ;
 	sMonth = If ( sMon + sMMM > 0 ; sMon + sMMM ; sMM ) ;
-	monthCount = PatternCount ( mapping ; "m" ) ;
+	monthCount = PatternCount ( Substitute ( mapping ; "mon" ; "mmm" ) ; "m" ) ;
 	monthRaw =
 		Case (
 			sMon = 0 and sMMM = 0 ;
@@ -22,27 +23,15 @@ Let ( [
 		) ;
 	month = Filter ( monthRaw ; "0123456789" ) ;
 	monthPadded = Right ( "..." & month ; monthCount ) ;
-
-	// Adjust mapping for length of month name/number
+	remapMonth = monthRaw ≠ month ;
 	mapping =
 		Case (
 			Position ( mapping ; "mon" ; 1 ; 1 ) ;
 				Substitute ( mapping ; "mon" ;
 					Left ( "............" ; Length ( DateMonthName ( month ; False ) ) ) 
 				) ;
-			monthRaw = month ; mapping ;
-			Replace ( mapping ; sMonth ; monthCount ; month )
-		) ;
-
-	//-- Hour
-	sHr = Position ( mapping ; "h" ; 1 ; 1 ) ;
-	hrCount = PatternCount ( mapping ; "h" ) ;
-	hrRaw = Middle ( string ; sHr ; hrCount ) ;
-	hr = Filter ( hrRaw ; "0123456789" ) ;
-	mapping =
-		Case (
-			hrRaw = hr ; mapping ;
-			Replace ( mapping ; sHr ; hrCount ; hr )
+			remapMonth ; Replace ( mapping ; sMonth ; monthCount ; month ) ;
+			mapping
 		) ;
 	
 	//-- Day
@@ -50,13 +39,26 @@ Let ( [
 	dayCount = PatternCount ( mapping ; "d" ) ;
 	dayRaw = Middle ( string ; sDay ; dayCount ) ;
 	day = Filter ( dayRaw ; "0123456789" ) ;
+	remapDay = dayRaw ≠ day ;
 	mapping =
 		Case (
-			dayRaw = day ; mapping ;
-			Replace ( mapping ; sDay ; dayCount ; day )
+			remapDay ; Replace ( mapping ; sDay ; dayCount ; day ) ;
+			mapping
 		) ;
 	
-	//-- Non-variable values
+	//-- Hour
+	sHr = Position ( mapping ; "h" ; 1 ; 1 ) ;
+	hrCount = PatternCount ( mapping ; "h" ) ;
+	hrRaw = Middle ( string ; sHr ; hrCount ) ;
+	hr = Filter ( hrRaw ; "0123456789" ) ;
+	remapHr = hrRaw ≠ hr ;
+	mapping =
+		Case (
+			remapHr ; Replace ( mapping ; sHr ; hrCount ; hr ) ;
+			mapping
+		) ;
+	
+	//---- Non-variable values
 	sSec = Position ( mapping ; "s" ; 1 ; 1 ) ;
 	sMin = Position ( mapping ; "i" ; 1 ; 1 ) ;
 	sPM = Position ( mapping ; "p" ; 1 ; 1 ) ;
@@ -93,6 +95,10 @@ Let ( [
 			"¶hr=" & hr & ", min=" & min & ", sec=" & sec & ", am/pm=" & pm &
 			"¶string=" & string & ", mapping=" & mapping ;
 
+		remapHr and ( sHr < sMonth or sHr < sDay ) ;
+			"Invalid mapping: Hour of variable length can't precede Month or Day" ;
+		remapDay and ( sDay < sMonth ) ;
+			"Invalid mapping: Day of variable length can't precede Month" ;
 		result = "?" ; "Invalid mapping: " & characterMapping ;
 		result
 	)
@@ -119,7 +125,7 @@ EXAMPLES:
 	= "1:49:25"
 	
 	TextAsDate ( "7/6/08 3:40 PM" ; "mm/dd/yy hh:ii pp")
-	= "7/6/2008 4:40 PM"
+	= "7/6/2008 3:40 PM"
 	
 LEGEND for characterMapping:
 	cc		Century (either 19 or 20) prepended to the abbreviated year.
@@ -127,17 +133,19 @@ LEGEND for characterMapping:
 	mm		Numeric month, a number from 1 to 12.
 	mmm	Short string (e.g., "Jan")
 	mon	Long string (e.g., "January")
-	dd		Day, a number from 1 to 31.
-	hh		Hour, a number from 0 to 23.
-	ii		Minutes, a number from 0 to 59.
-	ss		Seconds, a number from 0 to 61 (59 plus a maximum of two leap seconds).
+ 
+	ii		Minutes, a number from 00 to 59.
+	ss		Seconds, a number from 00 to 61 (59 plus a maximum of two leap seconds).
 	.		Wildcard for one character
 
 NOTES:
 	Uses the GetAs... functions because they round dates. E.g.,
 		Date ( 1 ; 14 ; 72 )		= "1/14/0072"
 		GetAsDate ( "1/14/72" )	= "1/14/1972"
+	WARNING: Day of variable length can't precede month
+	WARNING: Hour of variable length can't precede month or day
 
 HISTORY:
-	Created: 2011-Nov-16 15h09 PST — Donovan A. Chandler
+	Created:	2011-Nov-16 15h09 PST — Donovan Chandler
+	Modified:	2011-Dec-28 12h35 PST — Donovan Chandler ; Now traps for unsupported formats
 */
