@@ -1,0 +1,32 @@
+Let ( [
+	tagCount = ValueCount ( mergeTagNames ) ;
+	label = GetValue ( mergeTagNames ; 1 ) ;
+	value = GetValue ( mergeValues ; 1 ) ;
+	result = Substitute ( text ; mergeTagOpen & label & mergeTagClose ; Quote ( value ) )
+	] ;
+	Case (
+		tagCount > 1 ;
+			TextMergeTags (
+				result ;
+				RightValues ( mergeTagNames ; tagCount - 1 ) ;
+				RightValues ( mergeValues ; tagCount - 1 ) ;
+				mergeTagOpen ;
+				mergeTagClose
+			) ;
+		result
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextMergeTags ( text ; mergeTagNames ; mergeValues ; mergeTagOpen ; mergeTagClose )
+
+PURPOSE:
+	Replaces mergeLabels in text with corresponding mergeValues
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2011-Dec-22 21h31 PST — Donovan A. Chandler
+*/

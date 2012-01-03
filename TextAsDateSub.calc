@@ -1,0 +1,79 @@
+Let ( [
+	string = text ;
+	mapping = characterMapping ;
+	
+	] ;
+	
+	Case (
+		
+		
+	)
+)
+
+	//---- MEASURE VARIABLE WIDTH VALUES FIRST
+	//---- must process in order they appear in mapping
+	//-- Month number or name
+	sMon = Position ( mapping ; "mon" ; 1 ; 1 ) ;
+	sMMM = Position ( mapping ; "mmm" ; 1 ; 1 ) ;
+	sMM = Position ( mapping ; "m" ; 1 ; 1 ) ;
+	sMonth = If ( sMon + sMMM > 0 ; sMon + sMMM ; sMM ) ;
+	monthCount = PatternCount ( mapping ; "m" ) ;
+	monthRaw =
+		Case (
+			sMon = 0 and sMMM = 0 ;
+				Middle ( string ; sMM ; monthCount ) ;
+			Let ( [
+				str = Middle ( string ; sMon + sMMM ; 3 ) ;
+				match = "xxJanFebMarAprMayJunJulAugSepOctNovDec"
+				] ;
+				Position ( match ; str ; 1 ; 1 ) / 3
+			)
+		) ;
+	month = Filter ( monthRaw ; "0123456789" ) ;
+	monthPadded = Right ( "..." & month ; monthCount ) ;
+	mapping =
+		Case (
+			Position ( mapping ; "mon" ; 1 ; 1 ) ;
+				Substitute ( mapping ; "mon" ;
+					Left ( "............" ; Length ( DateMonthName ( month ; False ) ) ) 
+				) ;
+			monthRaw = month ; mapping ;
+			Replace ( mapping ; sMonth ; monthCount ; month )
+		) ;
+	
+	//-- Day
+	sDay = Position ( mapping ; "d" ; 1 ; 1 ) ;
+	dayCount = PatternCount ( mapping ; "d" ) ;
+	dayRaw = Middle ( string ; sDay ; dayCount ) ;
+	day = Filter ( dayRaw ; "0123456789" ) ;
+	mapping =
+		Case (
+			dayRaw = day ; mapping ;
+			Replace ( mapping ; sDay ; dayCount ; day )
+		) ;
+	
+	//-- Hour
+	sHr = Position ( mapping ; "h" ; 1 ; 1 ) ;
+	hrCount = PatternCount ( mapping ; "h" ) ;
+	hrRaw = Middle ( string ; sHr ; hrCount ) ;
+	hr = Filter ( hrRaw ; "0123456789" ) ;
+	mapping =
+		Case (
+			hrRaw = hr ; mapping ;
+			Replace ( mapping ; sHr ; hrCount ; hr )
+		) ;
+
+/* —————————————————————————————— //
+NAME:
+	TextAsDateSub ( text ; characterMapping ; currentMappingChar )
+
+PURPOSE:
+	
+
+EXAMPLES:
+	TextAsDateSub ( "7/6/08 3:40 PM" ; "7/6/08 hh:ii pp" ; "h" )
+	= "3¶7/6/08 3:ii pp"
+
+HISTORY:
+	Created: 2011-Dec-28 11h06 PST — Donovan Chandler
+*/

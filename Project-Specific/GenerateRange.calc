@@ -1,0 +1,33 @@
+Let ( [
+	valPrev = GetValue ( start ; ValueCount ( start ) ) ;
+	val = valPrev + interval ;
+	weekEnd = WeekOfYear ( "12/31/" & Left ( valPrev ; 4 ) ) ;
+	val =
+		Case (
+			type = "wom" ;
+				If ( Right ( val ; 2 ) ≤ weekEnd ; val ; val + 100 - weekEnd ) ;
+			val
+		) ;
+	result = List ( start ; val )
+	] ;
+	Case (
+		val < end ;
+			GenerateRange ( type ; result ; end ; interval ) ;
+		result
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	GenerateRange ( type ; start ; end ; interval )
+
+PURPOSE:
+	Generates return-delimited list per logic of specified type.
+
+EXAMPLES:
+	GenerateRange ( "wom" ; 200551 ; 200602 ; 1 )
+	= "200551¶200552¶200601¶200602"
+
+HISTORY:
+	Created: 2011-Oct-13 12h56 PST — Donovan A. Chandler
+*/
