@@ -1,8 +1,9 @@
 Let ( [
 	fieldName = GetFieldName ( field ) ;
+	fieldName = If ( fieldName = "?" ; field ; fieldName ) ;
 	fieldList = Substitute ( fieldName ; "::" ; ¶ ) ;
 	table = GetValue ( fieldList ; 1 ) ;
-	field = GetValue ( fieldList ; 2 )
+	field = GetValue ( fieldList ; ValueCount ( fieldList ) )
 	];
 	Lower ( table ) & "." & Lower ( Quote ( field ) )
 )
@@ -17,7 +18,9 @@ PURPOSE:
 
 EXAMPLES:
 	SQLField ( "CONTACT::Name" ) = "contact.\"name\""
+	SQLField ( GetFieldName ( CONTACT::Name" ) ) = "contact.\"name\""
 
 HISTORY:
 	Created: 2011-Nov-04 16h45 PST — Donovan Chandler
+	Modified: 2011-Nov-28 14h20 PST — Donovan Chandler ; added support for field name if reference fails; also returns field name of no table is provided
 */

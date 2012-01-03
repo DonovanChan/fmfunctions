@@ -1,5 +1,6 @@
 Let ( [
 	fieldName = GetFieldName ( field ) ;
+	fieldName = If ( fieldName = "?" ; field ; fieldName ) ;
 	table = Left ( fieldName ; Position ( fieldName ; "::" ; 1 ; 1 ) - 1 )
 	];
 	Lower ( table )
@@ -13,7 +14,8 @@ PURPOSE:
 	Returns name of field's basetable for use in SQL statements.
 
 EXAMPLES:
-	SQLTable ( "CONTACT::Name" ) = "contact"
+	SQLTable ( CONTACT::Name ) = "contact"
+	SQLTable ( GetFieldName ( CONTACT::Name ) ) = "contact"
 
 HISTORY:
 	Created: 2011-Nov-04 16h45 PST — Donovan Chandler
