@@ -1,0 +1,32 @@
+Let ( [
+	array = jsonObject ;
+	name = TextBetween ( array ; "\"" ; ":" ; 1 ) ;
+	name = TrimChars ( Trim ( name ) ; "\"" ) ;
+	eName = Position ( array ; name ; 1 ; 1 ) + Length ( name ) ;
+	value = TextBetween ( array ; ":" ; "," ; 1 ) ;
+	value = TrimChars ( Trim ( value ) ; "\"" ) ;
+	sValue = Position ( array ; value ; eName ; 1 ) ;
+	eValue = If ( sValue > 0 ; Position ( array ; "," ; sValue ; 1 ) ) ;
+	arrayRemaining = Middle ( array ; eValue ; Length ( array ) + 1 ) ;
+	arrayRemaining = TrimChars ( Trim ( arrayRemaining ) ; "\"" )
+	] ;
+	VarSet ( name ; value ; useGlobalVars ) +
+	If ( eValue > 0 and not IsEmpty ( arrayRemaining ) ;
+		JSONObjectToVariables ( arrayRemaining ; useGlobalVars )
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	JSONObjectToVariables ( jsonObject ; useGlobalVars )
+
+PURPOSE:
+	Sets each value of associative array to a variable of same name.
+
+EXAMPLES:
+	JSONObjectToVariables ( "\"name\":\"Bob\"" ; true )
+	// instantiates variable $$_name with value "Bob"
+
+HISTORY:
+	Created: 2012-Jan-04 13h33 PST — Donovan Chandler
+*/
