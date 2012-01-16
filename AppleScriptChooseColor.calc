@@ -1,5 +1,6 @@
 Let ( [
-	db = Get ( FileName ) ;
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
 	table = GetValue ( fieldList ; 1 ) ;
 	field = GetValue ( fieldList ; 2 ) ;
@@ -18,7 +19,7 @@ if fmResult is \"\" then¶
 	set colorArrayNew to adjustColorArray(colorArray,true)¶
 	set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"¶
 end if¶
-setField(\"" & db & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
+setField(\"" & dbName & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
 ¶
 ------------------------------------------------¶
 -- HANDLERS¶

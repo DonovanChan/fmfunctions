@@ -1,0 +1,21 @@
+Let ( [
+	path = Get ( FilePath ) ;
+	sName = Position ( path ; "/" ; Length ( path ) ; -1 ) + 1
+	] ;
+	Middle ( path ; sName ; 999 )
+)
+
+/* —————————————————————————————— //
+NAME:
+	FileNameWithExtension
+
+PURPOSE:
+	Returns file name including extension.
+	Keeps design functions from being fooled by periods in file name.
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2012-Jan-12 14h06 PST — Donovan A. Chandler
+*/

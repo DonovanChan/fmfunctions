@@ -1,0 +1,24 @@
+List (
+	lst ;
+	If ( not ListContains ( lst ; value ) ; value )
+)
+
+/* —————————————————————————————— //
+NAME:
+	ListAddUnique ( lst ; value )
+
+PURPOSE:
+	Appends value to a return-delimited list if it does not already exist.
+	Compares entire value (case-insensitive) to determine match.
+
+EXAMPLES:
+	ListAddUnique ( "dog¶cat" ; "mouse" ) = "dog¶cat¶mouse"
+	ListAddUnique ( "dog¶cat" ; "dog" ) = "dog¶cat"
+	ListAddUnique ( "Dog¶cat" ; "dog" ) = "dog¶cat"
+	ListAddUnique ( "doggie¶cat" ; "dog" ) = "dog¶cat¶doggie"
+	ListAddUnique ( "dog¶cat" ; "dog¶doggie" ) = "dog¶cat¶dog¶doggie"
+
+HISTORY:
+	Created: 2011-June-27 1h00 PDT — L. Allen Poole
+	Modified: 2012-Jan-09 17h05 PST — Donovan Chandler ; Now uses List() for handling empty lines.
+*/

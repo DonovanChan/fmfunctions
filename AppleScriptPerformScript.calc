@@ -8,7 +8,8 @@ Let([
 			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
 			"FileMaker Pro"
 		) ;
-	_file_name = Get ( FileName );
+	_path = Get ( FilePath ) ;
+	_file_name = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	_file_path = FilePathForAppleScript ( Get ( FilePath ) );
 	
 	_field_name_full_list = Substitute( _field_name_full; "::"; ¶ );

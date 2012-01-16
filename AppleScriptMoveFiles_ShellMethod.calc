@@ -1,8 +1,10 @@
 Let ([
-	dbName = Get ( FileName ) ;
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
 	tableName = GetValue ( fieldSplit ; 1 ) ;
-	fieldName = GetValue ( fieldSplit ; 2 )
+	fieldName = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" )
 	];
 "set resultError to null¶
 set filePaths to trimLinesRight(\"" & filePaths & "\")¶
@@ -73,7 +75,7 @@ end fileListToText¶
 ¶
 --Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
-	tell application \"FileMaker Pro Advanced\"¶
+	tell application \"" & fmpVersion & "\"¶
 		tell database (databaseName as text)¶
 			tell table (tableName as text)¶
 				set field fieldName to theValue¶

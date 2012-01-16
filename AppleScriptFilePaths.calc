@@ -1,5 +1,6 @@
 Let ( [
-	dbName = Get ( FileName ) ;
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
 	tableName = GetValue ( fieldSplit ; 1 ) ;
 	fieldName = GetValue ( fieldSplit ; 2 ) ;
@@ -46,7 +47,7 @@ end fileListToText¶
 ¶
 --Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
-	tell application fmpVersion¶
+	tell application " & Quote ( fmpVersion ) & "¶
 		tell database (databaseName as text)¶
 			tell table (tableName as text)¶
 				set field fieldName to theValue¶

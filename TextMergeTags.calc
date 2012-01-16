@@ -1,7 +1,7 @@
 Let ( [
 	tagCount = ValueCount ( mergeTagNames ) ;
 	label = GetValue ( mergeTagNames ; 1 ) ;
-	value = GetValue ( mergeValues ; 1 ) ;
+	value = Evaluate ( GetValue ( mergeValues ; 1 ) ) ;
 	result = Substitute ( text ; mergeTagOpen & label & mergeTagClose ; Quote ( value ) )
 	] ;
 	Case (
@@ -25,7 +25,15 @@ PURPOSE:
 	Replaces mergeLabels in text with corresponding mergeValues
 
 EXAMPLES:
-	
+	TextMergeTags ( "Middle ( {text} ; {start} ; 1 )"
+		; "text¶start"
+		; "\"dog\"¶\"5\""
+		; "{" 
+		; "}"
+	) = "Middle ( \"dog\" ; 5 ; 1 )"
+
+NOTES:
+	mergeValues - each value must be quoted (to escape multi-line values)
 
 HISTORY:
 	Created: 2011-Dec-22 21h31 PST — Donovan A. Chandler

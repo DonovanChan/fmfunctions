@@ -1,0 +1,32 @@
+Let ([
+	name = itemFieldOrName ;
+	field = GetFieldName ( name ) ;
+	field =
+		If (
+			not IsEmpty ( field ) and field ≠ "?";
+			TableOccurrenceBaseTable ( FieldTableOccurrence ( field ) )
+		) ;
+	reference =
+		Case (
+			not IsEmpty ( name ) ; name ;
+			not IsEmpty ( field ) ; Proper ( field ) ;
+			"record"
+		)
+	] ;
+	"Remove " & reference & "?" & ¶ & ¶ &
+	"There is no undo for this action."
+)
+
+/* —————————————————————————————— //
+NAME:
+	MessageRemove ( itemFieldOrName )
+
+PURPOSE:
+	Returns text message for use in dialogs when deleting join records.
+
+EXAMPLES:
+	MessageRemove ( CONTACT_FOCUS::NAME )
+
+HISTORY:
+	Created: 2010-Sep-07 12h00 PST — Donovan A. Chandler
+*/
