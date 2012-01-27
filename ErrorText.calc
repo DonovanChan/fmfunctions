@@ -307,6 +307,24 @@ errorNum = -2761	; "From AppleScript: <name> is illegal as a formal parameter." 
 errorNum = -2762	; "From AppleScript: <name> is not a parameter name for the event <event>." ;
 errorNum = -2763	; "From AppleScript: No result was returned for some argument of this expression." ;
 
+//-- Apple event registry errors
+errorNum = -10000	; "AppleEvent handler failed." ;
+errorNum = -10001	; "A descriptor type mismatch occurred." ;
+errorNum = -10002	; "Invalid key form." ;
+errorNum = -10003	; "Can't set <object or data> to <object or data>. Access not allowed." ;
+errorNum = -10004	; "A privilege violation occurred." ;
+errorNum = -10005	; "The read operation wasn't allowed." ;
+errorNum = -10006	; "Can't set <object or data> to <object or data>." ;
+errorNum = -10007	; "The index of the event is too large to be valid." ;
+errorNum = -10008	; "The specified object is a property, not an element." ;
+errorNum = -10009	; "Can't supply the requested descriptor type for the data." ;
+errorNum = -10010	; "The AppleEvent handler can't handle objects of this class." ;
+errorNum = -10011	; "Couldn't handle this command because it wasn't part of the current transaction." ;
+errorNum = -10012	; "The transaction to which this command belonged isn't a valid transaction." ;
+errorNum = -10013	; "There is no user selection." ;
+errorNum = -10014	; "Handler only handles single objects." ;
+errorNum = -10015	; "Can't undo the previous AppleEvent or user action." ;
+
 //-- Operating System Errors
 errorNum = -34	; "From System: Disk <name> full." ;
 errorNum = -35	; "From System: Disk <name> wasn’t found." ;
