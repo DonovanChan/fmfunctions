@@ -6,19 +6,29 @@ Let ([
 	fieldName = GetValue ( fieldSplit ; 2 ) ;
 	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" )
 	];
-"set resultError to null¶
-set filePaths to trimLinesRight(\"" & filePaths & "\")¶
-set destinationPath to stripStartupDisk(trimLinesRight(\"" & destinationPath & "\"))¶
-set destinationFile to POSIX file destinationPath¶
+"-- Localize parameters
+set resultError to null¶
+set filePaths to \"" & filePaths & "\"¶
+set destinationPath to \"" & destinationPath & "\"¶
 set createDestination to " & GetAsBoolean ( createDestination ) & " as boolean¶
 set copySourceFiles to " & GetAsBoolean ( copySourceFiles ) & " as boolean¶
+set overwrite to " & GetAsBoolean ( overwrite ) & " as boolean¶
+set dbName to \"" & dbName & "\"¶
+set fieldName to \"" & fieldName & "\"¶
+set tableName to \"" & tableName & "\"¶
+¶
+-- Massage parameters¶
+set filePaths to trimLinesRight(filePaths)¶
+set destinationPathPOSIX to stripStartupDisk(trimLinesRight(destinationPath))¶
+set destinationPath to (POSIX file destinationPathPOSIX) as text¶
+set resultError to missing value¶
 ¶
 -- Create or validate directory¶
 if createDestination then¶
-	do shell script \"mkdir -p \" & quoted form of (POSIX path of destinationFile)¶
-else if not fileExists(destinationPath) then¶
-	set resultFinal to \"Error: destinationPath not valid (\" & POSIX path of destinationFile & \")\"¶
-	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+	do shell script \"mkdir -p \" & quoted form of destinationPathPOSIX¶
+else if not fileExists(destinationPathPOSIX) then¶
+	set resultFinal to \"Error: destinationPath not valid (\" & destinationPathPOSIX & \")\"¶
+	setField(dbName, tableName, fieldName, resultFinal)¶
 	return¶
 end if¶
 ¶
@@ -28,33 +38,38 @@ set resultPathList to {}¶
 -- Move each file¶
 repeat with theFileString in fileList¶
 	try¶
-		set theFile to POSIX file stripStartupDisk(theFileString)¶
+		set theFile to POSIX file (stripStartupDisk(theFileString))¶
 		tell application \"Finder\"¶
 			if copySourceFiles then¶
-				copy file theFile to folder destinationFile¶
-				set newFile to (destinationFile as text) & lastOffset(theFile as text, \":\")¶
+				duplicate file theFile to folder destinationPath replacing overwrite¶
+				set newFile to destinationPath & lastOffset(theFile as text, \":\")¶
 			else¶
-				set newFile to move theFile to destinationFile¶
+				set newFile to move file theFile to folder destinationPath replacing overwrite¶
 			end if¶
 		end tell¶
-		set end of resultPathList to newfile¶
+		set end of resultPathList to newFile¶
 	on error errMsg number errNum¶
-		-- Don't worry if file already exists¶
-		if errNum is not -15267 then¶
+		-- Optionally delete file¶
+		if errNum is -15267 and copySourceFiles is false then¶
+			tell application \"Finder\" to delete theFile¶
+		else¶
 			set resultError to \"Error \" & errNum & \": \" & errMsg¶
+		end if¶
+		if errNum is -10000 then¶
+			set resultError to resultError & return & \"Invalid path: \" & theFileString¶
 		end if¶
 	end try¶
 end repeat¶
 ¶
 -- Determine result¶
-if resultError is not null then¶
+if resultError is not missing value then¶
 	set resultFinal to resultError¶
 else¶
 	set resultFinal to my fileListToText(resultPathList, true)¶
 end if¶
 ¶
 -- Send result to FileMaker¶
-	setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+setField(dbName, tableName, fieldName, resultFinal)¶
 ¶
 -- Handler: Returns list of files as return-delimited text string¶
 --	addStartupDrive allows prepending of disk name to each path¶
@@ -89,12 +104,16 @@ to stripStartupDisk(thePath)¶
 	tell application \"System Events\"¶
 		set hdName to name of startup disk¶
 	end tell¶
-	set hdLen to length of hdName¶
-	set colonPos to offset of \":\" in pathText¶
-	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
-	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
-	if text 1 thru hdLen of pathText is equal to hdName then¶
-		set pathText to text (hdLen + 1) thru -1 of pathText¶
+	set hdPos to offset of hdName in pathText¶
+	if hdPos is 0 then¶
+		if character 1 of pathText is not \"/\" then¶
+			set pathText to \"/\" & pathText¶
+		else¶
+			set pathText to pathText¶
+		end if¶
+	else¶
+		set pathPos to hdPos + (length of hdName)¶
+		set pathText to text pathPos thru -1 of pathText¶
 	end if¶
 	return pathText¶
 end stripStartupDisk¶
@@ -135,7 +154,7 @@ end lastOffset"
 
 /* —————————————————————————————— //
 NAME:
-	AppleScriptMoveFiles ( resultFieldName ; filePaths ; destinationPath ; createDestination ; copySourceFiles )
+	AppleScriptMoveFiles ( resultFieldName ; filePaths ; destinationPath ; createDestination ; copySourceFiles ; overwrite )
 
 PURPOSE:
 	Moves files to new directory. Returns list of paths to new file locations.
@@ -144,7 +163,8 @@ EXAMPLES:
 	
 
 NOTES:
-	Will NOT override file if it already exists in location.
+	Will replace existing files in destination if overwrite = True.
+	Else, will delete file from original location unless copySourceFiles = True.
 	Files not moved/copied will not be listed in the result.
 
 HISTORY:
