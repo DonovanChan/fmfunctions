@@ -1,0 +1,42 @@
+Let ( [
+	_S = If ( GetAsBoolean ( isGlobal ) ; "$$" ; "$" )
+	; exError = "IsEmpty ( " & _S & name & ") or " & _S & name & " = \"?\""
+	; exSet =
+		Case (
+			IsEmpty ( type ) or type = "text" or type = "t"
+				; "GetAsText ( "
+			; type = "number" or type = "n"
+				; "GetAsNumber ( "
+			; type = "date" or type = "d"
+				; "GetAsDate ( "
+			; type = "time" or type = "i"
+				; "GetAsTime ( "
+			; type = "timestamp" or "m"
+				; "GetAsTimestamp ( "
+		)
+  ] ;
+  Evaluate (
+    "Let([" & _S & name & "=" & exSet & Quote ( value ) & ") ];" & exError & ")"
+  )
+)
+
+/* —————————————————————————————— //
+NAME:
+	VarSet ( name ; value ; type ; isGlobal )
+
+PURPOSE:
+	Instantiates local or global variable, casting for type and performing validation
+
+OUTPUT: 
+	Assigns local or global variable, returning "1" if variable is empty or equals "?" (else 0)
+
+EXAMPLES:
+	// Set $$_tab_list to "tab_1" as text
+	VarSet ( "_tab_list" ; "tab_1" ; "" ; 1 ) // = 0
+	
+	// Attempt to set $date to "1/1/12" as date
+	VarSet ( "date" ; "1/1/" ; "d" ; 1 ) // = 1
+
+HISTORY:
+	Created 2012-Jan-23 15h07 PST — Donovan Chandler
+*/
