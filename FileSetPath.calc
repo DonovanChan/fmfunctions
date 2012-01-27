@@ -22,7 +22,7 @@ Let ( [
 			directory = "drive"		; Get ( SystemDrive ) ;
 			directory = "filemaker"	; Get ( FileMakerPath ) ;
 			directory = "file"			; Get ( FilePath ) ;
-			directory = "parentDir"	; Get ( FilePath ) ;
+			directory = "parent"	; Get ( FilePath ) ;
 		) ;
 	dirPathB =
 		Substitute ( dirPathA ;
@@ -33,7 +33,7 @@ Let ( [
 		) ;
 	directoryPath =
 		Case (
-			directory = "parentDir" ; Left ( dirPathB ; Position ( dirPathB ; "/" ; Length ( dirPathB) ; -1 )) ;
+			directory = "parent" ; Left ( dirPathB ; Position ( dirPathB ; "/" ; Length ( dirPathB) ; -1 )) ;
 			dirPathB
 		) ;
 	file = If ( Left ( file ; 1 ) = "/" ; Middle ( file ; 2 ; 999 ) ; file ) ;
