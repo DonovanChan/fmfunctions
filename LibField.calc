@@ -1,0 +1,15 @@
+GetFieldName ( FOCUS::LIBRARY_CODE_REP ) & "[" & index & "]"
+
+/* —————————————————————————————— //
+NAME:
+	LibField ( index )
+
+PURPOSE:
+	Returns name of field from LIBRARY record with specified index value.
+
+EXAMPLES:
+	LibField ( 1 ) = "FOCUS::LIBRARY_CODE_REP[1]"
+
+HISTORY:
+	Created: 2010-Aug-24 12h12 PST — Donovan A. Chandler
+*/

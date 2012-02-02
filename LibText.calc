@@ -1,0 +1,12 @@
+FOCUS::LIBRARY_CODE_REP[index]
+
+/* —————————————————————————————— //
+NAME:
+	LibText ( index )
+
+PURPOSE:
+	Returns text from LIBRARY record with specified index value.
+
+HISTORY:
+	Created: 2010-Aug-24 12h12 PST — Donovan A. Chandler
+*/
