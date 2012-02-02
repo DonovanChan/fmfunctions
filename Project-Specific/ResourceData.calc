@@ -1,6 +1,6 @@
 Case(
-	dataType = "text"; FOCUS::RESOURCE_TEXT[index];
-	dataType = "name"; "FOCUS::RESOURCE_TEXT[" & index & "]"
+	dataType = "text" ; FOCUS::LIBRARY_CODE_REP[index] ;
+	dataType = "name" ; "FOCUS::LIBRARY_CODE_REP[" & index & "]"
 )
 
 /* —————————————————————————————— //
@@ -14,7 +14,7 @@ EXAMPLES:
 	Where RESOURCE record has index 1...
 	
 	ResourceData( 1; "text" ) returns record text
-	ResourceData( 1; "name" ) = "FOCUS::RESOURCE_TEXT[1]"
+	ResourceData( 1; "name" ) = "FOCUS::LIBRARY_CODE_REP[1]"
 
 HISTORY:
 	Created: 2010-Aug-24 12h12 PST — Donovan A. Chandler

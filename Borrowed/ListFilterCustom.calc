@@ -1,5 +1,5 @@
 /* FilterList ( ListA ; Attribute ; ListB ; CaseSensitive ) .v2.0
-FilterList () requires list.custom ( Start ; End ; Function )*/
+FilterList () requires ListCustom ( Start ; End ; Function )*/
 
 // Limited => ListA < 18700 values and ListB < 18700 values too
 // Attributes : Equals - NotEquals - Contains - NotContains - BeginsWith - NotBeginsWith - EndsWith - NotEndsWith

@@ -1,35 +1,35 @@
 Let ( [
-  index = repetition ; 
-  marker = "‡‡RESOURCE[" & index & "]‡‡" ; 
-  markerPath = "‡‡RESOURCE_PATH[" & index & "]‡‡" ; 
-  textNew =
-    //-- Find and replace marker for this index ( assuming there's only one)
-    Case ( 
-      PatternCount ( text ; marker ) ; 
-        Substitute ( text ; marker ; ResourceInclude ( index ; 0 )) ; 
-      PatternCount ( text ; markerPath ) ; 
-        Substitute ( text ; markerPath ; ResourceInclude ( index ; 1 )) ; 
-      text
-    )
-  ] ; 
-  //-- Continue thru other Resources
-  Case ( 
-    PatternCount ( textNew ; "‡‡RESOURCE" ) ; 
-      ResourceMergeLoop ( textNew ; repetition + 1 ) ; 
-    textNew
-  )
+	index = repetition ; 
+	marker = "‡‡RESOURCE[" & index & "]‡‡" ; 
+	markerPath = "‡‡RESOURCE_PATH[" & index & "]‡‡" ; 
+	textNew =
+		//-- Find and replace marker for this index (assuming there's only one)
+		Case (
+			Position ( text ; marker ; 1 ; 1 ) ;
+				Substitute ( text ; marker ; ResourceInclude ( index ; 0 ) ) ;
+			Position ( text ; markerPath ; 1 ; 1 ) ;
+				Substitute ( text ; markerPath ; ResourceInclude ( index ; 1 ) ) ; 
+			text
+		)
+	] ; 
+	//-- Continue thru other Resources
+	Case ( 
+		Position ( textNew ; "‡‡RESOURCE" ; 1 ; 1 ) ; 
+			ResourceMergeLoop ( textNew ; repetition + 1 ) ; 
+		textNew
+	)
 )
 
 /* —————————————————————————————— //
 NAME:
-  ResourceMergeLoop ( text ; repetition )
+	ResourceMergeLoop ( text ; repetition )
 
 PURPOSE:
-  Performs operations for ResourceMerge ( ).
+	Performs operations for ResourceMerge ( ).
 
 EXAMPLES:
-  
+	
 
 HISTORY:
-  Created: 2010-Sep-01 11h27 PST — Donovan Chandler
+	Created: 2010-Sep-01 11h27 PST — Donovan Chandler
 */

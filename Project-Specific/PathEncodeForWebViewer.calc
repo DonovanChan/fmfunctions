@@ -1,10 +1,14 @@
-Let([
-	_path = GetAsURLEncoded( pathString );
-	_path = Substitute ( _path; ["file://"; "file:/"]; ["file:/";"file://"] )
-	];
+Let ( [
+	_path = GetAsURLEncoded ( pathString ) ;
+	_path =
+		Substitute (
+			_path ;
+			[ "file://" ; "file:/" ] ;
+			[ "file:/" ; "file://" ]
+		)
+	] ;
 	_path
 )
-
 /* —————————————————————————————— //
 NAME:
 	PathEncodeForWebViewer ( pathString )

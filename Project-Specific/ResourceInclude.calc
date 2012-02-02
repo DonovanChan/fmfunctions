@@ -1,39 +1,38 @@
 Let ( [
-  language = FOCUS::RESOURCE_LANGUAGE[index] ;
-  text = Case ( not urlOnly ; FOCUS::RESOURCE_TEXT[index] ) ;
-  url = Case ( urlOnly ; FOCUS::RESOURCE_URL[index] )
-  ] ;
-  Case (
-    language = "CSS" ;
-      Case ( 
-        urlOnly ; 
-          "<link rel=\"stylesheet\" type=\"text/css\" href='" & PathEncodeForWebViewer ( url ) & "'></link>" ;
-        "<style type=\"text/css\">¶" & text & "¶</style>"
-      ) ;
-
-    language = "JavaScript"  
-      Case ( 
-        urlOnly ; 
-          "<script src='" & PathEncodeForWebViewer ( url ) & "'></script>" ;
-        "<script type=\"text/javascript\">¶" & text & "¶</script>"
-      )
-  )
+	language = FOCUS::LIBRARY_LANGUAGE_REP[index] ;
+	text = Case ( not urlOnly ; FOCUS::LIBRARY_CODE_REP[index] ) ;
+	url = text //Case ( urlOnly ; FOCUS::RESOURCE_URL[index] )
+	] ;
+	Case (
+		language = "CSS" ;
+			Case ( 
+				urlOnly ; 
+					"<link rel=\"stylesheet\" type=\"text/css\" href='" & PathEncodeForWebViewer ( url ) & "'></link>" ;
+				"<style type=\"text/css\">¶" & text & "¶</style>"
+			) ;
+		language = "JavaScript" ;
+			Case ( 
+				urlOnly ; 
+					"<script src='" & PathEncodeForWebViewer ( url ) & "'></script>" ;
+				"<script type=\"text/javascript\">¶" & text & "¶</script>"
+			)
+	)
 )
 
 /* —————————————————————————————— //
 NAME:
-  ResourceInclude ( index ; urlOnly )
+	ResourceInclude ( index ; urlOnly )
 
 PURPOSE:
-  Wraps text or url from Resource record with specified index in HTML include statement.
+	Wraps text or url from Resource record with specified index in HTML include statement.
 
 EXAMPLES:
-  
-  
+	
+	
 DEPENDENCIES:
-  Custom Functions: PathEncodeForWebViewer ( )
-  Fields: FOCUS fields that store RESOURCE data
+	Custom Functions: PathEncodeForWebViewer ( )
+	Fields: FOCUS fields that store RESOURCE data
 
 HISTORY:
-  Created: 2010-Aug-28 16h24 PST — Donovan A. Chandler
+	Created: 2010-Aug-28 16h24 PST — Donovan A. Chandler
 */
