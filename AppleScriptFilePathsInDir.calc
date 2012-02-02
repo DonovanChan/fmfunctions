@@ -1,33 +1,23 @@
 Let ( [
-	path = Get ( FilePath ) ;
-	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
-	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
-	tableName = GetValue ( fieldSplit ; 1 ) ;
-	fieldName = GetValue ( fieldSplit ; 2 ) ;
-	fmpVersion =
+	  path = Get ( FilePath )
+	; dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 )
+	; fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ )
+	; tableName = GetValue ( fieldSplit ; 1 )
+	; fieldName = GetValue ( fieldSplit ; 2 )
+	; fmpVersion =
 		Case (
-			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ); "FileMaker Pro Advanced";
-			"FileMaker Pro"
-		) ;
-	
-	message = If ( IsEmpty ( message ) ; "Please select a folder." ; message ) ;
-	defaultDirPath = GetValue ( defaultDirPath ; 1 ) ;
-	showInvisibles = (showInvisibles = True) ;
-	multipleSelection = (multipleSelection = True)
-	];
-"set myFolder to {}¶
-set myFolder to myFolder & choose folder with prompt \"" & message & "\" ¬¶" &
-If ( not IsEmpty ( defaultDirPath ) ;
-	"default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") ¬¶"
-) &
-"invisibles " & showInvisibles & " ¬¶
-multiple selections allowed " & multipleSelection & ¶ &
-	"tell application \"Finder\"¶
-	set theItems to {}¶
-	repeat with dir in myFolder¶
-		set theItems to theItems & every file of folder dir¶
-	end repeat¶
-	set filePaths to my fileListToText(theItems,true)¶
+			PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" )
+				; "FileMaker Pro Advanced"
+			; "FileMaker Pro"
+		)
+	; dirPath = GetValue ( dirPath ; 1 )
+	] ;
+"set dirPath to " & Quote ( dirPath ) & "¶
+set dirPath to stripStartupDisk(dirPath)¶
+tell application \"Finder\"¶
+	set dirAlias to (POSIX file dirPath) as alias¶
+	set theItems to every file of folder dirAlias¶
+	set filePaths to my fileListToText(theItems, true)¶
 end tell¶
 setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", filePaths)¶
 ¶
@@ -76,14 +66,14 @@ end stripStartupDisk"
 
 /* —————————————————————————————— //
 NAME:
-	AppleScriptFilePathsInDir ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+	AppleScriptFilePathsInDir ( resultFieldName ; dirPath )
 
 PURPOSE:
-	Prompts user for directory and returns paths of each file in first level of directory (as return-delimited list)
+	Returns path of each file in first level of directory (as return-delimited list)
 
 EXAMPLES:
 	
 
 HISTORY:
-	Created: 2011-Jun-21 17h49 PST — Donovan A. Chandler
+	Created: 2012-Jan-19 20h16 PST — Donovan Chandler
 */
