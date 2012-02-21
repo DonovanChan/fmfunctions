@@ -1,5 +1,5 @@
 Let ( [
-	path = Get ( FilePath ) ;
+	path = Get ( FilePath ) ; // parse name from path in case name has "." in it
 	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
 	tableName = GetValue ( fieldSplit ; 1 ) ;
@@ -163,8 +163,8 @@ end stripStartupDisk¶
 --	Use 'info for' command to see type idenfier of a file¶
 --	More info: http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW4¶
 on utiList(labelText)¶
-	set labels to {\"txt\",\"xml\",\"html\",\"log\"}¶
-	set values to {\"public.plain-text\",\"public.xml\",\"public.html\",\"com.apple.log\"}¶
+	set labels to {\"txt\",\"xml\",\"html\",\"log\",\"webarchive\",\"email archive\"}¶
+	set values to {\"public.plain-text\",\"public.xml\",\"public.html\",\"com.apple.log\",\"com.apple.webarchive\",\"com.apple.mail.email\"}¶
 	set newText to searchReplaceText(labelText,labels,values)¶
 	set myResult to paragraphs of newText¶
 end¶
