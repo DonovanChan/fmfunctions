@@ -42,7 +42,7 @@ repeat with theFileString in fileList¶
 		tell application \"Finder\"¶
 			if copySourceFiles then¶
 				duplicate file theFile to folder destinationPath replacing overwrite¶
-				set newFile to destinationPath & lastOffset(theFile as text, \":\")¶
+				set newFile to destinationPath & my fileName(theFile)¶
 			else¶
 				set newFile to move file theFile to folder destinationPath replacing overwrite¶
 			end if¶
@@ -71,7 +71,21 @@ end if¶
 -- Send result to FileMaker¶
 setField(dbName, tableName, fieldName, resultFinal)¶
 ¶
--- Handler: Returns list of files as return-delimited text string¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+-- HANDLER: Returns true if file or folder exists¶
+on fileExists(fileOrFolderPOSIXPath)¶
+	try¶
+		alias (POSIX file fileOrFolderPOSIXPath)¶
+		return true¶
+	on error¶
+		return false¶
+	end try¶
+end fileExists¶
+¶
+-- HANDLER: Returns list of files as return-delimited text string¶
 --	addStartupDrive allows prepending of disk name to each path¶
 to fileListToText(theList, addStartupDrive)¶
 	set theText to \"\"¶
@@ -87,9 +101,25 @@ to fileListToText(theList, addStartupDrive)¶
 	return trimLinesRight(theText)¶
 end fileListToText¶
 ¶
---Handler: Sets FileMaker field value¶
+-- HANDLER: Returns name of file in path¶
+--	Path can be AppleScript HFS (\":\") or POSIX (\"/\")¶
+on fileName(pathOrFile)¶
+	set pathStr to pathOrFile as text¶
+	if (offset of \":\" in pathStr) > 0 then¶
+		set delimNew to \":\"¶
+	else¶
+		set delimNew to \"/\"¶
+	end if¶
+	set delimDefault to AppleScript's text item delimiters¶
+	set AppleScript's text item delimiters to delimNew¶
+	set fileName to text item -1 of pathStr¶
+	set AppleScript's text item delimiters to delimDefault¶
+	return fileName¶
+end fileName¶
+¶
+-- HANDLER: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
-	tell application " & Quote ( fmpVersion ) & "¶
+	tell application \"" & fmpVersion & "\"¶
 		tell database (databaseName as text)¶
 			tell table (tableName as text)¶
 				set field fieldName to theValue¶
@@ -98,58 +128,29 @@ on setField(databaseName, tableName, fieldName, theValue)¶
 	end tell¶
 end setField¶
 ¶
--- Handler: Returns path as text with startup disk removed¶
+-- HANDLER: Returns path as text with startup disk removed¶
 to stripStartupDisk(thePath)¶
 	set pathText to thePath as text¶
 	tell application \"System Events\"¶
 		set hdName to name of startup disk¶
 	end tell¶
-	set hdPos to offset of hdName in pathText¶
-	if hdPos is 0 then¶
-		if character 1 of pathText is not \"/\" then¶
-			set pathText to \"/\" & pathText¶
-		else¶
-			set pathText to pathText¶
-		end if¶
-	else¶
-		set pathPos to hdPos + (length of hdName)¶
-		set pathText to text pathPos thru -1 of pathText¶
+	set hdLen to length of hdName¶
+	set colonPos to offset of \":\" in pathText¶
+	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
+	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
+	if text 1 thru hdLen of pathText is equal to hdName then¶
+		set pathText to text (hdLen + 1) thru -1 of pathText¶
 	end if¶
 	return pathText¶
 end stripStartupDisk¶
 ¶
--- Handler: Returns true if file or folder exists¶
-on fileExists(fileOrFolderPOSIXPath)¶
-	try¶
-		alias (POSIX file fileOrFolderPOSIXPath)¶
-		return true¶
-	on error¶
-		return false¶
-	end try¶
-end fileExists¶
-¶
--- Handler: Removes trailing newlines¶
+-- HANDLER: Removes trailing newlines¶
 to trimLinesRight(theText)¶
 	repeat while theText ends with return¶
 		set theText to theText's text 1 thru -2¶
 	end repeat¶
 	return theText¶
-end trimLinesRight¶
-¶
--- HANDLER: Returns offset of last occurrence of character¶
-on lastOffset(theText, char)¶
-	try¶
-		set len to count of theText¶
-		set reversed to reverse of characters of theText as string¶
-		set last_occurrence to len - (offset of char in reversed) + 1¶
-		if last_occurrence > len then¶
-			return 0¶
-		end if¶
-	on error¶
-		return 0¶
-	end try¶
-	return last_occurrence¶
-end lastOffset"
+end trimLinesRight"
 )
 
 /* —————————————————————————————— //
