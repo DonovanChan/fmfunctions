@@ -1,0 +1,17 @@
+Let ( [
+	path = Get ( FilePath ) ;
+	pathNew = PathStripPrefix ( path )
+	] ;
+	"fmp://" & Get ( AccountName ) & "" & "@" & pathNew & "?script=" & script & "&param=" & parameter
+)
+
+/* __________________________________________________
+
+NAME:	URLSelf ( script ; parameter )
+PURPOSE:	Returns fmp:// url for calling script in current FileMaker file.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-04-27 11:56 PST - Donovan Chandler
+	Modified:	
+*/

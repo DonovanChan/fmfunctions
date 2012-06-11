@@ -1,0 +1,22 @@
+If (
+	not IsHosted ;
+		"path to exported file" ;
+	
+	"Data:text/html," &
+	WebNavHeaderSub ( 
+		CodeMerge ( "‡‡CODE[1]‡‡" ) ;
+		FOCUS::HEADER_LABELS ;
+		".  nav . header" ;
+		FOCUS::HEADER_INSTRUCTIONS
+	)
+)
+
+/* __________________________________________________
+
+NAME:	WebNavHeader
+PURPOSE:	Generates HTML for navigation header in web viewer.
+NOTES:	
+HISTORY:
+	Created:	2012-04-14 14:15 PST - Donovan Chandler
+	Modified:	
+*/

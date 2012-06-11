@@ -5,22 +5,17 @@ Let ( [
 	table = GetValue ( fieldList ; 1 ) ;
 	field = GetValue ( fieldList ; ValueCount ( fieldList ) )
 	];
-	Lower ( table ) & "." & Lower ( Quote ( field ) )
+	Lower ( table ) & ".\"" & Lower ( field ) & "\""
 )
 
-/* —————————————————————————————— //
-NAME:
-	sqlField ( field )
+/* __________________________________________________
 
-PURPOSE:
-	Returns name of field for use in SQL statements.
-	Removes table name and wraps in quotes (in case field = reserved word)
-
+NAME:		SQLField ( field )
+PURPOSE:	Returns name of field for use in SQL statements. Accepts field or name of field.
 EXAMPLES:
 	SQLField ( "CONTACT::Name" ) = "contact.\"name\""
 	SQLField ( GetFieldName ( CONTACT::Name" ) ) = "contact.\"name\""
-
 HISTORY:
-	Created: 2011-Nov-04 16h45 PST — Donovan Chandler
-	Modified: 2011-Nov-28 14h20 PST — Donovan Chandler ; added support for field name if reference fails; also returns field name of no table is provided
+	Created:	2011-11-04 16:45 PST - Donovan Chandler
+	Modified:	2011-11-28 14:20 PST - Donovan Chandler ; added support for field name if reference fails; also returns field name of no table is provided
 */

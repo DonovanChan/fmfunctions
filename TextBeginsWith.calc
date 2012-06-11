@@ -1,0 +1,20 @@
+Let ( [
+	len = Length ( matchString )
+	] ;
+	Left ( text ; len ) = matchString
+)
+
+/* —————————————————————————————— //
+NAME:
+	TextBeginsWith ( text ; matchString )
+
+PURPOSE:
+	Returns True if test begins with matchString
+
+EXAMPLES:
+	TextBeginsWith ( "doggie" ; "Dog" ) // = True
+	TextBeginsWith ( "doggie" ; "dot" ) // = False
+
+HISTORY:
+	Created: 2012-Feb-02 10h36 PST — Donovan A. Chandler
+*/

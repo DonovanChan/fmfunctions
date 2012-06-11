@@ -1,0 +1,40 @@
+Let([
+	win = Abs ( Get ( SystemPlatform ) ) = 2 ;
+	slash = If ( win ; "\\" ; "/" ) ;
+	
+	//-- Remove prefixes
+	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
+	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
+	path = If ( Left ( path ; 1 ) ≠ slash ; slash ) & path ;
+
+	//-- Remove name of system drive
+	disk = Get ( SystemDrive ) ;
+	posDrive = Position ( path ; disk ; 1 ; 1 ) ;
+	path =
+		If (
+			posDrive = 0 ; path ;
+			Middle ( path ; Position ( path ; "/" ; posDrive + 1 ; 1 ) ; 999 )
+		)
+	] ;
+	Case (
+		IsEmpty ( path ) ;
+			"" ;
+		path
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	PathWithDisk ( path )
+
+PURPOSE:
+	Converts path to POSIX style for use in plug-ins, etc.
+
+EXAMPLES:
+	PathWithDisk ( "/Macintosh HD/Users/Admin/Desktop/text.txt" )
+	// (Mac OS)	= "/Macintosh HD/Users/Admin/Desktop/text.txt"
+	// (Windows)	= "\Macintosh HD\Users\Admin\Desktop\text.txt"
+
+HISTORY:
+	Created: 2010-Mar-27 14h30 PST - Donovan A. Chandler
+*/

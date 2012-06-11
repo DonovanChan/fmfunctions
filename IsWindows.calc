@@ -1,0 +1,15 @@
+Abs ( Get ( SystemPlatform ) ) = 2
+
+/* —————————————————————————————— //
+NAME:
+	IsWindows ()
+
+PURPOSE:
+	Returns true if operating system is Windows
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2012-Feb-03 22h32 PST — Donovan A. Chandler
+*/

@@ -4,16 +4,12 @@ Let ([
   $$_script_triggers_disabled
 )
 
-/* —————————————————————————————— //
-NAME:
-	ScriptTriggersOn ( )
+/* __________________________________________________
 
-PURPOSE:
-	Sets boolean flag to False, allowing triggered scripts to execute.
-
+NAME:		ScriptTriggersOn ( )
+PURPOSE:	Sets boolean flag to False, allowing triggered scripts to execute.
 EXAMPLES:
 	ScriptTriggersOn()
-
 HISTORY:
-	Created: 2010-Nov-23 09h20 PST — Donovan A. Chandler
+	Created:	2010-11-23 09:20 PST - Donovan A. Chandler
 */

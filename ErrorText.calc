@@ -365,25 +365,19 @@ errorNum = -30720	; "From System: Invalid date and time <date string>."
 
 )
 
-/* —————————————————————————————— //
-NAME:
-	ErrorText ( errorNum )
+/* __________________________________________________
 
-PURPOSE:
-	Returns descriptions for codes from FileMaker 10 help text (see http://www.filemaker.com/help/html/error_codes.html#1027502).  Very useful is displaying errors to users and reporting in logs to make the codes intelligible.
-	Note that a negative value is possible (-1), so checks for healthy errors should always take this form:
-		Case ( $_error = 0	; "Healthy"	; "Unhealthy" )
-
+NAME:		ErrorText ( errorNum )
+PURPOSE:	Returns descriptions for codes from FileMaker help text.
 EXAMPLES:
 	ErrorText ( 112 ) = "Window is missing"
-
 NOTES:
+	For FileMaker error codes, see http://www.filemaker.com/help/html/error_codes.html#1027502
 	For AppleScript and System error codes, see http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_error_codes.html%23//apple_ref/doc/uid/TP40000983-CH220-SW5
-
 HISTORY:
-	Created: ? — Jeremiah Small, Soliant Consulting, from briandunning.com.  Updated for FMP10.
-	Modified: 2010-Jan-29 17h00 PST — Will M. Baker.  Added white space and indents.
-	Modified: 2011-Mar-31 09h57 PST — Donovan Chandler.  Added AppleScript and Custom sections.  Replaced FileMaker Calc section with definitions for FMP 11.
-	Modified: 2011-Jun-29 10h32 PST — Donovan Chandler.  Added complete AppleScript and OS sections.
-	Modified: 2011-Nov-14 11h17 PST — Donovan Chandler.  Added Apple event errors.
+	Created:	? - Jeremiah Small, Soliant Consulting, from briandunning.com.  Updated for FMP10.
+	Modified:	2010-01-29 17:00 PST - Will M. Baker : Added white space and indents.
+	Modified:	2011-03-31 09:57 PST - Donovan Chandler : Added AppleScript and Custom sections.  Replaced FileMaker Calc section with definitions for FMP 11.
+	Modified:	2011-06-29 10:32 PST - Donovan Chandler : Added complete AppleScript and OS sections.
+	Modified:	2011-11-14 11:17 PST - Donovan Chandler : Added Apple event errors.
 */

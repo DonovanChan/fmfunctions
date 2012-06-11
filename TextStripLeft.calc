@@ -4,13 +4,13 @@ Case (
 	text
 )
 
-/* —————————————————————————————— //
-NAME:
-	TextStripLeft ( text ; charToStrip )
-	
-PURPOSE:
-	Strips all occurrences of character from beginning of text
+/* __________________________________________________
+
+NAME:	TextStripLeft ( text ; charToStrip )
+PURPOSE:	Strips all occurrences of character from beginning of text
+EXAMPLES:
 	
 HISTORY:
-	Created: 2011-Jul-09 21h26 PST — Donovan Chandler
+	Created:	2011-07-09 21:26 PST - Donovan Chandler
+	Modified:	
 */

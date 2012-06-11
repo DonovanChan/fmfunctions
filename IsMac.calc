@@ -1,0 +1,9 @@
+Abs ( Get ( SystemPlatform ) ) = 1
+
+/* __________________________________________________
+
+NAME:	IsMac ()
+PURPOSE:	Returns 1 (True) if operating system is Mac OS.
+HISTORY:
+	Created:	2011-05-13 18:18 PST - Donovan A. Chandler
+*/

@@ -1,0 +1,17 @@
+Case(
+	linkOnly; "‡‡CODE_LINK[" & index & "]‡‡";
+	"‡‡CODE[" & index & "]‡‡"
+)
+
+/* __________________________________________________
+
+NAME:	CodeLabel ( index ; linkOnly )
+PURPOSE:	Returns merge placeholder for LIBRARY_CODE record of specified index.
+EXAMPLES:
+	//-- Merge value from LIBRARY_CODE::CODE
+	CodeMergeLabel ( 1 ; False ) = "‡‡CODE[1]‡‡"
+	//-- Merge value from LIBRARY_CODE::NAME
+	CodeMergeLabel ( 1 ; True ) = "‡‡CODE_LINK[1]‡‡"
+HISTORY:
+	Created:	2010-08-27 20:32 PST - Donovan A. Chandler
+*/

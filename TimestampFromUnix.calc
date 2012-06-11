@@ -1,0 +1,21 @@
+Let ( [
+	unixDiff = 62135596800 // GetAsNumber ( GetaSTimestamp ( "1/1/1970" ) )
+	; timezoneDiff = 60 * 60 * currentTimezone
+	] ;
+	GetAsTimestamp ( unixTimestampNumber + unixDiff + timezoneDiff )
+)
+
+/* —————————————————————————————— //
+NAME:
+	TimestampFromUnix ( unixTimestampNumber ; currentTimezone )
+
+PURPOSE:
+	Converts unix timestamp ("epoch time") to FileMaker timestamp.
+	Epoch time is stored as the number of seconds since midnight 1/1/1970 UTC/GMT.
+
+EXAMPLES:
+	TimestampFromUnix ( 1329931434 ; -8 ) = "2/22/2012 9:23:53 AM"
+
+HISTORY:
+	Created: 2012-Feb-22 14h29 PST — Donovan A. Chandler
+*/

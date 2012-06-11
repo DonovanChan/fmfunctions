@@ -1,0 +1,128 @@
+Let ( [
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
+	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	table = GetValue ( fieldSplit ; 1 ) ;
+	field = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ) ; " Advanced" )
+	] ;
+"set fmresult to missing value¶
+set theSubject to " & Quote ( subject ) & "¶
+set theSender to " & Quote ( from ) & "¶
+set theRecipients to split(" & Quote ( to ) & ",\"\¶\")¶
+set theCCRecipients to split(" & Quote ( cc ) & ",\"\¶\")¶
+set theHTML to " & Quote ( htmlBody ) & "¶
+set theHTML to searchReplaceText(theHTML,\"\¶\",return)¶
+set preview to " & GetAsBoolean ( preview ) & " as boolean¶
+tell application \"Mail\"¶
+	set theMessage to make new outgoing message with properties {subject:theSubject, html content:theHTML, visible:preview, sender:theSender}¶
+	tell theMessage¶
+		repeat with thisRecipient in theRecipients¶
+			set thisName to my textBetween(thisRecipient,\"\",\" <\")¶
+			if thisName is \"\" then¶
+				set thisAddr to thisRecipient¶
+			else¶
+				set thisAddr to my textBetween(thisRecipient,\"<\",\">\")¶
+			end if¶
+			make new to recipient at end of to recipients with properties {name:thisName, address:thisAddr}¶
+		end repeat¶
+		repeat with thisCCRecipient in theCCRecipients¶
+			set thisName to my textBetween(thisCCRecipient,\"\",\" <\")¶
+			if thisName is \"\" then¶
+				set thisAddr to thisCCRecipient¶
+			else¶
+				set thisAddr to my textBetween(thisCCRecipient,\"<\",\">\")¶
+			end if¶
+			make new to recipient at end of cc recipients with properties {name:thisName, address:thisAddr}¶
+		end repeat¶
+	end tell¶
+	if preview is false then send theMessage¶
+end tell¶
+¶
+-- Send result to FileMaker¶
+if fmresult is not missing value then¶
+	setField(\"" & dbName & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
+end if¶
+¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+-- HANDLER: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application " & Quote ( fmpVersion ) & "¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField¶
+¶
+-- HANDLER: Splits string into array by delimiter¶
+to split(someText, delimiter)¶
+	set AppleScript's text item delimiters to delimiter¶
+	set someText to someText's text items¶
+	set AppleScript's text item delimiters to {\"\"}¶
+	return someText¶
+end split¶
+¶
+-- HANDLER: Returns text between first occurrences of openDelim and closeDelim¶
+on textBetween(theText, openDelim, closeDelim)¶
+	if openDelim is \"\" then¶
+		set oStart to 1¶
+	else¶
+		set oStart to offset of openDelim in theText¶
+	end if¶
+	if oStart = 0 then return \"\"¶
+	set oStart to oStart + (length of openDelim)¶
+	if closeDelim is \"\" then¶
+		set oEnd to (length of theText)¶
+	else¶
+		set oEnd to offset of closeDelim in (text (oStart + 1) thru (length of theText) of theText)¶
+		if oEnd = 0 then return \"\"¶
+		set oEnd to oEnd + oStart - 1¶
+	end if¶
+	set result to text oStart thru oEnd of theText¶
+end textBetween¶
+¶
+-- HANDLER: Searches and replaces string within text block¶
+--	Accepts lists in searchString and replaceString¶
+to searchReplaceText(theText, searchString, replaceString)¶
+	set searchString to searchString as list¶
+	set replaceString to replaceString as list¶
+	set theText to theText as text¶
+	¶
+	set oldTID to AppleScript's text item delimiters¶
+	repeat with i from 1 to count searchString¶
+		set AppleScript's text item delimiters to searchString's item i¶
+		set theText to theText's text items¶
+		set AppleScript's text item delimiters to replaceString's item i¶
+		set theText to theText as text¶
+	end repeat¶
+	set AppleScript's text item delimiters to oldTID¶
+	¶
+	return theText¶
+end searchReplaceText"
+
+)
+
+/* __________________________________________________
+
+NAME:		AppleScriptSendEmail ( resultFieldName ; subject ; from ; to ; cc ; htmlBody ; preview )
+PURPOSE:	Generates AppleScript that sends HTML email.
+EXAMPLES:
+	AppleScriptSendEmail (
+		 GetFieldName ( global::applescript_result_gt ) ;
+		 "Size matters!" ;
+		 "anonymous@spammer.com" ;
+		 "email@gmail.com, Mr. Spam <spam@gmail.com>" ;
+		 "<p>Just kidding.</p>" ;
+		 False
+	)	// Sends HTML email to multiple recipients without displaying message in Mail
+NOTES:
+	preview parameter must currently be set to True for HTML emails to work.
+HISTORY:
+	Created:	2012-04-04 11:26 PST - Donovan Chandler
+	Modified:	2012-04-24 11:49 PST - Donovan Chandler : Added cc parameter
+*/

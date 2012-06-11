@@ -6,17 +6,13 @@ Let ( [
 	Lower ( table )
 )
 
-/* —————————————————————————————— //
-NAME:
-	sqlTable ( field )
+/* __________________________________________________
 
-PURPOSE:
-	Returns name of field's basetable for use in SQL statements.
-
+NAME:		SQLTable ( field )
+PURPOSE:	Returns name of field's basetable for use in SQL statements.
 EXAMPLES:
 	SQLTable ( CONTACT::Name ) = "contact"
 	SQLTable ( GetFieldName ( CONTACT::Name ) ) = "contact"
-
 HISTORY:
-	Created: 2011-Nov-04 16h45 PST — Donovan Chandler
+	Created:	2011-11-04 16:45 PST - Donovan Chandler
 */

@@ -1,0 +1,27 @@
+Let ( [
+	win = Abs ( Get ( SystemPlatform ) ) = 2 ;
+	slash = If ( win ; "\\" ; "/" ) ;
+	
+	//-- Remove prefixes
+	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
+	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
+	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) ) ;
+	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) ) ;
+	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) )
+	];
+	path
+)
+
+/* __________________________________________________
+
+NAME:	PathStripPrefix ( path )
+PURPOSE:	Removes prefix from file path.
+EXAMPLES:
+	PathStripPrefix ( "filemac:/HD/Users/Shared" )
+	// (Mac OS)	= "HD/Users/Shared"
+	// (Windows)	=
+	PathStripPrefix ( "fmnet:/your.server.com/FOCUS.fmp12" )
+	// = "your.server.com/FOCUS.fmp12"
+HISTORY:
+	Created:	2012-02-03 21:57 PST - Donovan Chandler
+*/

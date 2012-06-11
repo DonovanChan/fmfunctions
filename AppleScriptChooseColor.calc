@@ -1,5 +1,7 @@
 Let ( [
 	path = Get ( FilePath ) ;
+	isFaulty = IsEmpty ( defaultColor ) or Left ( Trim ( defaultColor ) ; 3 ) ≠ "RGB" ;
+	defaultColor = If ( isFaulty ; "RGB(0;0;0)" ; defaultColor ) ;
 	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
 	fieldList = Substitute ( fullFieldName ; "::" ; ¶ ) ;
 	table = GetValue ( fieldList ; 1 ) ;
@@ -8,17 +10,35 @@ Let ( [
 	] ;
 "set fmpVersion to \"" & fmpVersion & "\"¶
 set fmResult to \"\"¶
-set defaultColor to split(" & Quote( defaultColor ) & ",\";\")¶
-set defaultColor to adjustColorArray(defaultColor,false)¶
+set defaultColorRaw to \"" & defaultColor & "\"¶
+set defaultColorArray to split(defaultColorRaw,\";\")¶
+set defaultColor to adjustColorArray(defaultColorArray,false)¶
 try¶
-	set colorArray to choose color default color defaultColor¶
-on error errText number errNum¶
-	set fmResult to \"Error \" & errNum & \": \" & errText¶
+	-- Ensure default color is valid¶
+	try¶
+		set defaultColor to adjustColorArray(defaultColorArray, false)¶
+	on error errText number errNum¶
+		--set fmResult to \"Error \" & errNum & \": \" & errText & \" Default color invalid: \\\"\" & defaultColorRaw & \"\\\"\"¶
+		set defaultColor to \"\"¶
+	end try¶
+	¶
+	-- Display dialog, removing default color if necessary¶
+	try¶
+		if defaultColor is \"\" then¶
+			set colorArray to choose color¶
+		else¶
+			set colorArray to choose color default color defaultColor¶
+		end if¶
+	on error errText number errNum¶
+		set fmResult to \"Error \" & errNum & \": \" & errText & \" Default color: \" & defaultColorRaw¶
+	end try¶
 end try¶
+-- Parse results if valid¶
 if fmResult is \"\" then¶
 	set colorArrayNew to adjustColorArray(colorArray,true)¶
 	set fmResult to \"RGB (\" & item 1 of colorArrayNew & \";\" & item 2 of colorArrayNew & \";\" & item 3 of colorArrayNew & \")\"¶
 end if¶
+-- Send to FileMaker¶
 setField(\"" & dbName & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
 ¶
 ------------------------------------------------¶
@@ -66,13 +86,13 @@ end stripToInteger¶
 ¶
 -- Handler: Sets FileMaker field value¶
 on setField(databaseName, tableName, fieldName, theValue)¶
- tell application " & Quote ( fmpVersion ) & "¶
-	 tell database (databaseName as text)¶
-		 tell table (tableName as text)¶
-			 set field fieldName to theValue¶
-		 end tell¶
-	 end tell¶
- end tell¶
+	tell application " & Quote ( fmpVersion ) & "¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				 set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
 end setField"
 
 )
@@ -90,6 +110,7 @@ EXAMPLES:
 
 HISTORY:
 	Created: 2010-Oct-14 10h26 PST — Donovan A. Chandler
+	Modified: 2012-Mar-19 10h05 PST — Donovan Chandler : enhanced error message on parameter conversion
 
 NOTES:
 	defaultColor parameter currently not supported

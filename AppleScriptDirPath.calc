@@ -94,16 +94,12 @@ to trimLinesRight(theText)¶
 end trimLinesRight"
 )
 
-/* —————————————————————————————— //
-NAME:
-	AppleScriptDirectoryPath ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+/* __________________________________________________
 
-PURPOSE:
-	Prompts user for directory and returns paths of each file in first level of directory (as return-delimited list)
-
+NAME:		AppleScriptDirectoryPath ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+PURPOSE:	Prompts user for directory and returns paths of each file in first level of directory (as return-delimited list)
 EXAMPLES:
 	
-
 HISTORY:
-	Created: 2011-Jun-21 17h49 PST — Donovan A. Chandler
+	Created:	2012-06-12 PST -21 17h49 PST — Donovan A. Chandler
 */

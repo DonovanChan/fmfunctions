@@ -1,5 +1,5 @@
 Let ( [
-	cleanString = Substitute ( text ; ¶ ; "" ) ;
+	cleanString = Substitute ( text ; [ ¶ ; "" ] ; [ Char ( 10 ) ; "" ] ; [ " " ; "" ] ; [ Char ( 9 ) ; "" ] ) ;
 	first = Left ( cleanString ; 1 ) ;
 	leftPosition = Position ( text ; first ; 1 ; 1 ) ;
 	last = Right ( cleanString ; 1 ) ;
@@ -10,20 +10,19 @@ Let ( [
 
 )
 
-/* —————————————————————————————— //
-NAME:
-	TrimCR ( text )
+/* __________________________________________________
 
-PURPOSE:
-	Removes leading and trailing carriage returns from text.
-
+NAME:	TrimWhitespace ( text )
+PURPOSE:	Removes leading and trailing whitespace from text.
+EXAMPLES:
+	TrimCR ( "¶¶text¶" ) = "text"
 NOTES:
 	This method has been found to be faster than several other methods:
 	- Substituting returns out for spaces and using Trim()
 	- Testing left-most and right-most characters recursively
-
 HISTORY:
-	Created: 2010-Oct-21 12h00 PST — Salvatore Colangelo
-	Modifed: 2010-Nov-07 12h12 PST — Will M. Baker ; slight modifications to Salvatore's solution to bring in line with our naming conventions.
-	Modified: 2012-Jan-10 10h34 PST — Donovan Chandler ; updated comments and removed sample of Will's previous version.
+	Created: 2010-10-21 12:00 PST - Salvatore Colangelo
+	Modifed: 2010-11-07 12:12 PST - Will M. Baker ; slight modifications to Salvatore's solution to bring in line with our naming conventions.
+	Modified: 2012-01-10 10:34 PST - Donovan Chandler ; updated comments and removed sample of Will's previous version.
+	Modified: 2012-04-18 12:18 PST - Donovan Chandler ; now removes other whitespace
 */

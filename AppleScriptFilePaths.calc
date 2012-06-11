@@ -18,12 +18,14 @@ set showInvisibles to " & GetAsBoolean ( showInvisibles ) & " as boolean¶
 set multipleSelection to " & GetAsBoolean ( multipleSelection ) & " as boolean¶
 set selectedFiles to {}¶
 try¶
-	set selectedFiles to selectedFiles & choose file with prompt \"" & message & "\" ¬¶" &
-	If ( not IsEmpty ( defaultDirPath ) ;
-		"default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") ¬¶"
-	) &
-	"invisibles showInvisibles¬¶
-multiple selections allowed multipleSelection¶
+	tell application \"Finder\"¶
+		set selectedFiles to selectedFiles & choose file with prompt \"" & message & "\" ¬¶" &
+		If ( not IsEmpty ( defaultDirPath ) ;
+			"default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") ¬¶"
+			) &
+		"invisibles showInvisibles¬¶
+		multiple selections allowed multipleSelection¶
+	end tell¶
 	set resultFinal to my fileListToText(selectedFiles,true)¶
 on error errMsg number errNum¶
 	set resultFinal to \"Error \" & errNum & \": \" & errMsg¶
@@ -78,16 +80,13 @@ to stripStartupDisk(thePath)¶
 end stripStartupDisk"
 )
 
-/* —————————————————————————————— //
-NAME:
-	AppleScriptFilePaths ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+/* __________________________________________________
 
-PURPOSE:
-	Prompts user for directory and returns paths of each file in first level of directory (as return-delimited list)
-
+NAME:		AppleScriptFilePaths ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+PURPOSE:	Prompts user for file(s) and returns paths of each file in first level of directory (as return-delimited list)
 EXAMPLES:
 	
-
 HISTORY:
-	Created: 2011-Jun-21 17h49 PST — Donovan A. Chandler
+	Created:	2011-06-21 17:49 PST - Donovan A. Chandler
+	Modified:	2012-04-24 14:02 PST - Donovan Chandler : dialog explicitly handled by finder (prevents beach ball in FileMaker)
 */

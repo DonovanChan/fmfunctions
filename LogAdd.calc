@@ -1,0 +1,67 @@
+Let ( [
+	//	Setup
+	trigger = fieldsToLog ;
+	logLen = Length ( logText ) ;
+	scriptName = Get ( ScriptName ) ;
+	rep = Get ( ActiveRepetitionNumber ) ;
+	repFlag = If ( rep > 1 ; "[" & rep & " ]" ) ;
+	fdName = Get ( ActiveFieldName ) & repFlag ;
+	sep = separator ;
+
+	//	Locate any previous value in log
+	prevFieldRef = Position ( logText ; sep & fdName & sep ; 1 ; 1 ) ;
+	divider = "	->	" ;
+	prevStart = Position ( logText ; divider ; prevFieldRef ; 1 ) + Length ( divider ) ;
+	prevEnd = Position ( logText & ¶ ; ¶ ; prevFieldRef ; 1 ) ;
+	prevVal = If ( prevFieldRef ; Middle ( logText ; prevStart ; prevEnd - prevStart ) ; "[---]" ) ;
+		
+	//	New field value
+	timestamp = Get ( CurrentHostTimeStamp ) ;
+	newVal = GetField ( fdName ) ;
+	newValCollapsed = Substitute ( newVal ; ¶ ; "‡" ) ;
+	newValDisplay = If ( Length ( newVal ) ; newValCollapsed ; "[null]" ) ;
+
+	//	Format Values
+	_%Change = prevVal & divider & newValDisplay ;
+	_%Key = GetAsNumber ( Get ( CurrentHostTimeStamp ) ) & prevVal & newVal ;
+
+	//	Replace format parameters with data
+	logFormat =	 
+		Substitute ( format ;
+			["%Date"		; GetAsDate ( timestamp ) & sep ] ;
+			["%Time"		; GetAsTime ( timestamp ) & sep ] ;
+			["%Account"	; Get ( AccountName ) & sep ] ;
+			["%Field"		; fdName & sep ] ;
+			["%Change"	; _%Change & sep ] ;
+			["%Before"	; prevVal & sep ] ;
+			["%After"	; newVal & sep ] ;
+			["%Table"	; Get ( LayoutTableName ) & sep ] ;
+			["%Layout"	; Get ( LayoutName ) & sep ] ;
+			["%Key"		; _%Key & sep ] ;
+			["%ID"			; id & sep ]
+		) ;
+	logString = Left ( logFormat ; Length ( logFormat ) - Length ( sep ) )
+
+	] ;
+
+	If ( 
+		Length ( fdName ) and Length ( scriptName ) = 0 ;
+		logString & Left ( ¶ ; logLen ) & logText ;
+		logText
+	)
+
+)
+
+/*
+NAME:	AuditLog ( logText ; fieldsToLog ; format ; separator ; id )
+PURPOSE:	This custom function is called in an auto-enter text field so that every field listed as a parameter for this function automatically triggers the field to update. This function merely collects a snapshot of the related information and formats it for presentation.
+EXAMPLE:
+	AuditLog ( AuditLog ; Name & Company ; "%Date%Time%Account$Key%Field%Change" ; "	" )
+NOTES:
+	If you separate the values with a reliable delimiter like "|", then you can have a separate table parse out the values. To do this, place the log entries into a global field that automatically extracts the first line every time it's updated. Take that first line and split it into a value list, having different fields grab their relative value every time a new record is created.
+HISTORY: 
+	Audit Log Function created 2006 by Ray Cologon - v1.6 of NightWing Enterprises, Melbourne, Australia
+	Modifications for format and delimiter parameter taken from Matt Petrowsky
+	Adapted 2008mar08 by Donovan Chandler
+	Modified 2012apr17 by Donovan Chandler : Refactored and added %Before, %After, %ID
+*/

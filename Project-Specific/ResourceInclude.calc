@@ -1,7 +1,7 @@
 Let ( [
 	language = FOCUS::LIBRARY_LANGUAGE_REP[index] ;
 	text = Case ( not urlOnly ; FOCUS::LIBRARY_CODE_REP[index] ) ;
-	url = text //Case ( urlOnly ; FOCUS::RESOURCE_URL[index] )
+	url = text //Case ( urlOnly ; FOCUS::LIBRARY_URL_REP[index] )
 	] ;
 	Case (
 		language = "CSS" ;

@@ -1,0 +1,10 @@
+"|"
+
+/* __________________________________________________
+
+NAME:		LogDelimiter
+PURPOSE:	Stores delimiter used between audit log columns. Enables easy parsing of logs.
+HISTORY:
+	Created:	2012-04-17 13:00 PST - Donovan Chandler
+	Modified:	
+*/

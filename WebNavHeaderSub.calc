@@ -1,0 +1,40 @@
+Let ( [
+	$labels = labels ;
+	$script = script ;
+	$instructions = instructions ;
+	$currentLayout = Get ( LayoutName ) ;
+	
+	//-- Define runScript function performed when clicking
+	js = "			function runScript(param){ " &
+		If (
+			IsHosted ; "window.location = '" & URLSelf( $script ; "" ) & "' + param; " ;
+			"window.location.hash = param; "
+		) &
+		"return false }" ;
+	
+	//-- Build list of links that call runScript
+	ex = "Let ([ layout = GetValue( $instructions; [n] ) ; "
+		& "script = \"runScript('\" & layout & \"')\""
+		& "] ;"
+		& "\"			<li\" & If ( layout = $currentLayout ; \" id='active'\" ) & \">"
+		& "<a href='#' onclick=\" & Quote ( script ) & \">\" & "
+		& "GetValue( $labels ; [n] ) & \"</a></li>\" "
+		& ")" ;
+	list = ListCustom ( 1 ; ValueCount ( $labels ) ; ex )
+	] ;
+	Substitute ( template ;
+		[ "‡‡SCRIPT‡‡" ; js ] ;
+		[ "‡‡LIST‡‡" ; list ]
+	)
+)
+
+/* __________________________________________________
+
+NAME:	WebNavHeaderSub ( template ; labels ; script ; instructions )
+PURPOSE:	Generates HTML for navigation header in web viewer.
+NOTES:
+	Remember to add ""Data:text/html," for data urls in web viewer.
+HISTORY:
+	Created:	2012-04-14 14:15 PST - Donovan Chandler
+	Modified:	
+*/

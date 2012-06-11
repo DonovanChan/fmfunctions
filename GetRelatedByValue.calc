@@ -1,0 +1,23 @@
+Let ( [
+	ex =
+		"Let ( [ check = GetNthRecord ( " & compareField & " ; [n] ) " &
+		"] ; " &
+		"If ( " &
+			"check = " & Quote ( compareValue ) & " ; " &
+			"GetNthRecord ( " & targetField & " ; [n] ) " &
+		") )"
+	] ;
+	ListCustom ( 1 ; Count ( GetField ( targetField ) ) ; ex )
+)
+
+/* __________________________________________________
+
+NAME:	GetRelatedByValue ( targetField ; compareField ; compareValue )
+PURPOSE:	Returns related values from field where compareField = compareValue
+EXAMPLES:
+	GetRelatedByValue ( "CONTACT::NAME_FIRST" ; "CONTACT::NAME_LAST" ; "Simpson" )
+	//= "Bart¶Homer¶Lisa¶Maggie¶Marge"
+HISTORY:
+	Created:	2012-03-20 15:44 PST - Donovan Chandler
+	Modified:	
+*/

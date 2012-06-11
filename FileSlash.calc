@@ -1,0 +1,18 @@
+If (
+	Abs ( Get ( SystemPlatform ) ) = 2 ; "\\" ;
+	"/"
+)
+
+/* —————————————————————————————— //
+NAME:
+	FileSlash ()
+
+PURPOSE:
+	Returns slash character used for current operating system
+
+EXAMPLES:
+	
+
+HISTORY:
+	Created: 2012-Feb-03 23h29 PST — Donovan A. Chandler
+*/

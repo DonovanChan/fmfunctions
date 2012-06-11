@@ -1,0 +1,25 @@
+Let ( [
+	max = GetAsTime ( maxTime )
+	; max = If ( max = "?" or IsEmpty ( max ) ; GetAsTime ( "24:00:00" ) ; max )
+	; new = GetAsTime ( startTime ) + incrementSeconds
+	; new = If ( new > max ; max ; new )
+	; new = RightWords ( GetAsTimestamp ( new ) ; 2 )
+	; hour = Hour ( new )
+	] ;
+	If ( hour < 10 ; 0 )
+	& new
+)
+
+/* —————————————————————————————— //
+NAME:
+	TimeIncrement ( startTime ; incrementSeconds ; maxTime )
+
+PURPOSE:
+	Returns time + provided seconds in AM/PM format.
+
+EXAMPLES:
+	TimeIncrememt ( "7:15 AM" ; 2*60*60 ; "8:00 PM" ) //= "09:15 AM"
+
+HISTORY:
+	Created: 2012-Feb-24 14h42 PST — Donovan A. Chandler
+*/

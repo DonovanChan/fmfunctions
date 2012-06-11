@@ -1,0 +1,49 @@
+Let([
+	_slash = FileSlash ; // If ( Abs ( Get ( SystemPlatform ) ) = 2 ; "\\" ; "/" )
+	_sNode1 = Position ( path ; _slash ; 1 ; 1 ) ;
+	_sNode2 = Position ( path ; _slash ; 2 ; 1 ) ;
+		
+	_sPathDir = 
+		Case (
+			Left ( path ; 4 ) = "file" ; _sNode1 ;
+			Left ( path ; _sNode2 - 1 ) = _slash & "Volumes" ; _sNode2
+		) ;
+	_pathStripped = Middle ( path ; _sPathDir ; 999 ) ;
+
+	_prefixNew = 
+		Case (
+			type = "posix" ;
+				_slash & "Volumes" ;
+			type = "filemaker" ;
+				If ( IsMac ; "filemac:" ; "filewin:" & _slash )
+		)
+
+	] ;
+	Case (
+		IsEmpty ( path ) or IsEmpty ( type ) ;
+			"" ;
+		_prefixNew & _pathStripped
+	)
+)
+
+/* —————————————————————————————— //
+NAME:
+	FilePathConvert ( path ; type )
+
+PURPOSE:
+	Changes path type.
+
+EXAMPLES:
+	(Assuming Mac OS)
+
+	FilePathConvert ( "filemac:/Macintosh HD/Users/Admin/Desktop/text.txt" ;
+		"posix"
+	) = "/Volumes/Macintosh HD/Users/Admin/Desktop/text.txt"
+
+	FilePathConvert ( "/Volumes/Macintosh HD/Users/Admin/Desktop/text.txt" ;
+		"filemaker"
+	) = "filemac:/Macintosh HD/Users/Admin/Desktop/text.txt"
+
+HISTORY:
+	Created: 2010-Mar-27 14h30 PST - Donovan A. Chandler
+*/

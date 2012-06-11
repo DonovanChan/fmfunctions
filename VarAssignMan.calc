@@ -1,0 +1,60 @@
+"NAME:¶
+	VarAssign ( encodedString ; listOfParams )¶
+¶
+PURPOSE:¶
+	Instantiates variables from encodedString, with optional type casting and validation.¶
+	Also reports errors to $_error_message and $_invalid_params.¶
+	Used within ParamAssign(), which provides Get ( ScriptParameter ) as encodedString.¶
+¶
+PARAMETERS:¶
+	encodedString:	Name-value pairs created using #() function suite.
+					E.g., \"<:name:=value:>\"
+	listOfParams:	A list of values, each designating a parameter to extract.¶
+		The names of any required values that failed to instantiate a variable¶
+		value will be returned as a list.¶
+¶
+		Each value may also contain zero or more flags:¶
+¶
+			{-}name{;{g}{tndim}}{||\"default\"}¶
+¶
+			-	Value is optional¶
+			g	Instantiate as global variable¶
+			t	Cast as text¶
+			n	Cast as number¶
+			b	Cast as boolean¶
+			d	Cast as date¶
+			i	Cast as time¶
+			m	Cast as timestamp¶
+¶
+			\"default\" is any valid calculation to be used as variable value¶
+			if no parameter value is provided¶
+¶
+OUTPUT:¶
+	If no error...¶
+		Returns 0¶
+	If one or more required parameters are invalid...¶
+		Returns 10¶
+		Sets lists names of invalid parameters to $_invalid_params¶
+		Sets error message to $_error_message¶
+¶
+EXAMPLES:¶
+	ParamAssign (¶
+		List (¶
+			  \"name\"	// local var cast as text¶
+			; \"age;n||25\"	// local var cast as number, default = 25¶
+			; \"-flag;g\"	// optional, global var¶
+		)¶
+	)¶
+¶
+HISTORY:¶
+	2012-03-16 09:15 PST - Donovan Chandler¶
+	2012-04-06 10:07 PST - Donovan Chandler : No longer requires \";\" before \"||\" if no options are specified."
+
+/* __________________________________________________
+
+NAME:	VarAssignMan()
+PURPOSE:	Returns manual for VarAssign() function.
+HISTORY:
+	Created:	2012-03-16 10:29 PST - Donovan Chandler
+	Modified:	2012-04-06 10:07 PST - Donovan Chandler : No longer requires ";" before "||" if no options are specified.
+*/

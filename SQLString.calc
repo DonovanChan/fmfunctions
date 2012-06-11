@@ -1,0 +1,15 @@
+"'" & text & "'"
+
+/* __________________________________________________
+
+NAME:	SQLString ( text )
+PURPOSE:	Quotes string for use in SQL
+EXAMPLES:
+	SQLQuote ( "contact" ) = 'contact'
+NOTES:
+	For escaping of reserved characters like "'" or "%",
+	Use the optional arguments parameter in ExecuteSql( )
+HISTORY:
+	Created:	2012-03-28 11:11 PT - Donovan Chandler
+	Modified:	
+*/

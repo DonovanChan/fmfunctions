@@ -1,0 +1,94 @@
+Let ( [
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
+	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	tableName = GetValue ( fieldSplit ; 1 ) ;
+	fieldName = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" ) ;
+	
+	message = If ( IsEmpty ( message ) ; "Please select a folder." ; message ) ;
+	defaultDirPath = GetValue ( defaultDirPath ; 1 ) ;
+	showInvisibles = (showInvisibles = True) ;
+	multipleSelection = (multipleSelection = True)
+	];
+"set message to \"" & message & "\"¶
+set showInvisibles to " & showInvisibles & " as boolean¶
+set multipleSelection to " & multipleSelection & " as boolean¶
+set resultError to null¶
+set myFolder to {}¶
+-- Prompt for folder¶
+try¶
+	set thisFolder to choose folder with prompt message ¬¶" &
+		If ( not IsEmpty ( defaultDirPath ) ;
+			"default location POSIX file stripStartupDisk(\"" & defaultDirPath & "\") ¬¶"
+			) &
+		"invisibles showInvisibles ¬¶
+		multiple selections allowed multipleSelection¶
+		set myFolder to myFolder & aliasAsPosix(thisFolder)¶
+on error errMsg number errNum¶
+	set resultError to \"Error \" & errNum & \": \" & errMsg¶
+end try¶
+¶
+-- Determine result¶
+if resultError is not null then¶
+	set resultFinal to resultError¶
+else¶
+	set resultFinal to join(myFolder,return)¶
+end if¶
+setField(\"" & dbName & "\", \"" & tableName & "\", \"" & fieldName & "\", resultFinal)¶
+¶
+-- HANDLER: Returns list as text string¶
+to join(theList, delimiter)¶
+	set TID to AppleScript's text item delimiters¶
+	set AppleScript's text item delimiters to delimiter¶
+	set theResult to theList as text¶
+	set AppleScript's text item delimiters to TID¶
+	return theResult¶
+end join¶
+¶
+-- HANDLER: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application " & Quote ( fmpVersion ) & "¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField¶
+¶
+-- HANDLER: Returns path as text with startup disk removed¶
+to stripStartupDisk(thePath)¶
+	set pathText to thePath as text¶
+	tell application \"Finder\"¶
+		set hdName to name of startup disk¶
+	end tell¶
+	set hdLen to length of hdName¶
+	set colonPos to offset of \":\" in pathText¶
+	if colonPos is greater than 0 then set pathText to text (colonPos + 1) thru -1 of pathText¶
+	if character 1 of pathText is equal to \"/\" then set pathText to text 2 thru -1 of pathText¶
+	if text 1 thru hdLen of pathText is equal to hdName then¶
+		set pathText to text (hdLen + 1) thru -1 of pathText¶
+	end if¶
+	return pathText¶
+end stripStartupDisk¶
+¶
+-- HANDLER: Converts array of aliases into posix paths¶
+to aliasAsPosix(pathArray)¶
+	set res to {}¶
+	repeat with thisAlias in (pathArray as list)¶
+		set end of res to POSIX path of (thisAlias as text)¶
+	end repeat¶
+	return res¶
+end convertPaths"
+)
+
+/* __________________________________________________
+
+NAME:	AppleScriptChooseDir ( resultFieldName ; message ; defaultDirPath ; showInvisibles ; multipleSelection )
+PURPOSE:	Prompts user for folder(s) and returns paths of each selected directory (as return-delimited list)
+EXAMPLES:
+	
+HISTORY:
+	Created:	2012-04-30 21:02 PST - Donovan Chandler
+*/

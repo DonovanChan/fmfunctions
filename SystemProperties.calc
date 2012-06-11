@@ -10,18 +10,20 @@ List (
 //	; # ( "ActiveRepetitionNumber"	; Get ( ActiveRepetitionNumber ) )
 //	; # ( "ActiveSelectionSize"		; Get ( ActiveSelectionSize ) )
 //	; # ( "ActiveSelectionStart"		; Get ( ActiveSelectionStart ) )
-	; # ( "AllowAbortState"			; Get ( AllowAbortState ) )
-	; # ( "AllowToolbarState"		; Get ( AllowToolbarState ) )
+	; # ( "AllowAbortState"		; Get ( AllowAbortState ) )
+	; # ( "AllowFormattingBarState"	; Get ( AllowFormattingBarState ) )
+//	; # ( "AllowToolbarState"		; Get ( AllowToolbarState ) )
 	; # ( "ApplicationLanguage"	; Get ( ApplicationLanguage ) )
 	; # ( "ApplicationVersion"		; Get ( ApplicationVersion ) )
 //	; # ( "CalculationRepetitionNumber"	; Get ( CalculationRepetitionNumber ) )
+	; # ( "ConnectionState"		; Get ( ConnectionState ) )
 	; # ( "CurrentDate"			; Get ( CurrentDate ) )
 	; # ( "CurrentHostTimestamp"	; Get ( CurrentHostTimestamp ) )
 //	; # ( "CurrentTime"			; Get ( CurrentTime ) )
 	; # ( "CurrentTimestamp"		; Get ( CurrentTimestamp ) )
 	; # ( "CustomMenuSetName"	; Get ( CustomMenuSetName ) )
 //	; # ( "DesktopPath"			; Get ( DesktopPath ) )
-//	; # ( "DocumentsPath"			; Get ( DocumentsPath ) )
+//	; # ( "DocumentsPath"		; Get ( DocumentsPath ) )
 //	; # ( "DocumentsPathListing"	; Get ( DocumentsPathListing ) )
 	; # ( "ErrorCaptureState"		; Get ( ErrorCaptureState ) )
 //	; # ( "FileMakerPath"			; Get ( FileMakerPath ) )
@@ -33,7 +35,8 @@ List (
 //	; # ( "HighContrastState"		; Get ( HighContrastState ) )
 	; # ( "HostApplicationVersion"	; Get ( HostApplicationVersion ) )
 	; # ( "HostIPAddress"			; Get ( HostIPAddress ) )
-	; # ( "HostName"				; Get ( HostName ) )
+	; # ( "HostName"			; Get ( HostName ) )
+	; # ( "InstalledFMPlugins"		; Get ( InstalledFMPlugins ) )
 	; # ( "LastError"				; Get ( LastError ) )
 	; # ( "LastMessageChoice"		; Get ( LastMessageChoice ) )
 	; # ( "LastODBCError"			; Get ( LastODBCError ) )
@@ -46,13 +49,13 @@ List (
 	; # ( "MultiUserState"			; Get ( MultiUserState ) )
 	; # ( "NetworkProtocol"		; Get ( NetworkProtocol ) )
 //	; # ( "PageNumber"			; Get ( PageNumber ) )
-//	; # ( "PreferencesPath"			; Get ( PreferencesPath ) )
+//	; # ( "PreferencesPath"		; Get ( PreferencesPath ) )
 //	; # ( "PrinterName"			; Get ( PrinterName ) )
 	; # ( "QuickFindText" 		; Get ( QuickFindText ) )
 	; # ( "RecordAccess"			; Get ( RecordAccess ) )
 //	; # ( "RecordID"				; Get ( RecordID ) )
 //	; # ( "RecordModificationCount"	; Get ( RecordModificationCount ) )
-//	; # ( "RecordNumber"			; Get ( RecordNumber ) )
+//	; # ( "RecordNumber"		; Get ( RecordNumber ) )
 	; # ( "RecordOpenCount"		; Get ( RecordOpenCount ) )
 	; # ( "RecordOpenState"		; Get ( RecordOpenState ) )
 //	; # ( "RequestCount"			; Get ( RequestCount ) )
@@ -60,57 +63,53 @@ List (
 //	; # ( "ScreenDepth"			; Get ( ScreenDepth ) )
 //	; # ( "ScreenHeight"			; Get ( ScreenHeight ) )
 //	; # ( "ScreenWidth"			; Get ( ScreenWidth ) )
-	; # ( "ScriptName"				; Get ( ScriptName ) )
-	; # ( "ScriptParameter"			; Get ( ScriptParameter ) )
+	; # ( "ScriptName"			; Get ( ScriptName ) )
+	; # ( "ScriptParameter"		; Get ( ScriptParameter ) )
 	; # ( "ScriptResult"			; Get ( ScriptResult ) )
 	; # ( "SortState"				; Get ( SortState ) )
-	; # ( "StatusAreaState"			; Get ( StatusAreaState ) )
+	; # ( "StatusAreaState"		; Get ( StatusAreaState ) )
 	; # ( "SystemDrive"			; Get ( SystemDrive ) )
 	; # ( "SystemIPAddress"		; Get ( SystemIPAddress ) )
 //	; # ( "SystemLanguage"		; Get ( SystemLanguage ) )
 //	; # ( "SystemNICAddress"		; Get ( SystemNICAddress ) )
-	; # ( "SystemPlatform"			; Get ( SystemPlatform ) )
+	; # ( "SystemPlatform"		; Get ( SystemPlatform ) )
 	; # ( "SystemVersion"			; Get ( SystemVersion ) )
-//	; # ( "TemporaryPath"			; Get ( TemporaryPath ) )
+//	; # ( "TemporaryPath"		; Get ( TemporaryPath ) )
 //	; # ( "TextRulerVisible"		; Get ( TextRulerVisible ) )
 	; # ( "TotalRecordCount"		; Get ( TotalRecordCount ) )
 //	; # ( "TriggerKeystroke"		; Get ( TriggerKeystroke ) )
-//	; # ( "TriggerModifierKeys"		; Get ( TriggerModifierKeys ) )
-	; # ( "UserCount"				; Get ( UserCount ) )
-	; # ( "UserName"				; Get ( UserName ) )
+//	; # ( "TriggerCurrentTabPanel"	; Get ( TriggerCurrentTabPanel ) )
+//	; # ( "TriggerModifierKeys"	; Get ( TriggerModifierKeys ) )
+//	; # ( "TriggerTargetTabPanel"	; Get ( TriggerTargetTabPanel ) )
+	; # ( "UserCount"			; Get ( UserCount ) )
+	; # ( "UserName"			; Get ( UserName ) )
 //	; # ( "UseSystemFormatsState"	; Get ( UseSystemFormatsState ) )
 //	; # ( "WindowContentHeight"	; Get ( WindowContentHeight ) )
 //	; # ( "WindowContentWidth"	; Get ( WindowContentWidth ) )
 //	; # ( "WindowDesktopHeight"	; Get ( WindowDesktopHeight ) )
 //	; # ( "WindowDesktopWidth"	; Get ( WindowDesktopWidth ) )
 //	; # ( "WindowHeight"			; Get ( WindowHeight ) )
-//	; # ( "WindowLeft"				; Get ( WindowLeft ) )
+//	; # ( "WindowLeft"			; Get ( WindowLeft ) )
 	; # ( "WindowMode"			; Get ( WindowMode ) )
 //	; # ( "WindowName"			; Get ( WindowName ) )
+//	; # ( "WindowStyle"			; Get ( WindowStyle ) )
 //	; # ( "WindowTop"			; Get ( WindowTop ) )
 	; # ( "WindowVisible"			; Get ( WindowVisible ) )
 //	; # ( "WindowWidth"			; Get ( WindowWidth ) )
 //	; # ( "WindowZoomLevel"		; Get ( WindowZoomLevel ) )
-
-	; # ( "FMSAUC_Version"		; FMSAUC_Version( 0 ) )
 )
 
-/* —————————————————————————————— //
-NAME:
-	SystemProperties ()
+/* __________________________________________________
 
-PURPOSE:
-	Returns hash containing description of system properties.
-	Used for error logging and debugging.
-
+NAME:	SystemProperties ()
+PURPOSE:	Returns hash containing description of system properties.
 EXAMPLES:
 	
-
 HISTORY:
-	Created: 2011-May-12 10h34 PST — Donovan A. Chandler
-
+	Created:	2011-05-12 10:34 PST - Donovan A. Chandler
+	
 NOTES:
-	Every native Get() function from FMP 11 is included.
+	Every native Get() function from FMP 12 is included.
 	Uncomment functions you think may be useful.
-	Formatting optimized for viewing in FileMaker.
+	Formatting optimized for viewing in FileMaker 12.
 */

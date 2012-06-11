@@ -1,5 +1,5 @@
 Let ( [
-	dirList = Substitute ( filePath ; "/" ; ¶ ) ;
+	dirList = Substitute ( path ; "/" ; ¶ ) ;
 	count = ValueCount ( dirList ) ;
 	file = GetValue ( dirList ; count )
 	] ;
@@ -12,7 +12,7 @@ Let ( [
 
 /* —————————————————————————————— //
 NAME:
-	FileNameFromPath ( filePath )
+	FileNameFromPath ( path )
 
 PURPOSE:
 	Returns name of file referenced in path

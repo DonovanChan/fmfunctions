@@ -1,16 +1,14 @@
-GetAsBoolean ( $$_errors_suppressed )
+not 
+(
+IsEmpty ( $$_errors_suppressed )
+or $$_errors_suppressed = 0
+)
 
-/* —————————————————————————————— //
-NAME:
-	ErrorsAreSuppressed ( )
+/* __________________________________________________
 
-PURPOSE:
-	Returns true if errors message are currently being suppressed.
-	For example, if you are looping through records and building a temp error log instead of showing a dialog for each error.
-
-EXAMPLES:
-	
-
+NAME:	ErrorsAreSuppressed ( )
+PURPOSE:	Returns 1 (True) if error handling is disabled for file.
+		For example, if you are looping through records and building a temp error log instead of showing a dialog for each error.
 HISTORY:
-	Created: 2011-Oct-07 09h44 PST — Donovan A. Chandler
+	Created:	2011-10-07 09:44 PST - Donovan A. Chandler
 */

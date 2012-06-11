@@ -1,0 +1,11 @@
+PatternCount ( Get ( ApplicationVersion ) ; "Web Publishing" ) > 0
+
+/* __________________________________________________
+
+NAME:		IsWebPublished ( )
+PURPOSE:	Returns TRUE if user is using Instant Web Publishing, otherwise FALSE.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2012-05-18 15:48 PT - Donovan Chandler
+*/

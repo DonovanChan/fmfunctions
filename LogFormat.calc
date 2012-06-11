@@ -1,0 +1,10 @@
+"%Date%Time%Account%Field%Before%After"
+
+/* __________________________________________________
+
+NAME:		LogFormat
+PURPOSE:	Stores order of columns for audit logs. Enables easy parsing of logs.
+HISTORY:
+	Created:	2012-04-17 13:00 PST - Donovan Chandler
+	Modified:	
+*/

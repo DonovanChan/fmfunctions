@@ -1,0 +1,56 @@
+Let ( [
+	//-- Parse input for first parameter
+	rowCount = ValueCount ( listOfKeys ) ;
+	row = GetValue ( listOfKeys ; 1 ) ;
+	sOpt = Position ( row & ";" ; ";" ; 1 ; 1 ) ;
+	sDef = Position ( row ; "||" ; 1 ; 1 ) ;
+	eName =
+		Min (
+			If ( sOpt > 0 ; sOpt ; 999 ) ;
+			If ( sDef > 0 ; sDef ; 999 ) ;
+			Length ( row ) + 1
+		) ;
+	nameRaw = Left ( row ; eName - 1 ) ;
+	isOptional = ( Left ( nameRaw ; 1 ) = "-" ) ;
+	
+	name = Trim ( If ( isOptional ; Middle ( nameRaw ; 2 ; 999 ) ; nameRaw ) ) ;
+	value = #Value ( encodedString ; name ) ;
+	options = TextBetween ( row & "||" ; ";" ; "||" ; 1 ) ;
+	isGlobal = Position ( options ; "g" ; 1 ; 1 ) ;
+	type = Trim ( Substitute ( options ; ["g" ; "" ] ; [ "	" ; "" ] ) ) ;
+	
+	//-- Use default value if necessary ;
+	value =
+		If ( not IsEmpty ( value ) ; value ;
+			Evaluate ( Middle ( row ; sDef + 2 ; 999 ) )
+		) ;
+	
+	//-- Instantiate variable (error returns '1') ;
+	error =
+		Case (
+			value = "?" ;
+				1 ;
+			not IsEmpty ( row ) ;
+				VarSet ( "_" & name ; value ; type ; isGlobal )
+		)
+	
+	] ;
+	
+	//-- Return names of invalid parameters
+	List (
+		If ( not isOptional and error = 1 ; name ) ;
+		If ( rowCount > 1 ;
+			VarAssignLoop ( encodedString ; RightValues ( listOfKeys ; rowCount - 1 ) )
+		)
+	)
+)
+
+/* __________________________________________________
+
+NAME:	VarAssignLoop ( encodedString ; listOfKeys )
+PURPOSE:	Instantiates variables from dictionary, with optional type casting and validation.
+EXAMPLES:	See VarAssignMan() for documentation.
+HISTORY:
+	Created:	2012-03-16 10:27 PST - Donovan Chandler
+	Modified:	2012-04-06 09:56 PST - Donovan Chandler : No longer requires ";" before "||" if no options are specified.
+*/

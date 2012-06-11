@@ -1,0 +1,27 @@
+Let ( [
+	cleanString = Substitute ( text ; ¶ ; "" ) ;
+	first = Left ( cleanString ; 1 ) ;
+	leftPosition = Position ( text ; first ; 1 ; 1 ) ;
+	last = Right ( cleanString ; 1 ) ;
+	rightPosition = Position ( text ; last ; Length ( text ) ; -1 )
+	] ;
+
+	Middle ( text ; leftPosition ; rightPosition - leftPosition + 1 )
+
+)
+
+/* __________________________________________________
+
+NAME:	TrimCR ( text )
+PURPOSE:	Removes leading and trailing carriage returns from text.
+EXAMPLES:
+	TrimCR ( "¶¶text¶" ) = "text"
+NOTES:
+	This method has been found to be faster than several other methods:
+	- Substituting returns out for spaces and using Trim()
+	- Testing left-most and right-most characters recursively
+HISTORY:
+	Created: 2010-10-21 12:00 PST - Salvatore Colangelo
+	Modifed: 2010-11-07 12:12 PST - Will M. Baker ; slight modifications to Salvatore's solution to bring in line with our naming conventions.
+	Modified: 2012-01-10 10:34 PST - Donovan Chandler ; updated comments and removed sample of Will's previous version.
+*/

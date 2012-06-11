@@ -1,0 +1,20 @@
+Let ( [
+	labelDelim = "%" ;
+	columnDelim = LogDelimiter ;
+	row = GetValue ( logText ; 1 ) ;
+	sFormatNode = Position ( format ; label ; 1 ; 1 ) ;
+	index = PatternCount ( Left ( format ; sFormatNode ) ; labelDelim )
+	] ;
+	TextBetween ( columnDelim & row & columnDelim ; columnDelim ; columnDelim ; index )
+)
+
+/* __________________________________________________
+
+NAME:		LogExtract ( logText ; format ; label )
+PURPOSE:	Extracts value from delimited text block according to where label resides in format.
+EXAMPLES:
+	LogExtract ( "4/17/12|dchandler" ; "%Date%Account" ; "%Account" ) = "dchandler"
+HISTORY:
+	Created:	2012-04-17 12:49 PST - Donovan Chandler
+	Modified:	
+*/

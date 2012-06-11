@@ -1,0 +1,14 @@
+Middle ( url ; Position ( url ; "#" ; 1 ; 1 ) ; Length ( url ) )
+
+/* __________________________________________________
+
+NAME:	URLHash ( url )
+PURPOSE:	Returns hash portion of URL. Used for extracting info from web viewer.
+		Web viewer must be referencing an external file for you to alter the url.
+		Use GetLayoutObjectAttribute ( "wv_object" ; "sournce" ) to get the url.
+EXAMPLES:
+	URLHash ( "file://tmp/page.html#paramForScript" ) = "paramForScript"
+HISTORY:
+	Created:	2012-04-27 10:12 PST - Donovan Chandler
+	Modified:	
+*/

@@ -1,0 +1,55 @@
+Let ( [
+	path = Get ( FilePath ) ;
+	dbName = Middle ( path ; Position ( path ; "/" ; Length ( path ) ; -1 ) + 1 ; 999 ) ;
+	fieldSplit = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	table = GetValue ( fieldSplit ; 1 ) ;
+	field = GetValue ( fieldSplit ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( PatternCount ( Get ( ApplicationVersion ) ; "ProAdvanced" ) ; " Advanced" )
+	] ;
+"set returnFocus to " & GetAsBoolean ( returnFocus ) & " as boolean¶
+set fmresult to missing value¶
+tell application " & Quote ( "Finder" ) & "¶
+	activate¶
+	try¶
+		--open location " & Quote ( volumePath ) & "¶
+		mount volume " & Quote ( volumePath ) & " -- Returns better error results than open location¶
+	on error errText number errNum¶
+		set fmresult to \"Error: \" & errNum & \": \" & errText¶
+	end try¶
+end tell¶
+¶
+-- Send error to FileMaker¶
+if fmresult is not missing value then¶
+	setField(\"" & dbName & "\",\"" & table & "\",\"" & field & "\",fmResult)¶
+end if¶
+¶
+-- Optionally bring FileMaker to front
+if returnFocus then¶
+	tell application " & Quote ( fmpVersion ) & " to activate¶
+end¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+-- HANDLER: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application " & Quote ( fmpVersion ) & "¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField"
+)
+
+/* __________________________________________________
+
+NAME:	AppleScriptMountVolume ( resultFieldName ; volumePath ; returnFocus )
+PURPOSE:	Generates AppleScript that mounts external volumn.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2012-04-04 11:26 PST - Donovan Chandler
+	Modified:	
+*/

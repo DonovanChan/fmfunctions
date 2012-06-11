@@ -1,0 +1,14 @@
+Let ( [
+	$$_trace_enabled = True
+	] ;
+	$$_trace_enabled
+)
+
+/* __________________________________________________
+
+NAME:	ScriptTraceOn ( )
+PURPOSE:	Sets global flag to ensure scripts are permitted to build trace log.
+HISTORY:
+	Created:	2012-04-11 11:27 PST - Donovan Chandler
+	Modified:	
+*/

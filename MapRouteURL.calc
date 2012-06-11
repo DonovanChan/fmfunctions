@@ -1,0 +1,28 @@
+Let ( [
+	points = listOfCoordinates ;
+	remaining = TrimCR ( MiddleValues ( points ; 2 ; 999 ) ) ;
+	daddr = Substitute ( remaining ; ¶ ; "+to:" )
+	] ;
+	"http://maps.google.com/?"
+	& "saddr=" & GetValue ( points ; 1 )
+	& If ( NotEmpty ( remaining ) ; "&daddr=" & daddr )
+	& "&output=embed"
+)
+
+/* —————————————————————————————— //
+NAME:
+	MapPointsURL ( listOfCoordinates )
+
+PURPOSE:
+	Generates url for displaying group of waypoints on a Google map.
+
+EXAMPLES:
+	MapPointsURL ( "37.3371,-122.0021¶37.3371,-122.0028" )
+	= "http://maps.google.com/?q=37.3371,-122.0021&daddr=37.3371,-122.0028&output=embed"
+
+NOTES:
+	URL syntax: http://mapki.com/wiki/Google_Map_Parameters
+
+HISTORY:
+	Created: 2012-Mar-01 10h34 PST — Donovan A. Chandler
+*/

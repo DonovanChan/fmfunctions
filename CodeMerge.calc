@@ -1,0 +1,43 @@
+Let ( [
+	delim = "‡‡" ;
+	delimLen = Length ( delim ) ;
+	posMarker = Position ( text ; delim & "CODE" ; 1 ; 1 ) ;
+	endMarkerType = Position ( text ; "[" ; posMarker ; 1 ) - 1 ;
+	endMarker = Position ( text ; delim ; posMarker + 1 ; 1 ) + delimLen - 1 ;
+	marker = Middle ( text ; posMarker ; endMarker + delimLen - 1 - posMarker ) ;
+	markerType = Middle ( text ; posMarker + delimLen  ; endMarkerType - posMarker - delimLen + 1 ) ;
+	index = GetAsNumber ( marker ) ;
+	//-- Don't leave label in place if it isn't recognized, to prevent open loop
+	code =
+		Case (
+			markerType = "CODE" ; FOCUS::CODE_INCLUDE_REP[index] ;
+			markerType = "CODE_LINK" ; FOCUS::CODE_LINK_REP[index] ;
+			markerType = "CODE_NAME" ; FOCUS::CODE_FILE_NAME_REP[index] ;
+			"INVALID CODE LABEL: " & Substitute ( marker ; delim ; delim & " " )
+		) ;
+	textNew =
+		If (
+			posMarker = 0 ; text ;
+			Substitute ( text ; marker ; code )
+		)
+	] ;
+	Case (
+		Position ( textNew ; "‡‡CODE" ; 1 ; 1 ) ;
+			CodeMerge ( textNew ) ;
+		textNew
+	)
+)
+
+/* __________________________________________________
+
+NAME:	CodeMerge ( text )
+PURPOSE:	Merges value from LIBRARY_CODE table into text.
+		Useful for on-the-fly merging of code libraries in a web viewer.
+EXAMPLES:
+	// Where FOCUS::LIBRARY_CODE_INCLUDE[index] = "Beezwax!"
+	// Where FOCUS::LIBRARY_CODE_LINK[index] = "http://beezwax.net"
+	CodeMergeLoop ( "Hello ‡‡CODE[1]‡‡" ) = "Hello Beezwax!"
+	CodeMergeLoop ( "Hello ‡‡CODE_LINK[1]‡‡" ) = "http://beezwax.net"
+HISTORY:
+	Created:	2010-08-27 21:06 PST - Donovan A. Chandler
+*/

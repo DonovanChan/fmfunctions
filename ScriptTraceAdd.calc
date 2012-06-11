@@ -1,29 +1,18 @@
-Let ( [
-	stack = traceStack ;
-	delim = "	" ;
-	lastEntry = RightValues ( stack ; 1 ) ;
-	entryNum = LeftWords ( lastEntry ; 1 ) + 1 ;
-	script = Get ( ScriptName ) ;
-	now = GetAsNumber ( Get ( CurrentTimeStamp ) ) ;
-	prev = MiddleWords ( lastEntry ; 2 ; 1 ) ;
-	duration = If ( prev < 1 ; 0 ; now - prev ) & " sec"
-	 ];
-	List (
-		stack ;
-		entryNum & delim & now & delim & duration & delim & comment & delim & script
-	)
+TraceAdd (
+	Get ( ScriptName ) ;
+	"Script" ;
+	action ;
+	note
 )
 
-/* —————————————————————————————— //
-NAME:
-	ScriptTraceAdd ( traceStack ; comment )
+/* __________________________________________________
 
-PURPOSE:
-	Appends new entry to trace stack.  Used for monitoring script performance.
-
+NAME:		ScriptTraceAdd ( action ; note )
+PURPOSE:	Appends new entry to trace stack.  Used for monitoring script performance.
 EXAMPLES:
-	
-
+	ScriptTraceAdd ( "debug" ; "Finished sort operation" )
+NOTES:
+	Valid action values: {start, end, debug, error}
 HISTORY:
-	Created: 2011-Apr-26 14h58 PST — Donovan A. Chandler
+	Created:	2011-04-26 14:58 PST - Donovan A. Chandler
 */

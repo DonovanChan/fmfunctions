@@ -47,7 +47,7 @@ try¶
 	-- Read file¶
 	set fileText to readFile(fileAlias)¶
 on error errText number errNumber¶
-	set errMessage to \"Error \" & errNumber & \": \" & errText¶
+	set errMessage to \"Error: \" & errNumber & \": \" & errText¶
 end try¶
 ¶
 -- Set to FileMaker record¶
@@ -55,12 +55,12 @@ if errMessage ≠ missing value¶
 	set resultText to errMessage¶
 else¶
 	set resultText to fileText¶
+	set filePath to completePath(POSIX path of fileAlias)¶
+	set fileName to stripPath(fileAlias as text)¶
+	setField(dbName, tableName, fieldName, 2, filePath)¶
+	setField(dbName, tableName, fieldName, 3, fileName)¶
 end¶
-set filePath to completePath(POSIX path of fileAlias)¶
-set fileName to stripPath(fileAlias as text)¶
 setField(dbName, tableName, fieldName, 1, resultText)¶
-setField(dbName, tableName, fieldName, 2, filePath)¶
-setField(dbName, tableName, fieldName, 3, fileName)¶
 ¶
 -- Clear variable to ensure memory is clean¶
 set fileText to missing value¶
@@ -163,8 +163,8 @@ end stripStartupDisk¶
 --	Use 'info for' command to see type idenfier of a file¶
 --	More info: http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW4¶
 on utiList(labelText)¶
-	set labels to {\"txt\",\"xml\",\"html\",\"log\",\"webarchive\",\"email archive\"}¶
-	set values to {\"public.plain-text\",\"public.xml\",\"public.html\",\"com.apple.log\",\"com.apple.webarchive\",\"com.apple.mail.email\"}¶
+	set labels to {\"txt\",\"xml\",\"html\",\"log\",\"webarchive\",\"email archive\",\"css\"}¶
+	set values to {\"public.plain-text\",\"public.xml\",\"public.html\",\"com.apple.log\",\"com.apple.webarchive\",\"com.apple.mail.email\",\"com.apple.dashcode.css\"}¶
 	set newText to searchReplaceText(labelText,labels,values)¶
 	set myResult to paragraphs of newText¶
 end¶
@@ -172,9 +172,7 @@ end¶
 )
 
 /* —————————————————————————————— //
-NAME:
-	AppleScriptReadFile ( resultFieldName ; message ; defaultDirPath ; pathToFile ; fileTypes )
-
+NAME:	AppleScriptReadFile ( resultFieldName ; message ; defaultDirPath ; pathToFile ; fileTypes )
 PURPOSE:
 	Returns text contents and name of file.
 	Script will prompt for file if 'pathToFile' parameter is empty.
@@ -194,13 +192,11 @@ NOTES:
 			"/HD/Users/donovan/Desktop/test.txt"
 			"/Users/donovan/Desktop/test.txt"
 	pathToFile:	(Optional) Path to file to read.
-	pathToFile:	(Optional) List of file types user is permitted to select
-		Current options: html, log, txt, html
+	fileTypes:	(Optional) List of file types user is permitted to select
+		Current options: css, email archive, html, log, txt, webarchive, xml
 		You can add new types by adding new type identifiers to utiList() handler
 
-EXAMPLES:
-	
-
 HISTORY:
-	Created: 2011-Oct-27 11h38 PST — Donovan Chandler
+	Created:	2011-10-27 11:38 PST - Donovan Chandler
+	Modified:	2012-04-17 21:11 PST - Donovan Chandler
 */

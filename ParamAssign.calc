@@ -1,58 +1,29 @@
 Let ( [
-	rowCount = ValueCount ( listOfParams )
-	; rowSplit = Substitute ( GetValue ( listOfParams ; 1 ) ; ";" ; ¶ )
-	; nameRaw = GetValue ( rowSplit ; 1 )
-	; isOptional = Left ( nameRaw ; 1 ) = "-"
-	; name = Trim ( If ( isOptional ; Middle ( nameRaw ; 2 ; 999 ) ; nameRaw ) )
-	; value = #P ( name )
-	; options = GetValue ( rowSplit; 2 )
-	; isGlobal = Position ( options ; "g" ; 1 ; 1 ) > 0
-	; type = Trim ( Substitute ( options ; "g" ; "" ) )
-	; error =
-		If (
-			not IsEmpty ( rowSplit )
-				; VarSet ( "_" & name ; value ; type ; isGlobal )
-		)
+	names = VarAssignLoop ( Get ( ScriptParameter ) ; listOfParams ) ;
+	error = If ( IsEmpty ( names ) ; 0 ; 10 )
 	] ;
-	List (
-		  If ( not isOptional and error = 1 ; name )
-		; If ( rowCount > 1
-			; ParamAssign ( RightValues ( listOfParams ; rowCount - 1 ) )
+	If (
+		error ≠ 0 ;
+		Let ( [
+			count = ValueCount ( names ) ;
+			str = Substitute ( names ; ¶ ; ", " ) ;
+			msg = "Missing/invalid parameter" & If ( count > 1 ; "s" )
+				& ": " & str ;
+			v = VarSet ( "_invalid_params" ; names ; "t" ; False ) ;
+			v = VarSet ( "_error_message" ; msg ; "t" ; False )
+			] ;
+			""
 		)
 	)
+	& error
 )
 
-/* —————————————————————————————— //
-NAME:
-	ParamAssign ( listOfParams )
+/* __________________________________________________
 
-PURPOSE:
-	Instantiates named parameters, with optional type casting and validation.
-
-PARAMETERS:
-	listOfParams:	A list of values, each designating a parameter to extract.
-		The names of any required values that failed to instantiate a variable
-		value will be returned as a list.
-
-		Each value may also contain zero or more flags:
-			{-}name{;{g}{tndim}}
-			-	Value is optional
-			g	Instantiate as global variable
-			t	Cast as text
-			n	Cast as number
-			d	Cast as date
-			i	Cast as time
-			m	Cast as timestamp
-
-EXAMPLES:
-	ParamAssign (
-		List (
-			  "name"	// local var cast as text
-			; "age;n"	// local var cast as number
-			; "-flag;g"	// optional, global var
-		)
-	)
-
+NAME:	ParamAssign ( listOfParams )
+PURPOSE:	Instantiates named parameters, with optional type casting and validation.
+EXAMPLES:	See ManParamAssign() for documentation.
 HISTORY:
-	Created: 2012-Jan-23 14h53 PST — Donovan A. Chandler
+	Created:	2012-03-16 09:15 PST - Donovan Chandler
+	Modified:	
 */

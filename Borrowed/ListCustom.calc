@@ -136,24 +136,20 @@ My advice then : dissect this function by escaping the 'Result' and placing one 
 Special attention should be paid to the 'First' Variable, everything starts from there !
 */
 
-/* —————————————————————————————— //
-NAME:
-	ListCustom ( start ; end ; function )
-	v4.6, 2010-Aug
+/* __________________________________________________
 
-PURPOSE:
-	Performs function n times from start to end, returning a return-delimited list of results.  Does this without calling itself recursively.
-
+NAME:	ListCustom ( start ; end ; function )
+VERSION:	4.6, 2010-Aug
+PURPOSE:	Performs function N times from start to end, returning a return-delimited list of results.
+		Does this without calling itself recursively.
 EXAMPLES:
-	CustomList ( 1 ; Get ( FoundCount ) ; 
+	ListCustom ( 1 ; Get ( FoundCount ) ; 
 		"GetNthRecord ( FirstName ; [n] )" 
 	) = "James¶Henry¶Susan" where found set contains 3 records
-
 HISTORY:
-	Created: 2008-Jul by Agnes Barough
-	Modified: 2010-Aug-27 16h18 PST — Donovan A. Chandler
-		Changed name to ListCustom and added documentation to end.
-		
+	Created:	2008-07 by Agnes Barough
+	Modified:	2010-08-27 16:18 PST - Donovan A. Chandler
+	Changed name to ListCustom and added documentation to end.
 NOTE:
 	See original documentation above for further detail.
 */

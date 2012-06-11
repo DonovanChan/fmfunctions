@@ -9,16 +9,7 @@ Case (
 		) ;
 
 	//-- If list is clean, remove leading/trailing returns
-	Substitute (
-		Trim (
-		  Substitute ( text ;
-			[ " " ; "::‡::" ] ;
-			[ ¶ ; " " ]
-		  )
-		) ;
-		[ " " ; ¶ ] ;
-		[ "::‡::" ; " " ]
-	)
+	TrimCR ( text )
 )
 
 /* —————————————————————————————— //

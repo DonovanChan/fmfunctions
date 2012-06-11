@@ -1,17 +1,17 @@
 Let ( [
 	rep = occurrence ;
-	sOpen = Position ( text ; openChar ; 1 ; rep ) ;
-	sString = sOpen + Length ( openChar ) ;
-	sClose = Position ( text ; closeChar ; sString ; 1 ) ;
+	sOpen = Position ( text ; openCharacter ; 1 ; rep ) ;
+	sString = sOpen + Length ( openCharacter ) ;
+	sClose = Position ( text ; closeCharacter ; sString ; 1 ) ;
 	sClose = If ( sClose = 0 ; Length ( text ) ; sClose ) ;
 	lenString = sClose - sString
 	] ;
 	Case (
 		//-- Empty characters - use text boundary
-		IsEmpty ( openChar ) ;
-			Left ( text ; Position ( text ; closeChar ; 1 ; occurrence ) - 1 ) ;
-		IsEmpty ( closeChar ) ;
-			Middle ( text ; Position ( text ; openChar ; 1 ; occurrence ) + 1 ; Length ( text ) ) ;
+		IsEmpty ( openCharacter ) ;
+			Left ( text ; Position ( text ; closeCharacter ; 1 ; rep ) - Length ( closeCharacter ) ) ;
+		IsEmpty ( closeCharacter ) ;
+			Middle ( text ; sString ; Length ( text ) ) ;
 
 		//-- Search characters not found
 		sOpen = 0 or sClose = 0 ;
@@ -22,23 +22,15 @@ Let ( [
 	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	TextBetween ( text ; openChar ; closeChar ; occurrence )
+/* __________________________________________________
 
-PURPOSE:
-	Returns text between specified characters
-
+NAME:	TextBetween ( text ; openCharacter ; closeCharacter ; occurrence )
+PURPOSE:	Returns the text between the first instance of the two enclosing characters. If both characters are not present, with open before close, null is returned.
+EXAMPLES:
+	TextBetween ( "Repetition[5][3]" ; "[" ; "]" ; 1 ) = 5
+	TextBetween ( "Repetition[5][3]" ; "[" ; "]" ; 2 ) = "3"
+	TextBetween ( "Repetition[5][3]" ; "[" ; "" ; 1 ) = "5][3]"
 HISTORY:
-	Created 2010.04.27 by Donovan Chandler
-	Modified 2011.08.10 by Donovan Chandler ; Updated formatting
-	Modified 2011.11.10 by Donovan Chandler ; Now supports empty open and close chars
-
-EXAMPLE:
-	text.getBetween (
-		"<a href='#'>Link</a>" ;
-		"href=" ;
-		">" ;
-		1
-	) => "'#'"
+	Created:	2010-04-27 00:00 PST - Donovan Chandler
+	Modified	2011-11-10 00:00 PST - Donovan Chandler: Now supports empty open and close chars
 */

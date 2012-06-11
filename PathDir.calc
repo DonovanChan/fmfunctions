@@ -1,0 +1,17 @@
+Let ( [
+	len = Length ( path ) ;
+	pos = Position ( path ; "/" ; len ; -1 )
+	] ;
+	Left ( path ; pos )
+)
+
+/* __________________________________________________
+
+NAME:	PathDir ( path )
+PURPOSE:	Strips file name from path.
+EXAMPLES:
+	PathDir ( "filemac:/HD/Users/Shared/text.xml" )
+	= "filemac:/HD/Users/Shared/"
+HISTORY:
+	Created:	2012-02-03 22:00 PST - Donovan A. Chandler
+*/

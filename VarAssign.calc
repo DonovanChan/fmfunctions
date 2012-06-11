@@ -1,0 +1,29 @@
+Let ( [
+	names = VarAssignLoop ( encodedString ; listOfParams ) ;
+	error = If ( IsEmpty ( names ) ; 0 ; 10 )
+	] ;
+	If (
+		error ≠ 0 ;
+		Let ( [
+			count = ValueCount ( names ) ;
+			str = Substitute ( names ; ¶ ; ", " ) ;
+			msg = "Missing/invalid parameter" & If ( count > 1 ; "s" )
+				& ": " & str ;
+			v = VarSet ( "_invalid_params" ; names ; "t" ; False ) ;
+			v = VarSet ( "_error_message" ; msg ; "t" ; False )
+			] ;
+			""
+		)
+	)
+	& error
+)
+
+/* __________________________________________________
+
+NAME:	VarAssign ( encodedString ; listOfParams )
+PURPOSE:	Instantiates variables from dictionary, with optional type casting and validation.
+EXAMPLES:	See VarAssignMan() for documentation.
+HISTORY:
+	Created:	2012-03-16 09:15 PST - Donovan Chandler
+	Modified:	
+*/
