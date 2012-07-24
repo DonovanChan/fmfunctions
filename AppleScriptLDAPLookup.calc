@@ -1,0 +1,99 @@
+Let ( [
+	fullName = TextEncodeForAppleScript ( TextEncodeUTF8Hex ( fullName ) ) ;
+	noResultMessage = "Error: No matches found" ;
+	db = Get ( FileName ) ;
+	fieldList = Substitute ( resultFieldName ; "::" ; ¶ ) ;
+	table = GetValue ( fieldList ; 1 ) ;
+	field = GetValue ( fieldList ; 2 ) ;
+	fmpVersion = "FileMaker Pro" & If ( Position ( Get ( ApplicationVersion ) ; "ProAdvanced" ; 1 ; 1 ) ; " Advanced" ) ;
+	searchString = If ( IsEmpty ( valueToReturn ) ; "" ; " cn " & valueToReturn )
+	] ;
+"set DSID to \"" & DSID & "\"¶
+set name_full to \"" & fullName & "\"¶
+set db to \"" & db & "\"¶
+set tableName to \"" & table & "\"¶
+set fieldName to \"" & field & "\"¶
+set noResultMessage to \"" & noResultMessage & "\"¶
+set valueToReturn to \"" & valueToReturn & "\"¶
+¶
+if DSID ≠ \"\" then¶
+	set shell_script to \"ldapsearch -b 'ou=people,o=Apple Computer' -h ldap.apple.com -x -u -LLL '(DSID=\" & DSID & \")'" & searchString & "\"¶
+else if ((offset of \" \" in name_full) as number is greater than 0) then¶
+	set shell_script to \"ldapsearch -b 'ou=people,o=Apple Computer' -h ldap.apple.com -x -u -LLL '(cn=\" & name_full & \")'" & searchString & "\"¶
+else¶
+	set shell_script to \"ldapsearch -b 'ou=people,o=Apple Computer' -h ldap.apple.com -x -u -LLL '(sn=\" & name_full & \")'" & searchString & "\"¶
+end if¶
+¶
+if valueToReturn ≠ \"\" then¶
+	set shell_script to shell_script & \" \" & valueToReturn¶
+end if¶
+¶
+try¶
+	set ldapResult to do shell script shell_script as text¶
+on error errText number errNum¶
+	set ldapResult to errNum & \": \" & errText & \". \" & ldapResult¶
+	setField(db, tableName, fieldName, ldapResult)¶
+	return¶
+end try¶
+¶
+if ldapResult = \"\" then¶
+	set myResult to noResultMessage¶
+else¶
+	set ldapResultElement_count to patternCount(ldapResult, \"dn\")¶
+	set myResult to ldapResult¶
+end if¶
+¶
+setField(db, tableName, fieldName, myResult)¶
+¶
+------------------------------------------------¶
+-- HANDLERS¶
+------------------------------------------------¶
+¶
+--Handler: Returns value of first matching ldap result element¶
+on ldapResultElement(resultText, elementName)¶
+	set elementStart to offset of elementName as text in resultText¶
+	if (elementStart) > 0 then¶
+		set myResult to text (elementStart + (length of elementName) + 2) through ((length of resultText) - 1) of resultText¶
+	end if¶
+end ldapResultElement¶
+¶
+--Handler: Returns patterncount¶
+on patternCount(theText, matchString)¶
+	set oldTID to AppleScript's text item delimiters¶
+	set AppleScript's text item delimiters to {matchString}¶
+	set countedPattern to count of text items of theText¶
+	set AppleScript's text item delimiters to oldTID¶
+	return countedPattern - 1¶
+end patternCount¶
+¶
+--Handler: Sets FileMaker field value¶
+on setField(databaseName, tableName, fieldName, theValue)¶
+	tell application " & Quote ( fmpVersion ) & "¶
+		tell database (databaseName as text)¶
+			tell table (tableName as text)¶
+				set field fieldName to theValue¶
+			end tell¶
+		end tell¶
+	end tell¶
+end setField"
+)
+
+/* —————————————————————————————— //
+NAME:
+	AppleScriptLDAPLookup ( DSID ; fullName ; resultFieldName ; valueToReturn )
+
+PURPOSE:
+	Returns record from LDAP server.
+	Searches by fullName if DSID is not specified.
+	Returns full LDAP record if valueToReturn is not specified.
+
+EXAMPLES:
+	AppleScriptLDAPLookup ( "1337626871" ;
+		"" ;
+		GetFieldName ( GLOBAL::TEMP_TEXT_GT ) ;
+		"cn"
+	) // returns name of person
+
+HISTORY:
+	Created: 2011-Mar-15 15h21 PST — Donovan A. Chandler
+*/

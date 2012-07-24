@@ -1,7 +1,6 @@
 Let ( [
 	searchList = ¶ & currentList & ¶ ;
-	value_exists = PatternCount ( searchList ; ¶ & value & ¶ ) ;
-	currentListLength = Length ( currentList )
+	value_exists = Position ( searchList ; ¶ & value & ¶ ; 1 ; 1 )
 	 ];
 	Case (
 		value_exists ;
@@ -12,40 +11,31 @@ Let ( [
 						[ "|" & value & ¶ ; "" ];
 						[ "¶|" ; ¶ ]
 					)
-				 ];
-				Middle (
-					newList ;
-					2 ;
-					Length ( newList ) - 2
-				)
+				];
+				Middle ( newList ; 2 ; Length ( newList ) - 2 )
 			) ;
 
 		IsEmpty ( value ) ;
 			currentList ;
 
-		currentList &
-		If ( Right ( currentList ; 1 ) ≠ ¶ and currentListLength ; ¶ ) & value
+		List ( currentList ; value )
 	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	ListAddRemove ( currentList ; value )
+/* __________________________________________________
 
-PURPOSE:
-	Adds or removes value from return-delimited list.
-
+NAME:	ListAddOrRemove ( currentList ; value )
+PURPOSE:	Adds or removes value from return-delimited list. Useful for adding/removing an id from a multi-key, such as for portal selections.
+EXAMPLES:
+	ListAddRemove ( "foo" ; "fum" )			= "foo¶fum"
+	ListAddRemove ( "foo¶fum" ; "foo" )		= "fum"
+	ListAddRemove ( "foo¶¶fum" ; "foo" )	= "fum¶"
+	ListAddRemove ( "foo¶fum" ; "foo¶fum" )	= "fum¶fum"
 HISTORY:
-	Created: 2011-Mar-02 12h19 PST — Donovan Chandler
-	Based on old function by Matt Petrowsky of ISO Productions, Inc.
-
-INPUT:
-	currentList:  return-delimited list of values
-	value:	text string to be added or removed
-
-OUTPUT:
-   Return-delimited list from currentList parameter with value added or removed
-
+	Created:	2012-06-11 12:05 PT - Donovan Chandler based on function by Matt Petrowsky
+	Modified:	
 NOTES:
-   Adds if "value" exists in "currentList" or removes if it does not. Useful for adding/removing an id from a multi-key, such as for portal selections.
+	Does NOT remove any blank lines except for leading lines.
+	Does NOT support multi-line strings in "value" parameter.
+	NOT optimized for large lists. (Would need to get rid of substitutions.)
 */

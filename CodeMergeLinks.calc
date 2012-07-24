@@ -1,0 +1,22 @@
+Let ( [
+	linked = CodeMerge ( Substitute ( text ; "‡‡CODE[" ; "‡‡CODE_LINK[" ) )
+	] ;
+	CodeMerge ( Substitute ( linked ; "‡‡*CODE[" ; "‡‡CODE[" ) )
+)
+
+/* __________________________________________________
+
+NAME:	CodeMergeLinks ( text )
+PURPOSE:	Merges value from LIBRARY_CODE table into text,
+		ensuring that links to values are included instead of merging in entire text.
+		Useful when exporting code from a table.
+EXAMPLES:
+	// Where FOCUS::LIBRARY_CODE_INCLUDE[index] = "Beezwax!"
+	// Where FOCUS::LIBRARY_CODE_LINK[index] = "http://beezwax.net"
+	CodeMergeLoop ( "Hello ‡‡CODE[1]‡‡" ) = "http://beezwax.net"
+	CodeMergeLoop ( "Hello ‡‡CODE_LINK[1]‡‡" ) = "http://beezwax.net"
+
+HISTORY:
+	Created:	2012-06-21 12:14 PT - Donovan Chandler
+	Modified:	
+*/

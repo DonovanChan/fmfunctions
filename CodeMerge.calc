@@ -10,9 +10,9 @@ Let ( [
 	//-- Don't leave label in place if it isn't recognized, to prevent open loop
 	code =
 		Case (
-			markerType = "CODE" ; FOCUS::CODE_INCLUDE_REP[index] ;
-			markerType = "CODE_LINK" ; FOCUS::CODE_LINK_REP[index] ;
-			markerType = "CODE_NAME" ; FOCUS::CODE_FILE_NAME_REP[index] ;
+			markerType = "CODE" or markerType = "*CODE" ; FOCUS::CODE_INCLUDE_REP[index] ;
+			markerType = "CODE_LINK" or markerType = "*CODE_LINK" ; FOCUS::CODE_LINK_REP[index] ;
+			markerType = "CODE_NAME" or markerType = "*CODE_NAME" ; FOCUS::CODE_FILE_NAMESPACE[index] & FOCUS::CODE_FILE_NAME_REP[index] ;
 			"INVALID CODE LABEL: " & Substitute ( marker ; delim ; delim & " " )
 		) ;
 	textNew =

@@ -2,7 +2,7 @@ Get ( AccountPrivilegeSetName ) = "[Full Access]"
 
 /* __________________________________________________
 
-NAME:		UserIsFullAccess
+NAME:		UserIsFullAccess ( )
 PURPOSE:	Returns True if user has full access privileges
 HISTORY:
 	Created:	2012-09-12 PST -27 16h16 PST — Donovan A. Chandler

@@ -1,0 +1,13 @@
+TextBetween ( url & "&" ; name & "=" ; "&" ; 1 )
+
+/* __________________________________________________
+
+NAME:	URLParam ( url ; name )
+PURPOSE:	Retrieves parameter value from url.
+		Doesn't parse or decode full url because OnTimer script usually handles that.
+EXAMPLES:
+	URLParam ( "http://domain.com#animal=dog&food=donuts%20" ; "food" ) = "donuts%20"
+HISTORY:
+	Created:	2012-06-21 16:00 PST - Donovan Chandler
+	Modified:	
+*/

@@ -52,10 +52,11 @@ Let ( [
 
 )
 
-/*
-NAME:	AuditLog ( logText ; fieldsToLog ; format ; separator ; id )
-PURPOSE:	This custom function is called in an auto-enter text field so that every field listed as a parameter for this function automatically triggers the field to update. This function merely collects a snapshot of the related information and formats it for presentation.
-EXAMPLE:
+/* __________________________________________________
+
+NAME:	LogAdd ( logText ; fieldsToLog ; format ; separator ; id )
+PURPOSE:	Called in an auto-enter text field so that every field listed as a parameter for this function automatically triggers the field to update. This function merely collects a snapshot of the related information and formats it for presentation.
+EXAMPLES:
 	AuditLog ( AuditLog ; Name & Company ; "%Date%Time%Account$Key%Field%Change" ; "	" )
 NOTES:
 	If you separate the values with a reliable delimiter like "|", then you can have a separate table parse out the values. To do this, place the log entries into a global field that automatically extracts the first line every time it's updated. Take that first line and split it into a value list, having different fields grab their relative value every time a new record is created.

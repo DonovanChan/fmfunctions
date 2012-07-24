@@ -1,14 +1,14 @@
 Let ( [
-	  isMac = Abs ( Get ( SystemPlatform ) ) = 1
-	; pathPlain = FilePathStripPrefix ( path )
-	; prefix = "file://" & If ( isMac ; "/Volumes" )
+	isMac = Abs ( Get ( SystemPlatform ) ) = 1 ;
+	pathPlain = PathStripPrefix ( path ) ;
+	prefix = "file://" & If ( isMac ; "/Volumes/" )
 	] ;
 	prefix & pathPlain
 )
 
 /* __________________________________________________
 
-NAME:		FilePathForWebViewer ( path )
+NAME:	PathForWebViewer ( path )
 PURPOSE:	Encodes file path for use in web viewer.
 EXAMPLES:
 	
@@ -16,5 +16,5 @@ NOTES:
 	On Mac, prepend with "file:///Volumes/"
 	On Win, prepend with "file:///"
 HISTORY:
-	Created:	2010-06-23 16:39 PST - Donovan A. Chandler
+	Created:	2010-06-23 16:39 PT - Donovan A. Chandler
 */

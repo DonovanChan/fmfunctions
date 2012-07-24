@@ -1,4 +1,10 @@
-Middle ( url ; Position ( url ; "#" ; 1 ; 1 ) ; Length ( url ) )
+Let ( [
+	pos = Position ( url ; "#" ; 1 ; 1 )
+	] ;
+	If (
+		pos > 0 ; Middle ( url ; pos ; Length ( url ) )
+	)
+)
 
 /* __________________________________________________
 
