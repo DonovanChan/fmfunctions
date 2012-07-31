@@ -1,0 +1,20 @@
+If ( 
+
+	// The sql call results in an error, return empty so Data Viewer displays eror message
+	sqlExecuted = "?" ; "" ; 
+
+	// The sql call is executed correctly, just return the result
+	sqlExecuted
+)
+
+/* __________________________________________________
+
+NAME:	SQLDebug ( sqlExecuted )
+PURPOSE:	Allows you to view error message from ExecuteSQL( ) when performed in Data Viewer.
+EXAMPLES:
+	SQLDebug ( ExecuteSQL ( "SELECT unexistingfield from table" ; "" ; "" ) )
+	//= "The column named "unexistingfield" does not exist in any table in the column reference's scope."
+HISTORY:
+	Created:	Adapted from Andries Heylen (http://www.fmfunctions.com/mid/57)
+	Modified:	2012-07-31 07:23 PST - Donovan Chandler
+*/
