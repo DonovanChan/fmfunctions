@@ -1,0 +1,20 @@
+Let ( [
+	char1 = Middle ( text ; start ; 1 )
+	] ;
+	Case (
+		Position ( charactersToIgnore ; char1 ; 1 ; 1 ) = 0 ;
+			start ;
+		PositionIgnoring ( text ; charactersToIgnore ; start + 1 )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	PositionIgnoring ( text ; charactersToIgnore ; start )
+PURPOSE:	Returns position of first character not included in charactersToIgnore.
+EXAMPLES:
+	PositionIgnoring ( "123Dog" ; "D321 " ; 1 )	= 5
+HISTORY:
+	Created:	2012-02-13 13:00 PT - Will M. Baker
+	Modified:	
+*/
