@@ -1,19 +1,23 @@
-Let ( [
-	delim = "	" ;
-	row = GetAsNumber ( TimestampMicro ) & delim & objectName & delim & objectType & delim & action & delim & note ;
-	$$_trace_log = List ( $$_trace_log ; row )
-	] ;
-	row
+If (
+	not TraceIsOn ; "Trace log disabled" ;
+
+	Let ( [
+		delim = "	" ;
+		row = GetAsNumber ( TimestampMicro ) & delim & objectName & delim & objectType & delim & action & delim & note ;
+		$$_trace_log = List ( $$_trace_log ; row )
+		] ;
+		row
+	)
 )
 
 /* __________________________________________________
 
 NAME:	TraceAdd ( objectName ; objectType ; action ; note )
-PURPOSE:	Appends entry to trace log.
+PURPOSE:	Appends entry to trace log in global variable.
 NOTES:
 	Optimized more for speed and ease of use.
 	Use FMBench if you're looking for something robust.
 HISTORY:
 	Created:	2012-04-11 10:34 PST - Donovan Chandler
-	Modified:	
+	Modified:
 */

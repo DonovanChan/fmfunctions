@@ -1,0 +1,12 @@
+$$_trace_enabled
+
+/* __________________________________________________
+
+NAME:	TraceIsOn ( )
+PURPOSE:	Returns True if trace log is enabled.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-09-07 16:20 PST - Donovan Chandler
+	Modified:
+*/

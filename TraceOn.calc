@@ -1,0 +1,16 @@
+Let ( [
+	$$_trace_enabled = True
+	] ;
+	$$_trace_enabled
+)
+
+/* __________________________________________________
+
+NAME:	TraceOn ( )
+PURPOSE:	Enables trace log.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-09-07 16:21 PST - Donovan Chandler
+	Modified:
+*/
