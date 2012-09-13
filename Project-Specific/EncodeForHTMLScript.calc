@@ -1,0 +1,22 @@
+Let ( [
+	br = "</br>"
+	] ;
+	Substitute (
+		text ;
+		[ Char ( 10 )	; br ] ;	// Line feed
+		[ Char ( 11 )	; br ] ;	// Vertical tab
+		[ Char ( 12 )	; br ] ;	// Form feed
+		[ Char ( 13 )	; br ] 	// Carriage return
+	)
+)
+
+/* __________________________________________________
+
+NAME:	EncodeForHTMLScript ( text )
+PURPOSE:	Encodes block of text for use in "html . p" and related scripts.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-09-06 16:26 PST - Donovan Chandler
+	Modified:
+*/
