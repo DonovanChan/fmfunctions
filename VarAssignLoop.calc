@@ -12,19 +12,20 @@ Let ( [
 		) ;
 	nameRaw = Left ( row ; eName - 1 ) ;
 	isOptional = ( Left ( nameRaw ; 1 ) = "-" ) ;
-	
+
 	name = Trim ( If ( isOptional ; Middle ( nameRaw ; 2 ; 999 ) ; nameRaw ) ) ;
 	value = #Value ( encodedString ; name ) ;
 	options = TextBetween ( row & "||" ; ";" ; "||" ; 1 ) ;
 	isGlobal = Position ( options ; "g" ; 1 ; 1 ) ;
 	type = Trim ( Substitute ( options ; ["g" ; "" ] ; [ "	" ; "" ] ) ) ;
-	
+
 	//-- Use default value if necessary ;
 	value =
-		If ( not IsEmpty ( value ) ; value ;
-			Evaluate ( Middle ( row ; sDef + 2 ; 999 ) )
+		Case (
+			not IsEmpty ( value ) ; value ;
+			sDef > 0 ; Evaluate ( Middle ( row ; sDef + 2 ; 999 ) )
 		) ;
-	
+
 	//-- Instantiate variable (error returns '1') ;
 	error =
 		Case (
@@ -33,9 +34,9 @@ Let ( [
 			not IsEmpty ( row ) ;
 				VarSet ( "_" & name ; value ; type ; isGlobal )
 		)
-	
+
 	] ;
-	
+
 	//-- Return names of invalid parameters
 	List (
 		If ( not isOptional and error = 1 ; name ) ;
