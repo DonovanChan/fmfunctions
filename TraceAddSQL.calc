@@ -1,0 +1,30 @@
+If (
+	not TraceIsOn ; "Trace log disabled" ;
+
+	Let ( [
+		fdTimestamp = GetFieldName ( performance_log::timestamp_value ) ;
+		fdScript = GetFieldName ( performance_log::script_name ) ;
+		fdMessage = GetFieldName ( performance_log::note ) ;
+		ts = sqlPrepTimestampForInsert ( GetAsTimestamp ( TimestampMicro ) ) ;
+		query = "INSERT INTO " & SQLTable ( fdScript ) & " ( " &
+			SQLField ( fdTimestamp ) & ", " & SQLField ( fdScript ) & ", " & SQLField ( fdMessage ) &
+			" ) VALUES ( " &
+			ts & ", " & SQLString ( objectName ) & ", " & SQLString ( note ) &
+			" )"
+		] ;
+		sql ( query )
+	)
+)
+
+/* __________________________________________________
+
+NAME:   TraceAddSQL ( objectName ; objectType ; action ; note )
+PURPOSE:    Creates trace log entry directly into log table using SQL plug-in.
+NOTES:
+	Requires SQL plug-in supporting INSERT statements.
+	Optimized more for speed and ease of use.
+	Use FMBench if you're looking for something robust.
+HISTORY:
+	Created:    2012-09-17 11:59 PT - Donovan Chandler
+	Modified:
+*/
