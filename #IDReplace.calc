@@ -1,0 +1,22 @@
+Let ( [
+	all = listOfIDs ;
+	allFiltered = #IDExclude ( all ; table ) ;
+	tableOrig = TrimCR ( # ( all ; table ) )
+	] ;
+	List (
+		#ID ( table ; newValue ) ;
+		allFiltered
+	)
+)
+
+/* __________________________________________________
+
+NAME:	#IDReplace ( listOfIDs ; table ; newValue )
+PURPOSE:	Adds or replaces list of ID's for given table.
+		Modifies order of name-value pairs in favor of using existing functions.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2012-09-24 14:01 PT - Donovan Chandler
+	Modified:	
+*/

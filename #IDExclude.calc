@@ -1,0 +1,25 @@
+Let ( [
+	tag = "<:" & table & ":=¶" ;
+	tagStart = Position ( listOfIDs ; tag ; 1 ; 1 ) ;
+	tagEnd = Position ( listOfIDs ; "¶:>" ; tagStart ; 1 ) + 2 ;
+	listLength = Length ( listOfIDs )
+	] ;
+
+	Case (
+		PatternCount ( listOfIDs ; tag ) = 0 ; listOfIDs ;
+		tagEnd ≥ listLength ; Left ( listOfIDs ; tagStart - 2 ) ;
+		Left ( listOfIDs ; tagStart - 1 ) & Middle ( listOfIDs ; tagEnd + 1 ; listLength )
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	#IDExclude ( listOfIDs ; table )
+PURPOSE:	Retrieves a set of IDs from a table-encoded list, excluding the chunk of IDs corresponding to the specified table.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2010-02-08 15:54 PT - Will M. Baker
+	Modified:	2012-09-24 13:37 PT - Donovan Chandler : Formatting; made compatible with #( )
+*/

@@ -1,0 +1,23 @@
+Let ( [
+	tag = "<:" & table & ":=¶" ;
+	dataStart = Position ( listOfIDs ; tag ; 1 ; 1 ) + Length ( tag ) ;
+	dataEnd = Position ( listOfIDs ; "¶:>" ; dataStart ; 1 )
+	] ;
+
+	Case (
+		Position ( listOfIDs ; tag ; 1 ; 1 ) = 0 ; "" ;
+		Middle ( listOfIDs ; dataStart ; dataEnd - dataStart )
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	#IDValue ( listOfIDs ; table )
+PURPOSE:	Retrieves a set of IDs from an encoded list of tables.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2010-02-08 15:54 PT - Will M. Baker
+	Modified:	2012-09-24 14:40 PT - Donovan Chandler : Formatting; switched parameter order.
+*/

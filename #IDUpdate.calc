@@ -1,0 +1,34 @@
+Let ( [
+	all = listOfIDs ;
+	allFiltered = #IDExclude ( all ; table ) ;
+	tableOrig = #IDValue ( all ; table ) ;
+	tableNew = 
+		Case(
+			/*-- Multiple selection allowed */
+			multipleSelectionEnabled ;
+				ListAddOrRemove ( tableOrig ; selectedID );
+
+			/*-- Add or remove single selection */
+			tableOrig = selectedID ; "" ;
+
+			selectedID
+		)
+	] ;
+	List (
+		#ID ( table ; tableNew ) ;
+		allFiltered
+	)
+)
+
+/* __________________________________________________
+
+NAME:	#IDUpdate ( listOfIDs ; table ; selectedID ; multipleSelectionEnabled )
+PURPOSE:	Updates existing list of ID's for given table.
+		Used to add/remove a single id value.
+		Modifies order of name-value pairs in favor of using existing functions.
+EXAMPLES:
+	
+HISTORY:
+	Created:	2012-09-24 14:01 PT - Donovan Chandler
+	Modified:	
+*/

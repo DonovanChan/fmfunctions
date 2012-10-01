@@ -1,0 +1,14 @@
+"<:" & table & ":=¶" &
+listOfIDs & ¶ &
+":>"
+
+/* __________________________________________________
+
+NAME:	#ID ( table ; listOfIDs )
+PURPOSE:	Wraps an encoding tag around a list of IDs.  When used in conjunction with decoding functions, allows large groups of IDs from the same table to be stuffed into a field containing IDs from many tables, and the quick extraction of just those IDs, or all IDS but those IDs.
+EXAMPLES:
+	#ID ( "PERSON"; "ID1¶ID2¶ID3" ) = "<:PERSON¶ID1¶ID2¶ID3¶:>"
+HISTORY:
+	Created:	2010-02-08 15:54 PT - Will M. Baker
+	Modified:	2012-09-24 13:33 PT - Donovan Chandler : Made compatible with normal #Value().
+*/
