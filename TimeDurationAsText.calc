@@ -1,0 +1,29 @@
+Let ( [
+	then = GetAsTimestamp ( startTimestamp ) ;
+	now = GetAsTimestamp ( endTimestamp ) ;
+	dur = now - then ;
+	hours = Hour ( dur ) ;
+	days = Int ( Div ( hours ; 24 ) ) ;
+	hours = Mod ( hours ; 24 ) ;
+	mins = Minute ( dur )
+	] ;
+	Case (
+		IsEmpty ( startTimestamp ) or IsEmpty ( endTimestamp ) ; "" ;
+		days > 0 ; days & " day" & If ( days > 1 ; "s" ) ;
+		hours > 0 ; hours & " hour" & If ( hours > 1 ; "s" ) ;
+		mins > 0 ; mins & " min" & If ( mins > 1 ; "s" )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	TimeDurationAsText ( startTimestamp ; endTimestamp )
+PURPOSE:	Returns text description of duration, using largets denominator only.
+EXAMPLES:
+	TimeDurationAsText ( "1/1/2012" ; "1/14/2012" ) = "13 days"
+	TimeDurationAsText ( "1/1/2012 12:00 PM" ; "1/1/2012 1:00 PM" ) = "1 hour"
+	TimeDurationAsText ( "1/1/2012 12:00 PM" ; "1/1/2012 12:38 PM" ) = "38 mins"
+HISTORY:
+	Created:	2012-10-15 15:37 PT - Donovan Chandler
+	Modified:
+*/
