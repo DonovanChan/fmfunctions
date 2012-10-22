@@ -1,4 +1,4 @@
-Let ([
+Let ( [
 	//---- Parse path ----
 	pathNodeEnd = Position ( path & "/" ; "/" ; 1 ; 1 ) - 1;
 	pathNodeCurrent = Left ( path ; pathNodeEnd );
@@ -10,25 +10,26 @@ Let ([
 	nodeIndex = If ( nodeIndex > 0 ; nodeIndex ; 1 );
 
 	//---- Locate current element ----
-	value = JSONValue ( text ; nodeTag ; nodeIndex )
+	value = JSONValueNth ( text ; nodeTag ; nodeIndex )
 
-	];
-	
+	] ;
+
 	Case (
 
 		IsEmpty ( value ) ; "" ;
 
 		//-- Continue down path
 		not IsEmpty ( pathRemaining ) ;
-			JSONPath ( value ; pathRemaining );
+			JSONPath ( value ; pathRemaining ) ;
 
 		//-- Default: return result
 		value
 	)
 )
 
-/* —————————————————————————————— //
-NAME:	JSONPath ( text; path )
+/* __________________________________________________
+
+NAME:	JSONPath ( text ; path )
 PURPOSE:	Parses JSON using simple paths.
 		Inspired by XPath and JSONPath (http://goessner.net/articles/JsonPath/)
 EXAMPLES:
@@ -38,6 +39,7 @@ EXAMPLES:
 	JSONPath ( $_text ; "state[2]/cities" ) = "[\"Portland\"]"
 DEPENDENCIES:
 	Custom Functions:	JSONValue()
-HISTORY: 
-	Created: 2012-08-7 - Donovan Chandler
+HISTORY:
+	Created:	2012-08-07 12:00 PT - Donovan Chandler
+	Modified:
 */

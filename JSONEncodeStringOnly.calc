@@ -1,0 +1,20 @@
+Let ( [
+	char1 = Left ( Trim ( text ) ; 1 ) ;
+	isEscaped = ( char1 = "[" or char1 = "{" )
+	] ;
+	If ( isEscaped ; text ; JSONEncode ( text ) )
+)
+
+/* __________________________________________________
+
+NAME:	JSONEncodeStringOnly ( text )
+PURPOSE:	Creates quoted string for use in JSON, escaping characters as necessary.
+		Leaves string in tact if it appears to be a JSON object or array.
+EXAMPLES:
+	#EncodeStringOnly ( "Oakland" )			= "\"Oakland\""
+	#EncodeStringOnly ( "  [\"a\",\"b\"]")			= "[\"a\",\"b\"]"
+	#EncodeStringOnly ( "{\"city\":\"Oakland\"}")	= "{\"city\":\"Oakland\"}"
+HISTORY:
+	Created:	2012-05-29 12:54 PT - Donovan Chandler
+	Modified:
+*/

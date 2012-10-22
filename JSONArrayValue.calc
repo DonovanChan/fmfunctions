@@ -1,0 +1,60 @@
+Let ( [
+	QuotationMark = Char ( 34 ) ;
+	textLen = Length ( text ) ;
+	whitespace =
+		Char ( 32 )	// space
+		& Char ( 9 )	// horizontal tab
+		& Char ( 10 )	// line feed
+		& Char ( 11 )	// vertical tab
+		& Char ( 12 )	// form feed
+		& Char ( 13 ) ;	// carriate return
+	arrayStart = Position ( text ; "[" ; 1 ; 1 ) ;
+	delimStart = JSONArrayPosition ( text ; arrayStart + 1 ; index ) ;
+	openDelim = Middle ( text ; delimStart ; 1 ) ;
+	valueStart =
+		// Preserve leading whitespace unless retrieving single value
+		Case (
+			openDelim = QuotationMark ; PositionIgnoring ( text ; whitespace ; delimStart + 1 ) ;
+			delimStart + 1
+		) ;
+	valueEnd =
+		Case (
+			openDelim = QuotationMark ;
+				PositionUnescaped ( text ; openDelim ; valueStart + 1 ; textLen ; 1 ) ;
+			openDelim = "{" ;
+				TextClosePosition ( text ; "{" ; "}" ; delimStart ) - 1 ;
+			openDelim = "[" ;
+				TextClosePosition ( text ; "[" ; "]" ; delimStart ) - 1 ;
+			0
+		) ;
+	value =
+		Case (
+			valueStart = 0 or valueEnd = 0 ; "?" ;
+			openDelim = QuotationMark ;
+				Middle ( text ; valueStart + 1 ; valueEnd - valueStart - 1 ) ;
+			Middle ( text ; valueStart ; valueEnd - valueStart + 1 )
+		)
+	] ;
+/*	// Used for debugging
+	"delimStart=" & delimStart & ", valueStart=" & valueStart & ¶ &
+	"valueStart=" & valueStart & ", valueEnd=" & valueEnd & ", openDelim=" & Quote ( openDelim ) & ¶ &
+*/
+
+	JSONDecode ( value)
+)
+
+/* __________________________________________________
+
+NAME:	JSONArrayValue ( text ; index )
+PURPOSE:	Retrieves Nth array value from text.
+EXAMPLES:
+	Where $_text = "[ {\"a\":\"dog\",\"b\":\"cat\"}, [1,2,3] ]"
+
+	#NthArrayValue ( $_text ; 1 )	= "{\"a\":\"dog\",\"b\":\"cat\"}"
+	#NthValue ( $_text ; 2 )	= "[1,2,3]"
+	#NthValue ( $_text ; 3 )	= ""
+HISTORY:
+	Created:	2012-10-17 12:45 PT - Donovan Chandler using JSONArray( )
+NOTES:
+
+*/

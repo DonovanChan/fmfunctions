@@ -11,7 +11,7 @@ Case (
 			& Char ( 11 )	// vertical tab
 			& Char ( 12 )	// form feed
 			& Char ( 13 ) ;	// carriate return
-		nameStart = Position ( text ; #Encode ( name ) & ":" ; 1 ; index ) ;
+		nameStart = Position ( text ; JSONEncode ( name ) & ":" ; 1 ; index ) ;
 		delimStart = PositionUnescaped ( text ; ":" ; nameStart ; textLen ; 1 ) + 1 ;
 		valueStart = PositionIgnoring ( text ; whitespace ; delimStart ) ;
 		char1 = Middle ( text ; valueStart ; 1 ) ;
@@ -38,14 +38,14 @@ Case (
 		"valueStart=" & valueStart & ", valueEnd=" & valueEnd & ", char1=" & Quote ( char1 ) & ¶ &
 	*/
 
-		#Decode ( value)
+		JSONDecode ( value)
 	)
 
 )
 
 /* __________________________________________________
 
-NAME:	JSONValue ( text ; name ; index )
+NAME:	JSONValueNth ( text ; name ; index )
 PURPOSE:	Retrieves value of specified pair.
 EXAMPLES:
 	Where $_text = "{\"a\":\"dog\",\"a\":{\"dog\"},\"a\":[\"dog\"]}"

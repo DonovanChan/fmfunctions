@@ -1,15 +1,14 @@
 Case (
 	rep > repMax or start > Length ( text ) ; "" ;
 	Let ( [
-		backslash = Char ( 92 ) ;
+		Backslash = Char ( 92 ) ;
 		rawStart = Position ( text ; character ; start ; 1 ) ;
 		previousCharacter = If ( rawStart > 1 ; Middle ( text ; rawStart - 1 ; 1 ) ) ;
-		isEscaped = ( previousCharacter = backslash and rawStart ≠ Length ( text ) )
+		isEscaped = ( previousCharacter = Backslash and rawStart ≠ Length ( text ) )
 		] ;
 		Case (
 			isEscaped ; PositionUnescaped ( text ; character ; rawStart + 1 ; repMax ; rep ) ;
-			rep = repMax ; rawStart ;
-			PositionUnescaped ( text ; character ; rawStart + 1 ; repMax ; rep + 1 )
+			rawStart
 		)
 	)
 )
@@ -19,8 +18,10 @@ Case (
 NAME:	PositionUnescaped ( text ; character ; start ; repMax ; rep )
 PURPOSE:	Finds position of first unescaped quotation mark.
 EXAMPLES:
-	
+	Where $_text = "[ \[ \] ]"
+	PositionUnescaped ( $_text ; 1 ; Length ( $_text ) ; 1 ) = 9
 HISTORY:
 	Created:	2012-02-13 13:00 PT - Will M. Baker
 	Modified:	2012-05-29 12:05 PT - Donovan Chandler : Added character param; more concise; renamed from #QuotePosition() to PositionUnescaped(); removed Backslash()
+	Modified:	2012-10-17 11:40 PT - Donovan Chandler : Fixed final Case statement to return result.
 */

@@ -1,49 +1,44 @@
 Let([
-    //-- Determine end point of last search
-    numCloseChar = If( not IsEmpty( $$text_numCloseChar ); $$text_numCloseChar; 1 );
-    
-    sCloseChar = Position( text; closeChar; startPosition; numCloseChar );
-    vBlock = Middle( text; startPosition; sCloseChar - startPosition + 1 );
-    countOpenChar = PatternCount( vBlock; openChar ); 
-    countCloseChar = PatternCount( vBlock; closeChar )
-    
-    ] ;
-    
-    Case(
-        //--CloseChar is for child element --
-        countOpenChar > countCloseChar;
-            Let([ $$text_numCloseChar = numCloseChar + 1 ]; "" )
-            & TextClosePosition( text; openChar; closeChar; startPosition );
-            
-        //-- Result --
-        countOpenChar = countCloseChar;
-            Let( $$text_numCloseChar = ""; "" )
-            & sCloseChar;
-            
-        //-- Error --
-        0
-        
-    )
+	//-- Determine end point of last search
+	numCloseChars = If ( not IsEmpty ( $$text_numCloseChars ) ; $$text_numCloseChars ; 1 ) ;
+
+	sCloseChars = Position( text ; closeChars ; startPosition ; numCloseChars ) ;
+	vBlock = Middle ( text ; startPosition ; sCloseChars - startPosition + 1 ) ;
+	countopenChars = PatternCount ( vBlock ; openChars ) ;
+	countCloseChars = PatternCount ( vBlock ; closeChars )
+
+	] ;
+
+	Case(
+		//-- CloseChars is for child element
+		countopenChars > countCloseChars ;
+			Let ( [ $$text_numCloseChars = numCloseChars + 1 ] ; "" )
+			& TextClosePosition ( text ; openChars ; closeChars ; startPosition ) ;
+
+		//-- Result
+		countOpenChars = countCloseChars ;
+			Let ( $$text_numCloseChars = "" ; "" )
+			& sCloseChars ;
+
+		//-- Error
+		0
+
+	)
 
 )
 
-/* —————————————————————————————— //
-NAME: 
-    TextClosePosition( text; openChar; closeChar; startPosition )
+/* __________________________________________________
 
-PURPOSE: 
-    Finds first openChar after startPosition and returns position of corresponding closeChar.
+NAME:	TextClosePosition( text ; openChars ; closeChars ; startPosition )
+PURPOSE:	Finds first openChars after startPosition and returns position of corresponding closeChars.
+EXAMPLES:
+	Where $_text = "[ [1,2], [3,4] ]"
 
-HISTORY: 
-    Created: 2009.07.17 by Donovan Chandler
-
-INPUT: 
-    text:    Text string containing open and close character pairs
-    openChar:    
-    closeChar:    
-    startPosition:    
-
-OUTPUT: 
-    Integer of position where closeChar occurs.
-    Errors return result of 0.
+	TextClosePosition ( $_text ; "[" ; "]" ; 1 ) = 16
+	TextClosePosition ( $_text ; "[" ; "]" ; 2 ) = 7
+HISTORY:
+	Created:	2009-07-17 12:00 PT - Donovan Chandler
+OUTPUT:
+	Integer of position where closeChars occurs.
+	Errors return result of 0.
 */

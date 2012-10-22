@@ -1,0 +1,16 @@
+Substitute ( encodedText ;
+	[ Backslash & QuotationMark ; QuotationMark ] ;
+	[ Backslash & Backslash ; Backslash ] ;
+	[ "\¶" ; ¶ ]
+)
+
+/* __________________________________________________
+
+NAME:	JSONDecode ( encodedText )
+PURPOSE:	Returns unquoted form of string encoded using JSONEncode( ) function.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-02-13 13:00 PT - Will M. Baker
+	Modified:
+*/

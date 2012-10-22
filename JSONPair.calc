@@ -1,38 +1,14 @@
-Let ( [
-	_char1 = Left ( value ; 1 ) ;
-	_value =
-		Case (
-			//-- Pass thru if already an array or object
-			_char1 = "[" or _char1 = "{" or _char1 = "\"" ;
-				value ;
-				
-			//-- If empty, return ""
-			IsEmpty ( value ) ;
-				Quote ( value ) ;
-				
-			//-- If a number, do not quote
-			Filter ( value ; ".0123456789" ) = value ;
-				value ;
-				
-			//-- Else, escape characters
-			Quote ( value )
-		)
-	] ;
-	Quote ( name ) & ":" & _value
-)
+JSONEncode ( name ) & ":" & JSONEncodeStringOnly ( value )
 
+/* __________________________________________________
 
-/* —————————————————————————————— //
-NAME:
-	JSONSet ( name ; value )
-
-PURPOSE:
-	Creates name-value pair in JSON format.
-	Does NOT enclose in brackets - use JSONObject or JSONArray for that.
-
+NAME:	JSONPair ( name ; value )
+PURPOSE:	Creates name-value pair in JSON format.
 EXAMPLES:
-	JSONSet ( "animal" ; "dog" ) = "\"animal\":\"dog\""
-
+	# ( "name" ; "Oakland" )			= "\"name\":\"Oakland\""
+	# ( "array" ; "  [\"a\",\"b\"]")			= "\"array\":[\"a\",\"b\"]"
+	# ( "object" ; "{\"city\":\"Oakland\"}")	= "\"object\":{\"city\":\"Oakland\"}"
 HISTORY:
-	Created: 2010-Aug-18 12h26 PST — Donovan A. Chandler
+	Created:	2012-02-13 13:00 PT - Will M. Baker
+	Modified:	2012-05-29 12:59 PT - Donovan Chandler : Now preserves pre-encoded values.
 */

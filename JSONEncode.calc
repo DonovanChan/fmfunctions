@@ -1,0 +1,17 @@
+QuotationMark &
+Substitute ( text ;
+	[ Backslash ; Backslash & Backslash ] ;
+	[ QuotationMark ; Backslash & QuotationMark ]
+) &
+QuotationMark
+
+/* __________________________________________________
+
+NAME:	JSONEncode ( text )
+PURPOSE:	Creates quoted string for use in JSON, escaping characters as necessary.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-02-13 13:00 PT - Will M. Baker
+	Modified:
+*/

@@ -1,26 +1,24 @@
-Let([
-	sNext = Position ( text ; startDelim ; startPosition ; 1 ) ;
-	eNext = TextClosePosition ( text ; startDelim ; endDelim ; sNext )
+Let ( [
+	sNext = Position ( text ; openChars ; startPosition ; 1 ) ;
+	eNext = TextClosePosition ( text ; openChars ; closeChars ; sNext )
 	];
-	Case(
-		nodeNumber = 1 ; sNext ;
-		
-		TextNthNodePosition ( text ; startDelim ; endDelim ; eNext ; nodeNumber - 1 )
+	Case (
+		sNext = 0 ; "" ;
+		nodeIndex = 1 ; sNext ;
+		TextNthNodePosition ( text ; openChars ; closeChars ; eNext ; nodeIndex - 1 )
 	)
 )
 
-/* —————————————————————————————— //
-NAME: 
-	TextNthNodePosition( text; startDelim; endDelim; startPosition; nodeNumber )
+/* __________________________________________________
 
-PURPOSE: 
+NAME: 	TextNthNodePosition( text ; openChars ; closeChars ; startPosition ; nodeIndex )
+PURPOSE:
 	Returns start position of Nth "node".
-	Each node is demarcated by startDelim and endDelim.
-
-HISTORY: 
-	Created 2009.12.03 by Donovan Chandler
-
-EXAMPLE: 
-	
-
+	Each node is demarcated by openChars and closeChars.
+EXAMPLES:
+	Where $_text = "[ [1,2], [3] ],[ 4 ]"
+	TextNthNodePosition ( $_text ; "[" ; "]" ; 1 ; 2 ) = 16
+HISTORY:
+	Created:	2009-12-03 12:00 PT - Donovan Chandler
+	Modified:
 */

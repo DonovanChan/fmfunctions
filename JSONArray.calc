@@ -1,22 +1,14 @@
-If ( not IsEmpty ( stringToEnclose ) ;
-	"[" &
-	Substitute ( JSONArrayLoop ( stringToEnclose ) ;
-		[ ",¶" ; "¶" ] ;
-		[ ¶ ; "," ]
-	) &
-	"]"
-)
+"[" & JSONArrayLoop ( listOfValues ; ValueCount ( listOfValues ) ; "" ) & "]"
 
-/* —————————————————————————————— //
-NAME:
-	JSONArray ( stringToEnclose )
+/* __________________________________________________
 
-PURPOSE:
-	Ensures stringToEnclose is formatted as a JSON array
-
+NAME:	JSONArray ( listOfValues )
+PURPOSE:	Converts return-delimited list into JSON array.
+		Escapes each value, unless it appears to be a JSON object or array.
 EXAMPLES:
-
-
+	#Array ( "Oakland¶[\"a\",\"b\"]" )	= "[\"Oakland\",[\"a\",\"b\"]]"
+	#Array ( "" )			= "[]"
 HISTORY:
-	Created: 2010-Aug-18 12h21 PST — Donovan A. Chandler
+	Created:	2012-05-29 12:18 PT - Donovan Chandler
+	Modified:
 */

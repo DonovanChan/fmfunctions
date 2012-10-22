@@ -1,0 +1,21 @@
+Case (
+	repMax < 1 or IsEmpty ( listOfPairs ) ; previousResults ;
+	Let ( [
+		value = GetValue ( listOfPairs ; 1 ) ;
+		listNew = If ( not IsEmpty ( previousResults ) ; previousResults & "," ) & value ;
+		listRemaining = MiddleValues ( listOfPairs ; 2 ; repMax )
+		] ;
+		JSONObjectLoop ( listRemaining ; repMax - 1 ; listNew )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	JSONObjectLoop ( listOfPairs ; repMax ; previousResults )
+PURPOSE:	Performs recursion for #Object( )
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-05-29 13:39 PT - Donovan Chandler
+	Modified:
+*/

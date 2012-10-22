@@ -1,32 +1,21 @@
-Let ( [
-	_valueRaw = GetValue ( listOfValues ; 1 ) ;
-	_isText = ( GetAsNumber ( _valueRaw ) ≠ _valueRaw ) ;
-	_char1 = Left ( _valueRaw ; 1 ) ;
-	_value =
-		Case (
-			_isText and _char1 ≠ "{" and _char1 ≠ "[ " ;
-				Quote ( _valueRaw ) ;
-			_valueRaw
-		) ;
-	_valueCount = ValueCount ( listOfValues )
-	] ;
-	_value &
-	Case (
-		_valueCount - 1 > 0 ;
-			¶ & JSONArrayLoop ( RightValues ( listOfValues ; _valueCount - 1 ) )
+Case (
+	repMax < 1 or IsEmpty ( listOfValues ) ; previousResults ;
+	Let ( [
+		value = JSONEncodeStringOnly ( GetValue ( listOfValues ; 1 ) ) ;
+		listNew = If ( not IsEmpty ( previousResults ) ; previousResults & "," ) & value ;
+		listRemaining = MiddleValues ( listOfValues ; 2 ; repMax )
+		] ;
+		JSONArrayLoop ( listRemaining ; repMax - 1 ; listNew )
 	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	JSONArrayLoop ( listOfValues )
+/* __________________________________________________
 
-PURPOSE:
-	Used by JSONArray. Iterates over array values adding quotations.
-
+NAME:	JSONArrayLoop ( listOfValues ; repMax ; previousResults )
+PURPOSE:	Performs recursion for JSONArray( )
 EXAMPLES:
 
-
 HISTORY:
-	Created: 2010-Aug-18 22h06 PST — Donovan A. Chandler
+	Created:	2012-05-29 12:23 PT - Donovan Chandler
+	Modified:
 */

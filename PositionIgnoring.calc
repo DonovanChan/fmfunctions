@@ -16,5 +16,5 @@ EXAMPLES:
 	PositionIgnoring ( "123Dog" ; "D321 " ; 1 )	= 5
 HISTORY:
 	Created:	2012-02-13 13:00 PT - Will M. Baker
-	Modified:	
+	Modified:
 */
