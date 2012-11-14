@@ -1,11 +1,17 @@
-FmNexIns_GetTimestampMicro(1)
+Let ( [
+	timezoneSec = Get ( CurrentTimeStamp ) - Int ( Get ( UTCmSecs ) / 1000 )
+	] ;
+	GetAsTimestamp ( ( Get ( UTCmSecs ) / 1000 ) + timezoneSec )
+)
 
 /* __________________________________________________
 
 NAME:		TimestampMicro()
-PURPOSE:	Wrapper for native or external function that returns timestamp
+PURPOSE:	Returns local timestamp including microseconds.
+			Use TimeStampMicroUTC() for faster results.
 EXAMPLES:
-	TimestampMicro() = "08/06/2010 18:17:46.194457"
+	TimestampMicro() = "11/9/2012 1:16:13.056 PM"
 HISTORY:
-	Created:	2010-08-06 18:16 PST - Donovan A. Chandler
+	Created:	2010-08-06 18:16 PT - Donovan Chandler
+	Modified:	2012-11-09 13:06 PT - Donovan Chandler : Implemented David Thorpe's native version.
 */

@@ -1,0 +1,12 @@
+GetAsTimestamp ( Get ( UTCmSecs ) / 1000 )
+
+/* __________________________________________________
+
+NAME:	TimestampMicroUTC ( )
+PURPOSE:	Returns UTC timestamp including microseconds.
+EXAMPLES:
+	TimestampMicroUTC() = "11/9/2012 1:16:13.056 PM"
+HISTORY:
+	Created:	2012-11-09 13:13 PT - Donovan Chandler using David Thorpe's calc.
+	Modified:
+*/

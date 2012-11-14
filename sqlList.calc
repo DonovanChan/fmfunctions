@@ -1,13 +1,13 @@
 Let ( [
-	$list = listToDelimit ;
-	quoted = ListCustom ( 1 ; ValueCount ( $list ) ; "quoteSingle( GetValue( $list ; [n] ) )" )
+	$fn_list = listToDelimit ;
+	quoted = ListCustom ( 1 ; ValueCount ( $fn_list ) ; "quoteSingle( GetValue( $list ; [n] ) )" )
 	] ;
 	"( " & Substitute ( quoted ; ¶ ; "," ) & " )"
 )
 
 /* __________________________________________________
 
-NAME:		sqlList ( listToDelimit )
+NAME:		SQLList ( listToDelimit )
 PURPOSE:	Converts return-delimited list into comma-delimited list for use in SQL statements.
 EXAMPLES:
 	sqlList ( "dog¶cat¶mouse" ) = "(dog,cat,mouse)"

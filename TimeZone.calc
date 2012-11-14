@@ -1,0 +1,12 @@
+( Get ( CurrentTimeStamp ) - Int ( Get ( UTCmSecs ) / 1000 ) ) / 3600
+
+/* __________________________________________________
+
+NAME:	TimeZone ( )
+PURPOSE:	Returns hour offset of timezone
+EXAMPLES:
+	TimeZone // returns "-8" when in PST
+HISTORY:
+	Created:	2012-11-09 13:07 PT - Donovan Chandler using David Thorpe's calc.
+	Modified:
+*/

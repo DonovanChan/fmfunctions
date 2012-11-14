@@ -1,0 +1,12 @@
+"|"
+
+/* __________________________________________________
+
+NAME:	SQLFieldSeparator ( )
+PURPOSE:	Global storage of separator used between columns/fields returned from SQL queries.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-03-13 11:20 PST - Donovan Chandler
+	Modified:
+*/
