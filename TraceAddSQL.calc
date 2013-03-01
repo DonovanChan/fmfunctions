@@ -18,8 +18,8 @@ If (
 
 /* __________________________________________________
 
-NAME:   TraceAddSQL ( objectName ; objectType ; action ; note )
-PURPOSE:    Creates trace log entry directly into log table using SQL plug-in.
+NAME:	TraceAddSQL ( objectName ; objectType ; action ; note )
+PURPOSE:	Creates trace log entry directly into log table using SQL plug-in.
 NOTES:
 	Requires SQL plug-in supporting INSERT statements.
 	Optimized more for speed and ease of use.

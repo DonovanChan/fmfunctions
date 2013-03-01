@@ -11,6 +11,6 @@ PURPOSE:	Clears values from trace log. Large logs can impact performance.
 EXAMPLES:
 
 HISTORY:
-	Created:	2012-09-07 17:25 PST - Donovan Chandler
+	Created:	2012-09-07 17:25 PT - Donovan Chandler
 	Modified:
 */

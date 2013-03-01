@@ -1,0 +1,30 @@
+Let ( [
+	matchIsNumber = ( GetAsNumber ( matchValue ) = matchValue ) ;
+	query =
+		"SELECT " & SqField ( targetField ) &
+		"¶FROM " & SqTable ( targetField ) &
+		If (
+			matchIsNumber ;
+			"¶WHERE " & SqField ( matchField ) & " = " & matchValue ;
+			"¶WHERE lower(" & SqField ( matchField ) & ") = " & Lower ( SqString ( matchValue ) )
+		)
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGet ( targetField ; matchField ; matchValue )
+PURPOSE:	Gets value from record based on matching column value.
+EXAMPLES:
+	SqGet (
+		GetFieldName ( CONTACT::NAME ) ;
+		GetFieldName ( CONTACT::COMPANY ) ;
+		"Beezwax"
+	) = "Vincenzo‡‡Will" // where SqRowSeparator( ) = "‡‡"
+HISTORY:
+	Created:	2013-01-25 14:01 PT - Donovan Chandler
+	Modified:	2013-02-14 11:18 PT - Donovan Chandler : supports number in searchValue.
+	Modified:	2013-02-21 10:43 PT - Donovan Chandler : Uses lower() to loosen search.
+	Modified:	2013-02-25 14:18 PT - Donovan Chandler : Doesn't use lower() on number values.
+*/

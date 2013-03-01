@@ -1,0 +1,23 @@
+"<table>¶<tr><td>" &
+Substitute (
+	array ;
+	[ rowDelimiter ; "</td></tr>¶<tr><td>" ] ;
+	[ columnDelimiter ; "</td><td>" ]
+) &
+"</td></tr>¶</table>"
+
+
+/* __________________________________________________
+
+NAME:	ArrayToHTMLTable ( array ; rowDelimiter ; columnDelimiter )
+PURPOSE:	Converts tabular array into HTML table
+EXAMPLES:
+	ArrayToHTMLTable ( "Animal|Food¶Dragon|livestock" ; "¶" ; "|" )
+	//= "<table>
+	<tr><td>Animal</td><td>Food</td></tr>
+	<tr><td>Dragon</td><td>livestock</td></tr>
+	</table>"
+HISTORY:
+	Created:	2013-01-10 11:00 PT - Donovan Chandler
+	Modified:
+*/

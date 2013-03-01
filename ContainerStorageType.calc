@@ -1,0 +1,16 @@
+Case (
+	Left ( containerAsText ; 7 ) = "remote:"	; "external" ;
+	ValueCount ( containerAsText ) ≥ 2		; "reference" ;
+	"local"
+)
+
+/* __________________________________________________
+
+NAME:	ContainerStorageType ( containerAsText )
+PURPOSE:	Determines how container data is being stored.
+EXAMPLES:
+	ContainerStorageType ( GetAsText ( table::file ) )
+HISTORY:
+	Created:	2012-11-20 17:22 PT - Donovan Chandler
+	Modified:
+*/

@@ -1,0 +1,12 @@
+$$_trace_log
+
+/* __________________________________________________
+
+NAME:	TraceLog ( )
+PURPOSE:	Displays trace log being managed by Trace function suite.
+EXAMPLES:
+
+HISTORY:
+	Created:	2012-09-07 17:25 PT - Donovan Chandler
+	Modified:
+*/

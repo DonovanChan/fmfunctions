@@ -1,0 +1,19 @@
+If (
+	GetAsNumber ( textOrNumber ) = textOrNumber ; textOrNumber ;
+	SqString ( textOrNumber )
+)
+
+/* __________________________________________________
+
+NAME:	SqStringSmart ( textOrNumber )
+PURPOSE:	Quotes string for use in SQL if it is a string.
+EXAMPLES:
+	SqStringSmart ( "contact" ) = "'contact'"
+	SqStringSmart ( "2.5" ) = "2.5"
+NOTES:
+	Use the optional arguments parameter in ExecuteSql( )
+	if you want to be sure of proper handling of strings.
+HISTORY:
+	Created:	2013-02-14 11:48 PT - Donovan Chandler
+	Modified:	
+*/

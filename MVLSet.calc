@@ -1,0 +1,16 @@
+Let ( [
+	$$_MVL[column] = valueListValues
+	] ;
+	$$_MVL[column] ≠ "?" and not IsEmpty ( $$_MVL[column] )
+)
+
+/* __________________________________________________
+
+NAME:	MVLSetVar ( column ; valueListValues )
+PURPOSE:	Sets values to global variable used for value lists using Magic Value List technique.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-02-01 09:52 PT - Donovan Chandler
+	Modified:	2013-02-14 11:53 PT - Donovan Chandler : returns 0 for empty or invalid value.
+*/

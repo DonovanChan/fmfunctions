@@ -1,4 +1,4 @@
-Let([
+Let ( [
 	_slash = FileSlash ; // If ( Abs ( Get ( SystemPlatform ) ) = 2 ; "\\" ; "/" )
 	_sNode1 = Position ( path ; _slash ; 1 ; 1 ) ;
 	_sNode2 = Position ( path ; _slash ; 2 ; 1 ) ;

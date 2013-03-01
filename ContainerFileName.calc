@@ -1,0 +1,20 @@
+Let ( [
+	type = ContainerStorageType ( containerAsText )
+	] ;
+	Case (
+		type = "external"	; TextBetween ( containerAsText ; ":" ; "¶" ; 1 ) ;
+		type = "reference"	; GetValue ( containerAsText ; 1 ) ;
+		containerAsText
+	)
+)
+
+/* __________________________________________________
+
+NAME:	ContainerFileName ( containerAsText )
+PURPOSE:	Returns file name from container field.
+EXAMPLES:
+	ContainerFileName ( GetAsText ( table::file ) )
+HISTORY:
+	Created:	2012-11-20 17:24 PT - Donovan Chandler
+	Modified:
+*/

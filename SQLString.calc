@@ -1,8 +1,10 @@
-"'" & text & "'"
+"'" & Substitute ( text ; "'" ; "''" ) & "'"
 
 /* __________________________________________________
 
-NAME:	SQLString ( text )
+WARNING: Function may be hardcoded into SqList ( )
+
+NAME:	SqString ( text )
 PURPOSE:	Quotes string for use in SQL
 EXAMPLES:
 	SQLQuote ( "contact" ) = 'contact'
@@ -11,5 +13,5 @@ NOTES:
 	Use the optional arguments parameter in ExecuteSql( )
 HISTORY:
 	Created:	2012-03-28 11:11 PT - Donovan Chandler
-	Modified:	
+	Modified:
 */

@@ -1,16 +1,16 @@
 Let ( [
-    $$_trace_enabled = False ;
-    ] ;
-    $$_trace_enabled
+	$$_trace_enabled = False	// Keeps variable so we can toggle it in the web viewer
+	] ;
+	$$_trace_enabled
 )
 
 /* __________________________________________________
 
-NAME:   TraceOff ( )
-PURPOSE:    Disables trace log. Ensures scripts don't get bogged down unnecessarily.
+NAME:	TraceOff ( )
+PURPOSE:	Disables trace log. Ensures scripts don't get bogged down unnecessarily.
 EXAMPLES:
 
 HISTORY:
-    Created:    2012-09-07 16:21 PST - Donovan Chandler
-    Modified:
+	Created:	2012-09-07 16:21 PT - Donovan Chandler
+	Modified:
 */

@@ -6,11 +6,11 @@ Let([
 	];
 	Case (
 		//-- Sort settings don't match, Show nothing
-		GetAsBoolean ( _sort_field_descending ) ≠ GetAsBoolean ( _sort_descending ); ""; 
-		
+		GetAsBoolean ( _sort_field_descending ) ≠ GetAsBoolean ( _sort_descending ); "";
+
 		//-- Text field, Show text
 		_field_type = "text"; GetField ( _sort_field );
-		
+
 		//-- Else, format for date or number
 		Let([
 			nF = GetField( _sort_field );
@@ -23,17 +23,14 @@ Let([
 	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	rec.sortFieldValue ( sortFieldName ; sortFieldDescending ; sortDescending )
+/* __________________________________________________
 
-PURPOSE:
-	Returns value from current record if sort sort direction matches direction for this calc.  Results are formatted to preserve sort order of non-text values while sorting by text field.
-
+NAME:	FieldSortValue ( sortFieldName ; sortFieldDescending ; sortDescending )
+PURPOSE:	Returns value from current record if sort sort direction matches direction for this calc.  Results are formatted to preserve sort order of non-text values while sorting by text field.
 EXAMPLES:
-	
 
 HISTORY:
-	Created: 2010-Jul-19 15h41 PST — Donovan A. Chandler
 	Based on demo by Ray Cologon at nightwing.com.au
+	Created:	2010-07-19 15:41 PT - Donovan Chandler
+	Modified:	2013-02-19 13:43 PT - Donovan Chandler : renamed; formatting.
 */

@@ -1,0 +1,24 @@
+Case (
+
+errorNum = -50	; "Invalid parameters supplied to SDialog_InputDialog." ;
+errorNum = -5611	; "Resulting window is to large to fit the screen. This error is usually returned if you try to insert too large picture into dialog." ;
+errorNum = 1208	; "Returned when syntax of your validation calculation is wrong.." ;
+errorNum = 2400	; "General error, SimpleDialog is not able to recognize the error. Please report this error and its conditions to support@24usoftware.com." ;
+errorNum = 52973	; "Plug-In registration error: License number exceeded. More active plug-ins with one serial number than the license permits." ;
+errorNum = 57005	; "Plug-In registration error: Plug-In expired. Usually because trial period is over." ;
+errorNum = 2989	; "Plug-In registration error: Wrong registration attempt." ;
+errorNum = 47838	; "Plug-In registration error: Wrong plug-in registration. The plugin will not work until registered properly."
+
+)
+
+/* __________________________________________________
+
+NAME:	ErrorTextSDialog ( errorNum )
+PURPOSE:	Returns description of error code returned from Simple Dialog plug-in.
+EXAMPLES:
+	Where $_void = SDialog_InputDialog ( "" ; "OK" ; "invalid param" ) = -50
+	ErrorTextSDialog ( $_void ) = "Invalid parameters supplied to SDialog_InputDialog."
+HISTORY:
+	Created:	2013-01-03 10:57 PT - Donovan Chandler
+	Modified:
+*/

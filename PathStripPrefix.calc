@@ -1,13 +1,18 @@
 Let ( [
-	win = Abs ( Get ( SystemPlatform ) ) = 2 ;
-	slash = If ( win ; "\\" ; "/" ) ;
-	
+	//-- Remove disk from path (e.g., "C:/")
+	tag = "!!DISK!!" ;
+	drive = Get ( SystemDrive ) ;
+	path = Substitute ( path ; drive ; tag ) ;
+
 	//-- Remove prefixes
 	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
 	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
-	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) ) ;
-	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) ) ;
-	path = If ( Left ( path ; 1 ) ≠ slash ; path ; Middle ( path ; 2 ; 999 ) )
+
+	//-- Restore disk to path
+	path = Substitute ( path ; tag ; drive ) ;
+
+	//-- Remove leading slashes
+	path = TextStripLeft ( path ; "/" )
 	];
 	path
 )
@@ -17,11 +22,17 @@ Let ( [
 NAME:	PathStripPrefix ( path )
 PURPOSE:	Removes prefix from file path.
 EXAMPLES:
-	PathStripPrefix ( "filemac:/HD/Users/Shared" )
-	// (Mac OS)	= "HD/Users/Shared"
-	// (Windows)	=
+	// Where desktop path = "/Macintosh HD/Users/donovan/Desktop/"
+	PathStripPrefix ( "file:/" & Get ( DesktopPath ) )
+	= "/Macintosh HD/Users/donovan/Desktop/"
+	
+	// Where desktop path = "/C:/Users/Donovan/Desktop/"
+	PathStripPrefix ( "file:/" & Get ( DesktopPath ) )
+	= "C:/Users/Donovan/Desktop/"
+	
 	PathStripPrefix ( "fmnet:/your.server.com/FOCUS.fmp12" )
-	// = "your.server.com/FOCUS.fmp12"
+	= "your.server.com/FOCUS.fmp12"
 HISTORY:
-	Created:	2012-02-03 21:57 PST - Donovan Chandler
+	Created:	2012-02-03 21:57 PT - Donovan Chandler
+	Modified:	2013-01-22 17:24 PT - Donovan Chandler : Windows compatible.
 */

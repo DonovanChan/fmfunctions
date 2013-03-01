@@ -1,17 +1,22 @@
 Let ( [
 	raw = PathStripPrefix ( path ) ;
-	ready = If ( Left ( raw ; 1 ) ≠ "/" ; "/" ) & raw
+	ready = If ( Left ( raw ; 1 ) ≠ "/" ; "/" ) & raw ;
+	stripped = "/" & Substitute ( ready ; Get ( SystemDrive ) ; "" )
 	] ;
-	"/" & Substitute ( ready ; Get ( SystemDrive ) ; "" )
+	If (
+		//-- Adjust for cases where disk isn't in path (e.g., hosted file)
+		Left ( stripped ; 2 ) = "//" ; Right ( stripped ; Length ( stripped ) - 1 ) ;
+		stripped
+	)
 )
 
 /* __________________________________________________
 
-NAME:	FilePathStripDisk ( path )
+NAME:	PathStripDisk ( path )
 PURPOSE:	Removes prefix and system drive from path.
 EXAMPLES:
-	FilePathStripDisk ( "file:/HD/Users/donovan" ) = "/Users/donovan"
+	PathStripDisk ( "file:/HD/Users/donovan" ) = "/Users/donovan"
 HISTORY:
-	Created:	2012-04-18 09:32 PST - Donovan Chandler
-	Modified:	
+	Created:	2012-04-18 09:32 PT - Donovan Chandler
+	Modified:	2013-02-05 09:43 PT - Donovan Chandler : accounts for cases where disk is not in path.
 */

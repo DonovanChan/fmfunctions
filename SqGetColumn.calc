@@ -1,0 +1,18 @@
+Let ( [
+	query =
+		"SELECT DISTINCT" & SqField ( targetField ) &
+		"¶FROM " & SqTable ( targetField )
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGetColumn ( targetField )
+PURPOSE:	Retrieves all unique values from a column.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-01-25 14:01 PT - Donovan Chandler
+	Modified:
+*/

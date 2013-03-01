@@ -3,7 +3,7 @@ Let ( [
 	fieldName = If ( fieldName = "?" ; field ; fieldName ) ;
 	table = Left ( fieldName ; Position ( fieldName ; "::" ; 1 ; 1 ) - 1 )
 	];
-	Lower ( table )
+	"\"" & Lower ( table ) & "\""
 )
 
 /* __________________________________________________
@@ -14,5 +14,6 @@ EXAMPLES:
 	SQLTable ( CONTACT::Name ) = "contact"
 	SQLTable ( GetFieldName ( CONTACT::Name ) ) = "contact"
 HISTORY:
-	Created:	2011-11-04 16:45 PST - Donovan Chandler
+	Created:	2011-11-04 16:45 PT - Donovan Chandler
+	Modified:	2012-11-20 17:43 PT - Donovan Chandler : Quotes in case of reserved word.
 */

@@ -1,0 +1,22 @@
+Let ( [
+	raw = GetValue ( listToDelimit ; 1 ) ;
+	quoted = SqString ( raw ) ;
+	count = ValueCount ( listToDelimit )
+	] ;
+	Case (
+		count > 1 ;
+			quoted & "," &
+			SqListLoop ( RightValues ( listToDelimit ; count - 1 ) ) ;
+		quoted
+	)
+)
+
+/* __________________________________________________
+
+NAME:	SqListLoop ( listToDelimit )
+PURPOSE:	Performs recursion for SqList.
+EXAMPLES:
+	SqListLoop ( "dog¶cat\¶mouse" ) = "'dog','cat¶mouse'"
+HISTORY:
+	Created:	2011-10-26 16:23 PT - Donovan A. Chandler
+*/

@@ -1,0 +1,19 @@
+Let ( [
+	query =
+		"SELECT " & SqField ( targetField ) &
+		"¶FROM " & SqTable ( targetField ) &
+		"¶WHERE " & SqField ( idField ) & " = " & sqString ( idField )
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGetByID ( targetField ; idField )
+PURPOSE:	Retrieves value from record matching supplied id value.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-01-25 14:01 PT - Donovan Chandler
+	Modified:
+*/

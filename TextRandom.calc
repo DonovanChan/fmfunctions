@@ -1,0 +1,40 @@
+Let ( [
+	alpha = "qwertzuiopasdfghjklyxcvbnm" ;
+	caps = Upper ( alpha ) ;
+	numeric = "123456789" ;
+	special = ",.-;:_%&$=?!" ;
+
+	xPool = Case (
+		complexityLevel = 1	; alpha ;
+		complexityLevel = 2	; caps ;
+		complexityLevel = 3	; numeric ;
+		complexityLevel = 4	; alpha & caps ;
+		complexityLevel = 5	; alpha & numeric ;
+		complexityLevel = 6	; numeric & caps ;
+		complexityLevel = 7	; alpha & caps & numeric ;
+		complexityLevel = 8	; alpha & caps & numeric & special ;
+		complexityLevel = 9	; special
+	) ;
+	xLen = Length ( xPool ) ;
+	baseNew = baseString & Middle ( xPool ; Ceiling ( Random * xLen ) ; 1 )
+	] ;
+	Case (
+		desiredLength ≤ Length ( baseString ) ;
+		baseString ;
+		TextRandom ( baseNew ; desiredLength ; complexityLevel )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	TextRandom ( baseString ; desiredLength ; complexityLevel)
+PURPOSE:	Generates random string.
+EXAMPLES:
+	TextRandom ( "foo"	; 5 ; 3 )	= "foo34"
+	TextRandom ( ""	; 5 ; 2 )	= "PwYuT"
+	TextRandom ( ""	; 5 ; 8 )	= ",SnU9"
+HISTORY:
+	Based on PasswordCreator( ) by Matrin D. Brunner.
+	Created:	2013-02-15 14:40 PT - Donovan Chandler
+	Modified:
+*/

@@ -7,12 +7,12 @@ TraceAdd (
 
 /* __________________________________________________
 
-NAME:		ScriptTraceAdd ( action ; note )
+NAME:	ScriptTraceAdd ( action ; note )
 PURPOSE:	Appends new entry to trace stack.  Used for monitoring script performance.
 EXAMPLES:
 	ScriptTraceAdd ( "debug" ; "Finished sort operation" )
 NOTES:
 	Valid action values: {start, end, debug, error}
 HISTORY:
-	Created:	2011-04-26 14:58 PST - Donovan Chandler
+	Created:	2011-04-26 14:58 PT - Donovan Chandler
 */

@@ -1,16 +1,15 @@
-Let ( [
-	$fn_list = listToDelimit ;
-	quoted = ListCustom ( 1 ; ValueCount ( $fn_list ) ; "SQLString( GetValue( $fn_list ; [n] ) )" )
-	] ;
-	"( " & Substitute ( quoted ; ¶ ; "," ) & " )"
+Case (
+	IsEmpty ( listToDelimit ) ; "" ;
+	"(" & SqListLoop ( listToDelimit ) & ")"
 )
 
 /* __________________________________________________
 
-NAME:		SQLList ( listToDelimit )
-PURPOSE:	Converts return-delimited list into comma-delimited list for use in SQL statements.
+NAME:	SqList ( listToDelimit )
+PURPOSE:	Converts return-delimited list into comma-delimited list of quoted strings.
+		Useful for IN clauses in SQL statements.
 EXAMPLES:
-	SQLList ( "dog¶cat¶mouse" ) = "(dog,cat,mouse)"
+	SqList ( "dog¶cat\¶mouse" ) = "('dog','cat¶mouse')"
 HISTORY:
-	Created:	2011-10-26 16:23 PST - Donovan A. Chandler
+	Created:	2011-10-26 16:23 PT - Donovan A. Chandler
 */

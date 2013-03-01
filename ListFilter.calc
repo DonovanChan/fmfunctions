@@ -1,0 +1,23 @@
+Let ( [
+	valueCur = GetValue ( valuesToRemove ; 1 ) ;
+	valueCnt = ValueCount ( valuesToRemove ) ;
+	listNew = ListFilterSub ( listOfValues ; valueCur )
+	] ;
+	If (
+		valueCnt ≤ 1 ; listNew ;
+		ListFilter ( listNew ; RightValues ( valuesToRemove ; valueCnt - 1 ) )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	ListFilter ( listOfValues ; valuesToRemove )
+PURPOSE:	Returns list with designated value(s) removed.
+EXAMPLES:
+	ListFilter ( "Do¶Dog¶Cat" ; "Do" ) = "Dog¶Cat"
+	ListFilter ( "Do¶Dog¶Cat" ; "Do¶Cat" ) = "Dog"
+	ListFilter ( "Do¶Dog¶Cat" ; "Dog¶Cat" ) = "Do"
+HISTORY:
+	Created:	2012-11-30 10:40 PT - Donovan Chandler
+	Modified:
+*/

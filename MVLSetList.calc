@@ -1,0 +1,47 @@
+Let ( [
+/*
+idFieldName = GetFieldName ( "" ) ;
+nameFieldName = GetFieldName ( "" ) ;
+matchFieldName = GetFieldName ( "" ) ;
+matchFieldValue = "" ;
+*/
+
+	col1 =
+		Case (
+			IsEmpty ( matchFieldValue ) ; SqGetColumn ( idFieldName ) ;
+			SqGet (
+				idFieldName ;
+				matchFieldName ;
+				matchFieldValue
+			)
+		) ;
+	col2 =
+		Case (
+			IsEmpty ( matchFieldValue ) ; SqGetColumn ( nameFieldName ) ;
+			SqGet (
+				nameFieldName ;
+				matchFieldName ;
+				matchFieldValue
+			)
+		) ;
+	col1Result = MVLSetVar ( 1 ; Substitute ( col1 ; SqRowSeparator ; ¶ ) ) ;
+	col2Result = MVLSetVar ( 2 ; Substitute ( col2 ; SqRowSeparator ; ¶ ) )
+	] ;
+	Case (
+		col1Result + col2Result = 0 ; "Error: invalid id and name lists" ;
+		col1Result = 0 ; "Error: invalid id list" ;
+		col2Result = 0 ; "Error: invalid name list" ;
+		1
+	)
+)
+
+/* __________________________________________________
+
+NAME:	MVLSetList ( idFieldName ; nameFieldName ; matchFieldName ; matchFieldValue )
+PURPOSE:	Sets variable used for Magic Value List.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-02-01 10:04 PT - Donovan Chandler
+	Modified:	2013-02-14 11:52 PT - Donovan Chandler : response includes error message.
+*/

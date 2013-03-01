@@ -1,0 +1,28 @@
+Let ( [
+	match = ¶ & valueToRemove & ¶ ;
+	matchStart = Position ( ¶ & listOfValues & ¶ ; match ; 1 ; 1 ) ;
+	matchStart = matchStart + If ( matchStart > 1 ; -1 ) // Subtract to offset the leading ¶
+	] ;
+	If (
+		matchStart = 0 ; listOfValues ;
+		Let ( [
+			lead = Left ( listOfValues ; matchStart - 1 ) ;
+			trail = Middle ( listOfValues ; matchStart + Length ( match ) - 1 ; Length ( listOfValues ) )
+			] ;
+			lead & ListFilterSub ( trail ; valueToRemove )
+		)
+	)
+)
+
+/* __________________________________________________
+
+NAME:	ListFilterSub ( listOfValues ; valueToRemove )
+PURPOSE:	Returns list with designated value removed.
+EXAMPLES:
+	ListFilterSub ( "Do¶Dog¶Cat" ; "Do" ) = "Dog¶Cat"
+	ListFilterSub ( "Do¶Dog¶Cat" ; "Do¶Cat" ) = "Do¶Dog¶Cat"
+	ListFilterSub ( "Do¶Dog¶Cat" ; "Dog¶Cat" ) = "Do"
+HISTORY:
+	Created:	2012-11-29 21:47 PT - Donovan Chandler
+	Modified:
+*/

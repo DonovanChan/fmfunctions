@@ -3,7 +3,7 @@ If (
 
 	Let ( [
 		delim = "	" ;
-		row = GetAsNumber ( TimestampMicro ) & delim & objectName & delim & objectType & delim & action & delim & note ;
+		row = Get ( UTCmSecs ) / 1000 & delim & objectName & delim & objectType & delim & action & delim & note ;
 		$$_trace_log = List ( $$_trace_log ; row )
 		] ;
 		row
@@ -12,12 +12,23 @@ If (
 
 /* __________________________________________________
 
-NAME:	TraceAdd ( objectName ; objectType ; action ; note )
+NAME:	LogTimeAdd ( objectName ; objectType ; action ; note )
 PURPOSE:	Appends entry to trace log in global variable.
+EXAMPLE:
+	LogTimeAdd ( "record . delete" ; "Script" ; "Start" ; "note…" ) & TraceLog
+	= "163491021512.292	record . delete	Script	Start	note…"
+PARAMETERS:
+	The parameters are all optional and for your discretion.
+	I use them for parsing the log in a fashion inspired by FMBench.
+
+	objectName	Name of script, etc.
+	objectType	{script, calc}
+	action		{start, end, debug, error}
+				Use "start" and "end" to determine the length of a script.
 NOTES:
 	Optimized more for speed and ease of use.
 	Use FMBench if you're looking for something robust.
 HISTORY:
-	Created:	2012-04-11 10:34 PST - Donovan Chandler
+	Created:	2012-04-11 10:34 PT - Donovan Chandler
 	Modified:
 */

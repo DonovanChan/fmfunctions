@@ -1,0 +1,27 @@
+Let ( [
+	value = GetValue ( listOfFieldNames ; 1 ) ;
+	valueNew = SqField ( value ) ;
+	valueCnt = ValueCount ( listOfFieldNames )
+	] ;
+	Case (
+		valueCnt ≤ 1 ; valueNew ;
+		List (
+			valueNew ;
+			SqFieldListLoop ( RightValues ( listOfFieldNames ; valueCnt - 1 ) )
+		)
+	)
+)
+
+/* __________________________________________________
+
+NAME:	SqFieldListLoop ( listOfFieldNames )
+PURPOSE:	Converts list of field names into SQL-escaped field references.
+EXAMPLES:
+	SqFieldListLoop ( List (
+		GetFieldName ( account::id_person ) ;
+		GetFieldname ( ACCOUNT::PRIVILEGE_NAME_LT )
+	) ) = "\"account\".\"id_person\"¶\"account\".\"privilege_name_lt\""
+HISTORY:
+	Created:	2013-02-18 12:18 PT - Donovan Chandler
+	Modified:	
+*/

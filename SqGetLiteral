@@ -1,0 +1,28 @@
+Let ( [
+	matchIsNumber = ( Left ( matchSQLValue ; 1 ) ≠ "'" ) ;
+	query =
+		"SELECT " & SqField ( targetField ) &
+		"¶FROM " & SqTable ( targetField ) &
+		If (
+			matchIsNumber ;
+			"¶WHERE " & SqField ( matchField ) & " = " & matchSQLValue ;
+			"¶WHERE " & SqField ( matchField ) & " = " & matchSQLValue
+		)
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGetLiteral ( targetField ; matchField ; matchSQLValue )
+PURPOSE:	Gets value from record based on matching column value. Similar to SqGet( ) except it searches for an exact match against the matchSQLValue parameter without using lower() or any escaping.
+EXAMPLES:
+	SqGetLiteral (
+		GetFieldName ( CONTACT::NAME ) ;
+		GetFieldName ( CONTACT::PHONE ) ;
+		SqString ( "888.835.4483" )
+	) = "Beezwax" // where CONTACT::PHONE is a text field
+HISTORY:
+	Created:	2013-02-28 10:27 PT - Donovan Chandler
+	Modified:
+*/

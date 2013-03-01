@@ -5,7 +5,7 @@ Let ( [
 	table = GetValue ( fieldList ; 1 ) ;
 	field = GetValue ( fieldList ; ValueCount ( fieldList ) )
 	];
-	Lower ( table ) & ".\"" & Lower ( field ) & "\""
+	"\"" & Lower ( table ) & "\".\"" & Lower ( field ) & "\""
 )
 
 /* __________________________________________________
@@ -17,6 +17,7 @@ EXAMPLES:
 	SQLField ( CONTACT::Name ) = "contact.\"name\""
 	SQLField ( "CONTACT::Name" ) = "contact.\"name\""
 HISTORY:
-	Created:	2011-11-04 16:45 PST - Donovan Chandler
-	Modified:	2011-11-28 14:20 PST - Donovan Chandler ; added support for field name if reference fails; also returns field name of no table is provided
+	Created:	2011-11-04 16:45 PT - Donovan Chandler
+	Modified:	2011-11-28 14:20 PT - Donovan Chandler : added support for field name if reference fails; also returns field name of no table is provided
+	Modified:	2012-11-20 17:44 PT - Donovan Chandler : quotes table name
 */

@@ -1,22 +1,23 @@
 "data:text/html,<html><head>
 <style type=\"text/css\">
-
-  /* Background Color */
-  body {
+¶
+  body {¶
+    border: 0 ;¶
+    margin: 0 ;¶
     background: #" &
       Case (
         //-- If empty, use white
         IsEmpty ( backgroundColorHex ) ; "FFFFFF" ;
         backgroundColorHex
       ) &
-    "}
-
-  /* Scale image to size of viewer */
-  img {
-    width: 100%;
-    height: auto;
-  }
-
+    "}¶
+¶
+  /* Scale image to size of viewer */¶
+  img {¶
+    width: 100%;¶
+    height: auto;¶
+  }¶
+¶
 </style>
 </head>
 <body>
@@ -99,17 +100,19 @@ SrWq1atYs2rdyrWr169gwxZJAAA7\">" & ¶ &
 "</body>
 </html>"
 
-/* —————————————————————————————— //
-NAME: 
-	WebSpinningIcon( backgroundColorHex )
+/* __________________________________________________
 
-PURPOSE: 
-	Displays "in process" type of spinning icon
-	
-INPUT:
-	backgroundColor: Hexadecimal value (without "#") of background color
-
-HISTORY: 
-	Created: 2009-Sep-31 — Donovan Chandler
+NAME:	WebSpinningIcon( backgroundColorHex )
+PURPOSE:	Displays "in process" type of spinning icon
+EXAMPLES:
+	WebSpinningIcon ( "FFFFFF" ) or
+	WebSpinningIcon ( RGBToHex ( RGB ( 255 ; 255 ; 255 ) ) )
+	// Returns HTML for use in webviewer.
+	// Webviewer displays spinning icon with white background.
+NOTE:
+	Use the Edit -> Remove Styles menu command to remove the web viewer's padding.
+HISTORY:
 	Technique discovered from Kevin Vile of Cleveland Consulting, Inc. in Sindelar's "Year in Review" session, DevCon 2009
+	Created:	2009-09-31 00:00 PT - Donovan Chandler
+	Modified:	
 */

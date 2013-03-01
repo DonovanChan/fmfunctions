@@ -1,0 +1,26 @@
+Let ( [
+	fields = Substitute ( targetSQLFields ; ¶ ; ", " ) ;
+	query =
+		"SELECT " & fields &
+		"¶FROM " & SqTable ( matchField ) &
+		"¶WHERE lower(" & SqField ( matchField ) & ") = " & Lower ( SqStringSmart ( matchValue ) )
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGetFields ( targetSQLFields ; matchField ; matchValue )
+PURPOSE:	Gets respective field values from record based on matching column value.
+EXAMPLES:
+	SqGetFields (
+		List ( SqField ( PERSON::NAME ) ; SqField ( PERSON::EMAIL ) ) ;
+		PERSON::ID ;
+		"PERSON-0035"
+	) = "Donovan Chandler††donovan_c@beezwax.net"
+	// Assuming SQL( ) uses "††" as the column separator
+HISTORY:
+	Created:	2013-01-31 10:01 PT - Donovan Chandler
+	Modified:	2013-02-14 11:50 PT - Donovan Chandler : supports number is matchValue.
+	Modified:	2013-02-21 10:44 PT - Donovan Chandler : uses lower() to loosen search.
+*/

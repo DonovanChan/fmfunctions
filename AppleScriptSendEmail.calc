@@ -11,11 +11,17 @@ set theSubject to " & Quote ( subject ) & "¶
 set theSender to " & Quote ( from ) & "¶
 set theRecipients to split(" & Quote ( to ) & ",\"\¶\")¶
 set theCCRecipients to split(" & Quote ( cc ) & ",\"\¶\")¶
+set preview to " & GetAsBoolean ( preview ) & " as boolean¶
 set theHTML to " & Quote ( htmlBody ) & "¶
 set theHTML to searchReplaceText(theHTML,\"\¶\",return)¶
-set preview to " & GetAsBoolean ( preview ) & " as boolean¶
 tell application \"Mail\"¶
-	set theMessage to make new outgoing message with properties {subject:theSubject, html content:theHTML, visible:preview, sender:theSender}¶
+	set theMessage to make new outgoing message with properties {subject:theSubject, visible:preview, sender:theSender}¶
+	if text 1 thru 1 of theHTML is \"<\" then¶
+		set html content of theMessage to theHTML¶
+	else¶
+		set content of theMessage to theHTML¶
+	end¶
+	set theMessageID to id of theMessage¶
 	tell theMessage¶
 		repeat with thisRecipient in theRecipients¶
 			set thisName to my textBetween(thisRecipient,\"\",\" <\")¶
@@ -36,7 +42,10 @@ tell application \"Mail\"¶
 			make new to recipient at end of cc recipients with properties {name:thisName, address:thisAddr}¶
 		end repeat¶
 	end tell¶
-	if preview is false then send theMessage¶
+	if preview is false then¶
+		send theMessage¶
+		close outgoing message id theMessageID saving no¶
+	end¶
 end tell¶
 ¶
 -- Send result to FileMaker¶
@@ -103,7 +112,7 @@ to searchReplaceText(theText, searchString, replaceString)¶
 	set AppleScript's text item delimiters to oldTID¶
 	¶
 	return theText¶
-end searchReplaceText"
+end searchReplaceText¶"
 
 )
 
@@ -121,8 +130,13 @@ EXAMPLES:
 		 False
 	)	// Sends HTML email to multiple recipients without displaying message in Mail
 NOTES:
-	preview parameter must currently be set to True for HTML emails to work.
+	preview parameter must currently be set to False for HTML emails to work.
+	htmlBody will assume content plain text unless the first character is "<"
+	
+	Email drafts may occassionally appear when closing Mail 6 in OS X 10.8.
 HISTORY:
-	Created:	2012-04-04 11:26 PST - Donovan Chandler
-	Modified:	2012-04-24 11:49 PST - Donovan Chandler : Added cc parameter
+	Created:	2012-04-04 11:26 PT - Donovan Chandler
+	Modified:	2012-04-24 11:49 PT - Donovan Chandler : Added cc parameter
+	Modified:	2013-01-30 11:42 PT - Donovan Chandler : Sets message as visible so it can be closed. (Mail 6 on Mountain Lion doesn't close the message otherwise).)
+	Modified:	2013-02-06 11:01 PT - Donovan Chandler : Enabled preview of plain text emails; Reverted previous change after realizing that HTML doesn't send when message is visible.
 */

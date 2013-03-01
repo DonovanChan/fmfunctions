@@ -24,17 +24,12 @@ Substitute ( text ;
 	[ "é"	; "\c3 a9" ] // LATIN SMALL LETTER E WITH ACUTE
 )
 
-/* —————————————————————————————— //
-NAME:
-	TextEncodeUTF8Hex ( text )
+/* __________________________________________________
 
-PURPOSE:
-	Replaces common text characters with UTF-8 hex codes.
-	Used for strings when querying LDAP from shell script.
-
+NAME:	TextEncodeUTF8Hex ( text )
+PURPOSE:	Replaces common text characters with UTF-8 hex codes.
 EXAMPLES:
 	
-
 HISTORY:
-	Created: 2011-Mar-15 16h21 PST — Donovan A. Chandler
+	Created:	2011-03-15 16:21 PT - Donovan Chandler
 */

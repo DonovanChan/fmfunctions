@@ -1,0 +1,23 @@
+Let ( [
+	query =
+		"SELECT " & SqField ( targetField ) &
+		"¶FROM " & SqTable ( targetField ) &
+		"¶WHERE " & SqField ( matchField ) & " LIKE " & matchSQLValue
+	] ;
+	SQL ( query )
+)
+
+/* __________________________________________________
+
+NAME:	SqGetLike ( targetField ; matchField ; matchSQLValue )
+PURPOSE:	Gets value from record based on matching column value. Similar to SqGet( ) except it uses the "LIKE" operator.
+EXAMPLES:
+	SqGetLike (
+		GetFieldName ( CONTACT::NAME ) ;
+		GetFieldName ( CONTACT::NAME ) ;
+		SqString ( "Do%" )
+	) = "Dorothy‡‡Donald" // where SqRowSeparator() = "‡‡"
+HISTORY:
+	Created:	2013-02-28 15:06 PT - Donovan Chandler
+	Modified:
+*/
