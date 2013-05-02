@@ -1,7 +1,7 @@
 Let([
 	_sort_field = sortFieldName;
-	_sort_field_descending = sortFieldDescending;
-	_sort_descending = sortDescending;
+	_sort_field_descending = useForDescSort;
+	_sort_descending = descSortIsOn;
 	_field_type = MiddleWords ( FieldType ( Get ( FileName ); _sort_field ); 2; 1 )
 	];
 	Case (
@@ -25,8 +25,8 @@ Let([
 
 /* __________________________________________________
 
-NAME:	FieldSortValue ( sortFieldName ; sortFieldDescending ; sortDescending )
-PURPOSE:	Returns value from current record if sort sort direction matches direction for this calc.  Results are formatted to preserve sort order of non-text values while sorting by text field.
+NAME:	FieldSortValue ( sortFieldName ; useForDescSort ; descSortIsOn )
+PURPOSE:	Returns value from current record if sort direction matches direction for this calc.  Results are formatted to preserve sort order of non-text values while sorting by text field.
 EXAMPLES:
 
 HISTORY:

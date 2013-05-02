@@ -1,4 +1,4 @@
-Position ( Get ( ApplicationVersion ) ; "server" ) > 0
+Position ( Get ( ApplicationVersion ) ; "server" ; 1 ; 1 ) > 0
 
 /* —————————————————————————————— //
 NAME:

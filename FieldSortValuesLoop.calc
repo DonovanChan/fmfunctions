@@ -1,0 +1,25 @@
+If (
+	rep > repMax ; "" ;
+	Let ( [
+		field = GetValue ( fieldList ; rep ) ;
+		tableIndex = TableIndex ( FieldTableOccurrence ( field ) ) ;
+		descSortIsOn = GetValue ( $$_sort_desc[tableIndex] ; rep )
+		] ;
+		List (
+			FieldSortValue ( field ; useForDescSort ; descSortIsOn ) ;
+			FieldSortValuesLoop ( fieldList ; useForDescSort ; repMax ; rep + 1 )
+		)
+	)
+)
+
+/* __________________________________________________
+
+NAME:	FieldSortValuesLoop ( fieldList ; useForDescSort ; repMax ; rep )
+PURPOSE:	Given list of field names, returns list of field values that are sortable as text.
+EXAMPLES:
+
+NOTES:	Be sure that the table occurrence of the fieldList values matches the evaluation context calculation in the sort field.
+HISTORY:
+	Created:	2013-03-04 08:13 PT - Donovan Chandler
+	Modified:
+*/

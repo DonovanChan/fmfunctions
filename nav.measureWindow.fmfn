@@ -1,29 +1,21 @@
-/*---------------------------------------------------------------------------------------
-NAME: 
-    nav.measureWindow( clearMeasurements )
-
-PURPOSE: 
-    Measures location and dimensions of current window for use by nav.setWindowSettings()
-
-HISTORY: 
-    Created 2009.08.13 by Donovan Chandler
-
-INPUT: 
-    clearMeasurements:    "False" or Null will set measurements.  "True" will clear all variables instantiated by this function.
-
-OUTPUT: 
-    Global Variables
----------------------------------------------------------------------------------------*/
-
-Let([
-    clear = Evaluate( clearMeasurements ) = 1 ;
-    
-    $$origWindowHeight    = If( clear; "" ; Get( WindowHeight ) ) ;
-    $$origWindowWidth    = If( clear; "" ; Get( WIndowWidth ) ) ;
-    $$origWindowTop    = If( clear; "" ; Get( WIndowTop ) ) ;
-    $$origWindowLeft    = If( clear; "" ; Get( WindowLeft ) ) 
-    ] ;
-    
-    ""
-    
+Let ( [
+	clear = GetAsBoolean ( clearMeasurements ) ;
+	$$_window_orig_height	= If ( clear ; "" ; Get ( WindowHeight ) ) ;
+	$$_window_orig_width	= If ( clear ; "" ; Get ( WIndowWidth ) ) ;
+	$$_window_orig_top	= If ( clear ; "" ; Get ( WIndowTop ) ) ;
+	$$_window_orig_left	= If ( clear ; "" ; Get ( WindowLeft ) )
+	] ;
+	""
 )
+
+/* __________________________________________________
+
+NAME:	NavMeasureWindow()
+PURPOSE:	Measures location and dimensions of current window for use by NavSetWindowSettings()
+EXAMPLES:
+	NavMeasureWindow( )		// sets window measurements to global vars
+	NavMeasureWindow( False )	// clears global vars
+HISTORY:
+	Created:	2009-08-13 16:02 PT - Donovan Chandler
+	Modified:	2013-03-06 16:02 PT - Donovan Chandler : reformatted; changed var names; no longer uses Evaluate on boolean input.
+*/

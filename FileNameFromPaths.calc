@@ -1,8 +1,8 @@
-FileNameFromPaths ( filePaths ; "" )
+FileNameFromPathsLoop ( filePaths ; "" )
 
 /* —————————————————————————————— //
 NAME:
-	FileNameFromPathsLoop ( filePaths )
+	FileNameFromPaths ( filePaths )
 
 PURPOSE:
 	Extracts file names from list of paths, return list of names

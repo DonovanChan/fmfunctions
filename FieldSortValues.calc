@@ -1,0 +1,12 @@
+FieldSortValuesLoop ( fieldList ; useForDescSort ; ValueCount ( fieldList ) ; 1 )
+
+/* __________________________________________________
+
+NAME:	FieldSortValues ( fieldList ; useForDescSort )
+PURPOSE:	Given list of field names, returns list of values that are sortable as text.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-03-04 08:13 PT - Donovan Chandler
+	Modified:
+*/

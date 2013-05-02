@@ -13,10 +13,11 @@ Let ( [
 
 NAME:	ListFilter ( listOfValues ; valuesToRemove )
 PURPOSE:	Returns list with designated value(s) removed.
+		Preserves all empty lines.
 EXAMPLES:
-	ListFilter ( "Do¶Dog¶Cat" ; "Do" ) = "Dog¶Cat"
+	ListFilter ( "Do¶Dog¶¶Cat" ; "Do" ) = "Dog¶¶Cat"
 	ListFilter ( "Do¶Dog¶Cat" ; "Do¶Cat" ) = "Dog"
-	ListFilter ( "Do¶Dog¶Cat" ; "Dog¶Cat" ) = "Do"
+	ListFilter ( "Do¶Dog¶Cat¶" ; "Dog¶Cat" ) = "Do¶"
 HISTORY:
 	Created:	2012-11-30 10:40 PT - Donovan Chandler
 	Modified:

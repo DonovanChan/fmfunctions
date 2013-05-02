@@ -40,7 +40,12 @@ matchFieldValue = "" ;
 NAME:	MVLSetList ( idFieldName ; nameFieldName ; matchFieldName ; matchFieldValue )
 PURPOSE:	Sets variable used for Magic Value List.
 EXAMPLES:
-
+	MVLSetList (
+		GetFieldName ( PERSON::ID ) ;
+		GetFieldName ( PERSON::NAME ) ;
+		GetFieldName ( PERSON::AGE ) ;
+		30
+	)
 HISTORY:
 	Created:	2013-02-01 10:04 PT - Donovan Chandler
 	Modified:	2013-02-14 11:52 PT - Donovan Chandler : response includes error message.

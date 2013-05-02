@@ -18,10 +18,11 @@ Let ( [
 
 NAME:	ListFilterSub ( listOfValues ; valueToRemove )
 PURPOSE:	Returns list with designated value removed.
+		Preserves empty lines.
 EXAMPLES:
-	ListFilterSub ( "Do¶Dog¶Cat" ; "Do" ) = "Dog¶Cat"
+	ListFilterSub ( "Do¶Dog¶¶Cat" ; "Do" ) = "Dog¶¶Cat"
 	ListFilterSub ( "Do¶Dog¶Cat" ; "Do¶Cat" ) = "Do¶Dog¶Cat"
-	ListFilterSub ( "Do¶Dog¶Cat" ; "Dog¶Cat" ) = "Do"
+	ListFilterSub ( "Do¶Dog¶Cat¶" ; "Dog¶Cat" ) = "Do¶"
 HISTORY:
 	Created:	2012-11-29 21:47 PT - Donovan Chandler
 	Modified:

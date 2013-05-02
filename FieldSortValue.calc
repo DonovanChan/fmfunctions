@@ -1,0 +1,36 @@
+Let([
+	_sort_field = sortFieldName ;
+	_sort_field_descending = sortFieldDescending ;
+	_sort_descending = sortDescending ;
+	_field_type = MiddleWords ( FieldType ( Get ( FileName ) ; _sort_field ) ; 2 ; 1 )
+	];
+	Case (
+		//-- Sort settings don't match, Show nothing
+		GetAsBoolean ( _sort_field_descending ) ≠ GetAsBoolean ( _sort_descending ) ; "" ;
+
+		//-- Text field, Show text
+		_field_type = "text" ; GetField ( _sort_field ) ;
+
+		//-- Else, format for date or number
+		Let([
+			nF = GetField ( _sort_field ) ;
+			nT = Int (nF) ;
+			nM = Mod ( nF ; 1) ;
+			nX = If (nM ; nM ; ".0" )
+			];
+			Right ( "0000000000000000" & nT ; 16 ) & nX
+		)
+	)
+)
+
+/* __________________________________________________
+
+NAME:	FieldSortValue ( sortFieldName ; sortFieldDescending ; sortDescending )
+PURPOSE:	Returns value from current record if sort sort direction matches direction for this calc.  Results are formatted to preserve sort order of non-text values while sorting by text field.
+EXAMPLES:
+
+HISTORY:
+	Based on demo by Ray Cologon at nightwing.com.au
+	Created:	2010-07-19 15:41 PT - Donovan Chandler
+	Modified:	2013-02-19 13:43 PT - Donovan Chandler : renamed; formatting.
+*/

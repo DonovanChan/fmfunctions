@@ -1,5 +1,5 @@
 Let ( [
-	matchIsNumber = ( GetAsNumber ( matchValue ) = matchValue ) ;
+	matchIsNumber = not IsEmpty ( matchValue ) and ( GetAsNumber ( matchValue ) = matchValue ) ;
 	query =
 		"SELECT " & SqField ( targetField ) &
 		"¶FROM " & SqTable ( targetField ) &
@@ -7,7 +7,8 @@ Let ( [
 			matchIsNumber ;
 			"¶WHERE " & SqField ( matchField ) & " = " & matchValue ;
 			"¶WHERE lower(" & SqField ( matchField ) & ") = " & Lower ( SqString ( matchValue ) )
-		)
+		) ;
+	$$_sql_query_last = query
 	] ;
 	SQL ( query )
 )
@@ -27,4 +28,5 @@ HISTORY:
 	Modified:	2013-02-14 11:18 PT - Donovan Chandler : supports number in searchValue.
 	Modified:	2013-02-21 10:43 PT - Donovan Chandler : Uses lower() to loosen search.
 	Modified:	2013-02-25 14:18 PT - Donovan Chandler : Doesn't use lower() on number values.
+	Modified:	2013-03-15 11:57 PT - Donovan Chandler : Quotes empty strings.
 */

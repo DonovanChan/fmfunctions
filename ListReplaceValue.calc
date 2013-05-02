@@ -1,0 +1,20 @@
+Let ( [
+	lstLen = ValueCount ( lst ) ;
+	lstGap = index - lstLen ;
+	padding = If ( lstGap > 0 ; StringRepeatLoop ( "¶" ; 1 ; lstGap ) ) ;
+	lead = LeftValues ( lst & padding ; index - 1 ) ;
+	trail = RightValues ( lst ; lstLen - index )
+	] ;
+	lead & newValue & If ( not IsEmpty ( trail ) ; ¶ & trail )
+)
+
+/* __________________________________________________
+
+NAME:	ListReplaceValue ( lst ; index ; newValue )
+PURPOSE:	Replaces value at given index in list.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-03-03 22:33 PT - Donovan Chandler
+	Modified:
+*/
