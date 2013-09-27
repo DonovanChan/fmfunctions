@@ -1,24 +1,21 @@
-Let ([
+Let ( [
 	dayTotal =
 		GetAsNumber ( GetAsDate ( dateEnd ) )
 		- GetAsNumber ( GetAsDate ( dateStart ) ) + 1 ;
 	workWeeks = Int ( dayTotal / 7 ) ;
 	workLeftover = Mod ( dayTotal ; 7 ) - 1 ;
 	workLeftover = If ( workLeftover < 1 ; 0 ; workLeftover )
-	];
-	workWeeks*5 + workLeftover
+	] ;
+	workWeeks*5 + workLeftover + 1
 )
 
-/* —————————————————————————————— //
-NAME:
-	DateWeekdaysInRange ( dateStart ; dateEnd )
+/* __________________________________________________
 
-PURPOSE:
-	Returns number of weekdays in given range
-
+NAME:	DateWeekdaysInRange ( dateStart ; dateEnd )
+PURPOSE:	Returns number of weekdays in given range
 EXAMPLES:
-	
-
+	DateWeekdaysInRange ( "7/1/2013" ; "7/8/2013" ) = 6 /* Mon - Mon */
 HISTORY:
-	Created: 2011-Mar-25 12h52 PST — Donovan A. Chandler
+	Created:	2011-03-25 12:52 PT - Donovan Chandler
+	Modified:	2013-07-09 17:11 PT - Donovan Chandler: Now includes last day in range.
 */

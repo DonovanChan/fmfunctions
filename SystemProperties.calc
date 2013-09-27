@@ -1,5 +1,8 @@
 List (
-	  # ( "AccountExtendedPrivileges"	; Get ( AccountExtendedPrivileges ) )
+	// High priority values moved to top for easy viewing
+	  # ( "ScriptParameter"		; Get ( ScriptParameter ) )
+
+	; # ( "AccountExtendedPrivileges"	; Get ( AccountExtendedPrivileges ) )
 	; # ( "AccountName"			; Get ( AccountName ) )
 	; # ( "AccountPrivilegeSetName"	; Get ( AccountPrivilegeSetName ) )
 //	; # ( "ActiveFieldContents"		; Get ( ActiveFieldContents ) )
@@ -64,7 +67,7 @@ List (
 //	; # ( "ScreenHeight"			; Get ( ScreenHeight ) )
 //	; # ( "ScreenWidth"			; Get ( ScreenWidth ) )
 	; # ( "ScriptName"			; Get ( ScriptName ) )
-	; # ( "ScriptParameter"		; Get ( ScriptParameter ) )
+//	; # ( "ScriptParameter"		; Get ( ScriptParameter ) )
 	; # ( "ScriptResult"			; Get ( ScriptResult ) )
 	; # ( "SortState"				; Get ( SortState ) )
 	; # ( "StatusAreaState"		; Get ( StatusAreaState ) )
@@ -104,10 +107,10 @@ List (
 NAME:	SystemProperties ()
 PURPOSE:	Returns hash containing description of system properties.
 EXAMPLES:
-	
+
 HISTORY:
 	Created:	2011-05-12 10:34 PST - Donovan A. Chandler
-	
+
 NOTES:
 	Every native Get() function from FMP 12 is included.
 	Uncomment functions you think may be useful.

@@ -1,0 +1,20 @@
+List (
+
+If ( startIndex > 1 ; StringRepeat ( Char ( 65279 ) ; startIndex ) )
+& GetValue ( theList ; startIndex )
+
+; If ( ValueCount ( theList ) > startindex ; ListPrependBOM ( theList ; startIndex + 1 ) )
+
+)
+
+/* __________________________________________________
+
+NAME:	ListPrependBOM ( theList ; startIndex )
+PURPOSE:	Prepends each line with byte order marks. Used to create sorted value lists.
+EXAMPLES:
+
+HISTORY:
+	Thanks to Lon Cook for pointing me to BOM an Char ( 65279 ).
+	Created:	2013-08-07 14:42 PT - Donovan Chandler
+	Modified:
+*/

@@ -1,32 +1,27 @@
 Let ([
-  omitDateListFull = 
-    List (
-      If ( omitHolidays ; DatesHolidayList ) ;
-      omitDateList
-    )
-  ];
-  DatesInRange (
-    startDate ; endDate ;
-    omitWeekends ;
-    omitDateListFull
-  )
+	omitDateListFull =
+		List (
+			If ( omitHolidays ; DatesHolidayList ) ;
+			omitDateList
+		)
+	];
+	DatesInRange (
+		startDate ; endDate ;
+		omitWeekends ;
+		omitDateListFull
+	)
 )
 
-/* —————————————————————————————— //
-NAME:
-  DatesInRangeFull (
-    startDate ; endDate ;
-    omitWeekends ;
-    omitHolidays ;
-    omitDateList
-  )
+/* __________________________________________________
 
-PURPOSE:
-  Wrapper for DatesInRange() providing better support for toggling multiple sets of omit dates 
-
+NAME:   DatesInRangeFull ( startDate ; endDate ;
+			omitWeekends ;
+			omitHolidays ;
+			omitDateList
+		)
+PURPOSE:  Wrapper for DatesInRange() providing better support for toggling multiple sets of omit dates
 EXAMPLES:
-  
 
 HISTORY:
-  Created: 2010-Nov-30 12h15 PST — Donovan Chandler
+	Created:  2010-11-30 12:15 PT - Donovan Chandler
 */

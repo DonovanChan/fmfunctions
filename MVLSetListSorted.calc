@@ -1,0 +1,59 @@
+Let ( [
+/*
+idFieldName = GetFieldName ( "" ) ;
+nameFieldName = GetFieldName ( "" ) ;
+matchFieldName = GetFieldName ( "" ) ;
+matchFieldValue = "" ;
+sortField = GetFieldname ( "" ) ;
+*/
+
+	col1Query =
+		"SELECT " & SqField ( idFieldName ) &
+		"¶FROM " & SqTable ( idFieldName ) &
+		If ( not IsEmpty ( matchFieldValue ) ;
+			"¶WHERE lower(" & SqField ( matchFieldName ) & ") = " & SqString ( Lower ( matchFieldValue ) )
+		) ;
+	col2Query =
+		"SELECT " & SqField ( nameFieldName ) &
+		"¶FROM " & SqTable ( nameFieldName ) &
+		If ( not IsEmpty ( matchFieldValue ) ;
+			"¶WHERE lower(" & SqField ( matchFieldName ) & ") = " & SqString ( Lower ( matchFieldValue ) )
+		) ;
+	col3Query =
+		"SELECT " & SqField ( sortFieldName ) &
+		"¶FROM " & SqTable ( sortFieldName ) &
+		If ( not IsEmpty ( matchFieldValue ) ;
+			"¶WHERE lower(" & SqField ( matchFieldName ) & ") = " & SqString ( Lower ( matchFieldValue ) )
+		) ;
+	col1 = SQL ( col1Query ) ;
+	col2 = SQL ( col2Query ) ;
+	col3 = SQL ( col3Query ) ;
+	col1Result = MVLSetVar ( 1 ; Substitute ( col1 ; SqRowSeparator ; ¶ ) ) ;
+	col2Result = MVLSetVar ( 2 ; Substitute ( col2 ; SqRowSeparator ; ¶ ) ) ;
+	col3Result = MVLSetVar ( 3 ; Substitute ( col3 ; SqRowSeparator ; ¶ ) )
+	] ;
+	Case (
+		col1Result & col2Result & col3Result = "???" ; "Error: invalid id and name lists" ;
+		col1Result = "?" ; "Error: invalid id list" ;
+		col2Result = "?" ; "Error: invalid name list" ;
+		col3Result = "?" ; "Error: invalid sort list" ;
+		1
+	)
+)
+
+/* __________________________________________________
+
+NAME:	MVLSetListSorted ( idFieldName ; nameFieldName ; matchFieldName ; matchFieldValue ; sortField )
+PURPOSE:	Sets variable used for Magic Value List.
+EXAMPLES:
+	MVLSetList (
+		GetFieldName ( PERSON::ID ) ;
+		GetFieldName ( PERSON::NAME ) ;
+		GetFieldName ( PERSON::AGE ) ;
+		30 ;
+		GetFieldName ( PERSON::AGE )
+	)
+HISTORY:
+	Created:	2013-05-03 11:28 PT - Donovan Chandler using MVLSetListSorted().
+	Modified:
+*/

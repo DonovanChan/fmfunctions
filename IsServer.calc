@@ -1,14 +1,13 @@
-Position ( Get ( ApplicationVersion ) ; "server" ; 1 ; 1 ) > 0
+PatternCount ( Get ( ApplicationVersion ) ; "server" ) > 0
 
-/* —————————————————————————————— //
-NAME:
-	IsServer ( )
+/* __________________________________________________
 
-PURPOSE:
-	Returns TRUE if current user is the server
-
-EXAMPLES:
-
+NAME:	IsServer ( )
+PURPOSE:	Returns 1 (True) if current user is the server (scheduled script)
+NOTES:
+	For reference on Get ( ApplicationVersion ), see
+	http://www.filemaker.com/12help/html/func_ref2.32.17.html#1028783
 HISTORY:
-	Created: 2011-Feb-25 09h45 PST — Donovan Chandler
+	Created:	2012-03-09 16:04 PT - Donovan Chandler
+	Modified:
 */

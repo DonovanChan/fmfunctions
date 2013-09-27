@@ -1,31 +1,26 @@
 Let ( [
-  start = GetAsDate ( startDate ) ;
-  end = GetAsDate ( endDate )
-  ] ;
-  Case (
-    start ≤ end ;
-      DatesInRangeLoop (
-        start ;
-        end ;
-        omitWeekends ;
-        ListDateToNumber ( omitDateList ) ;
-        ""
-      )
-  )
+	start = GetAsDate ( startDate ) ;
+	end = GetAsDate ( endDate )
+	] ;
+	Case (
+		start ≤ end ;
+			DatesInRangeLoop (
+				start ;
+				end ;
+				omitWeekends ;
+				ListDateToNumber ( omitDateList ) ;
+				""
+			)
+	)
 )
 
-/* —————————————————————————————— //
-NAME:
-  DatesInRange ( startDate ; endDate ; omitWeekends ; omitDateList )
+/* __________________________________________________
 
-PURPOSE:
-  Returns list of dates in range. Excludes weekends and/or holidays if specified.
-
+NAME:   DatesInRange ( startDate ; endDate ; omitWeekends ; omitDateList )
+PURPOSE:  Returns list of dates in range. Excludes weekends and/or holidays if specified.
 EXAMPLES:
-  DatesInRange ( "10/1/2010" ; "10/4/2010" ; 1 ; "10/4/2010" ) = "10/1/2010¶10/5/2010"
-
+	DatesInRange ( "10/1/2010" ; "10/4/2010" ; 1 ; "10/4/2010" ) = "10/1/2010¶10/5/2010"
 HISTORY:
-  Created: 2010-Oct-15 12h06 PST — Donovan A. Chandler
-  Modified: 2010-Nov-30 12h07 PST — Donovan Chandler ; replaced "omitHoliday" param with "omitDateList"
-
+	Created:  2010-10-15 12:06 PT - Donovan Chandler
+	Modified: 2010-11-30 12:07 PT - Donovan Chandler : replaced "omitHoliday" param with "omitDateList"
 */

@@ -2,10 +2,13 @@ PatternCount ( Get ( ApplicationVersion ) ; "Web Publishing" ) > 0
 
 /* __________________________________________________
 
-NAME:		IsWebPublished ( )
+NAME:	IsWebPublished ( )
 PURPOSE:	Returns TRUE if user is using Instant Web Publishing, otherwise FALSE.
 EXAMPLES:
-	
+
+NOTES:
+	For reference on Get ( ApplicationVersion ), see
+	http://www.filemaker.com/12help/html/func_ref2.32.17.html#1028783
 HISTORY:
 	Created:	2012-05-18 15:48 PT - Donovan Chandler
 */

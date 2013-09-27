@@ -1,0 +1,51 @@
+Let ( [
+	~startTimestamp = GetAsTimestamp ( startTimestamp ) ;
+	~endTimestamp = GetAsTimestamp ( endTimestamp )
+	] ;
+
+	Case (
+
+		GetAsDate ( ~startTimestamp ) = GetAsDate ( ~endTimestamp ) ;
+		Hour ( ~endTimestamp ) - Hour ( ~startTimestamp ) ;
+
+		Let ( [
+			~hrsPerDay = 24 ;
+
+			~startDate = GetAsDate ( ~startTimestamp ) ;
+			~endDate = GetAsDate ( ~endTimestamp ) ;
+			~dateList = DatesInRangefull ( ~startDate ; ~endDate ; True ; True ; "" ) ;
+			~dateListCount = ValueCount ( ~dateList ) ;
+			~startDateIsWorkday = GetValue ( ~dateList ; 1 ) = ~startDate ;
+			~endDateIsWorkday = GetValue ( ~dateList ; ~dateListCount ) = ~endDate ;
+			~fullDays = ~dateListCount - ~startDateIsWorkday - ~endDateIsWorkday ;
+			~startDayMls = Timestamp ( ~startDate ; Time ( 24 ; 0 ; 0 ) ) -~startTimestamp ;
+			~startDayHrs = ~startDayMls / 60 / 60 ;
+			~endDayMls = ~endTimestamp - Timestamp ( ~endDate ; Time ( 0 ; 0 ; 0 ) ) ;
+			~endDayHrs = ~endDayMls / 60 / 60
+			] ;
+			~fullDays * ~hrsPerDay +
+			If ( ~startDateIsWorkday ; Min ( ~startDayHrs ; ~hrsPerDay ) ) +
+			If ( ~endDateIsWorkday ; Min ( ~endDayHrs ; ~hrsPerDay ) )
+		)
+
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	WorkHoursOffset ( startTimestamp ; endTimestamp )
+PURPOSE:	Returns work hours between start and end timestamps.
+EXAMPLES:
+	WorkHoursOffset ( "9/20/13 12:00 PM" ; "9/21/13 12:00 PM" )
+	// Returns 12 (omitting weekend day)
+
+	WorkHoursOffset ( "9/20/13 12:00 PM" ; "9/23/13 2:00 PM" )
+	// Returns 26
+
+	WorkHoursOffset ( "9/21/13 12:00 PM" ; "9/21/13 2:00 PM" )
+	// Returns 2 (includes weekend time when less than one day total)
+HISTORY:
+	Created:	2013-09-20 16:41 PT - Donovan Chandler
+	Modified:
+*/

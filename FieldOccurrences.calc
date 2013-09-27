@@ -1,0 +1,23 @@
+Let ( [
+	~tableEnd = Position ( fieldName ; "::" ; 1 ; 1 ) ;
+	~fieldName = Middle ( fieldName ; If ( ~tableEnd ; ~tableEnd + 2 ; 1 ) ; 99 ) ;
+	~query =
+		"SELECT TableName FROM filemaker_fields" &
+		"¶WHERE FieldName = ?" &
+		//-- Remove all tables with "__" in name
+		"¶AND TableName NOT LIKE '%\_\_%'"
+	] ;
+	ExecuteSQL ( ~query ; "" ; "¶" ; ~fieldName )
+)
+
+/* __________________________________________________
+
+NAME:	FieldOccurrences ( fieldName )
+PURPOSE:	Returns list of tables containing specified field.
+		Contains additional logic to filter out all but "anchor" table occurrences.
+EXAMPLES:
+	FieldOccurrences ( "ID_COMPANY" ) //= "CONTACT¶INVOICE" where those tables have ID_COMPANY field
+HISTORY:
+	Created:	2013-05-09 14:26 PT - Donovan Chandler
+	Modified:
+*/

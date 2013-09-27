@@ -2,7 +2,7 @@ Case (
 
 //-- FileMaker calculation errors
 errorNum = -1		; "Unknown error" ;
-errorNum = 0		; "Invalid permission" ;
+errorNum = 0		; "No error" ;
 errorNum = 1		; "User canceled action" ;
 errorNum = 2		; "Memory error" ;
 errorNum = 3		; "Command is unavailable (for example, wrong operating system, wrong mode, etc.)" ;

@@ -1,0 +1,31 @@
+Let ( [
+/*
+	rep = 1 ;
+	repeatingField = FOCUS::NAV_SUB_LAYOUT_LIST_REP ;
+	matchValue = "Equipment List" ;
+*/
+	~repContent = GetRepetition ( repeatingField ; startingRep ) ;
+	~repMatched = ListContains ( ~repContent ; matchValue )
+	] ;
+	Case (
+		//-- Exceeded rep range
+		~repContent = "?" ; "" ;
+
+		//-- Matched, return repetition/index
+		~repMatched ; startingRep ;
+
+		//-- Iterate to next repetition, if still within permitted rep range
+		startingRep < repMax ; FieldRepMatch ( repeatingField ; matchValue ; startingRep + 1 ; repMax )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	FieldRepMatch ( repeatingField ; matchValue ; startingRep ; maxRep )
+PURPOSE:	Returns repetition of field containing a line that matches matchValue
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-05-16 09:40 PT - Donovan Chandler
+	Modified:
+*/

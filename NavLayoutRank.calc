@@ -1,0 +1,24 @@
+Let ( [
+	//layoutToMatch = "System List" ;
+
+	~navLayouts = FOCUS::NAV_LAYOUT_LIST_REP ;
+	~navRepMax = 8 ;
+	~navIndex = FieldRepMatch ( ~navLayouts ; layoutToMatch ; 1 ; ~navRepMax ) ;
+
+	~subnavLayouts = FOCUS::NAV_SUB_LAYOUT_LIST_REP ;
+	~subnavRepMax = 5 ;
+	~subnavIndex = FieldRepMatch ( ~subnavLayouts ; layoutToMatch ; 1 ; ~subnavRepMax )
+	] ;
+	~navIndex & If ( ~subnavIndex ; "." & ~subnavIndex )
+)
+
+/* __________________________________________________
+
+NAME:	NavLayoutRank ( layoutToMatch )
+PURPOSE:	Returns rank of current layout as specified in nav_layout record of active nav_set.
+EXAMPLES:
+
+HISTORY:
+	Created:	2013-05-16 10:02 PT - Donovan Chandler
+	Modified:
+*/

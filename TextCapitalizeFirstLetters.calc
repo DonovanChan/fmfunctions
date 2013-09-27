@@ -1,0 +1,28 @@
+Let ( [
+	~line = GetValue ( text ; startLineNumber ) ;
+	~firstWord = LeftWords ( ~line ; 1 ) ;
+	~firstWordStart = Position ( ~line ; ~firstWord ; 1 ; 1 ) ;
+	~firstWordNew = Upper ( Left ( ~firstWord ; 1 ) ) & Middle ( ~firstWord ; 2 ; 99 ) ;
+	~remainingText = Middle ( ~line ; ~firstWordStart + Length ( ~firstWord ) ; Length ( ~line ) )
+	] ;
+
+	List (
+		Left ( ~line ; ~firstWordStart - 1 ) & ~firstWordNew & ~remainingText ;
+		If ( ValueCount ( text ) > startLineNumber ; FormatWorkItemCapitalization ( text ; startLineNumber + 1 ) )
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	TextCapitalizeFirstLetters ( text ; startLineNumber )
+PURPOSE:	Capitalizes first letter of each line of text.
+			Leaves leading symbols in tact.
+			Leaves acronyms in tact.
+EXAMPLES:
+	TextCapitalizeFirstLetters ( "the¶- red¶FOX" ; 1 )
+	// Returns "The¶- Red¶FOX"
+HISTORY:
+	Created:	2013-09-27 10:30 PT - Donovan Chandler
+	Modified:
+*/

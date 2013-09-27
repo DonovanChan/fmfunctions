@@ -4,13 +4,15 @@ Case (
 	text
 )
 
-/* —————————————————————————————— //
-NAME:
-	TextStripRight ( text ; charToStrip )
-	
-PURPOSE:
-	Strips all occurrences of character from end of text
-	
+/* __________________________________________________
+
+NAME:	TextStripRight ( text ; charToStrip )
+PURPOSE:	Strips all occurrences of character from end of text
+EXAMPLES:
+	TextStripRight ( "test:"	; ":" )	//= "test"
+	TextStripRight ( "test: "	; ":" )	//= "test: "
+	TextStripRight ( "test: "	; ": " )	//= "test: "
 HISTORY:
-	Created: 2011-Jul-09 21h26 PST — Donovan Chandler
+	Created:	2011-07-09 21:26 PT - Donovan Chandler
+	Modified:
 */

@@ -26,7 +26,7 @@ Let ( [
 			sDef > 0 ; Evaluate ( Middle ( row ; sDef + 2 ; 999 ) )
 		) ;
 
-	//-- Instantiate variable (error returns '1') ;
+	//-- Instantiate variable (error returns '1')
 	error =
 		Case (
 			value = "?" ;
@@ -52,7 +52,7 @@ NAME:	VarAssignLoop ( encodedString ; listOfKeys )
 PURPOSE:	Instantiates variables from dictionary, with optional type casting and validation.
 EXAMPLES:	See VarAssignMan() for documentation.
 HISTORY:
-	Created:	2012-03-16 10:27 PST - Donovan Chandler
-	Modified:	2012-04-06 09:56 PST - Donovan Chandler : No longer requires ";" before "||" if no options are specified.
+	Created:	2012-03-16 10:27 PT - Donovan Chandler
+	Modified:	2012-04-06 09:56 PT - Donovan Chandler : No longer requires ";" before "||" if no options are specified.
 	Modified:	2012-10-01 14:13 PT - Donovan Chandler : Fixed bug evaluating default values.
 */

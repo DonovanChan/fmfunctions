@@ -1,53 +1,48 @@
 Let ( [
-  start = GetAsDate ( startDate ) ;
-  end = GetAsDate ( endDate ) ;
-  dayOfWeek = DayOfWeek ( start ) ;
-  isWeekend =
-    Case (
-      omitWeekends ;
-        dayOfWeek = 7 or dayOfWeek = 1 ;
-      0
-    ) ;
-  isHoliday =
-    Case (
-      omitDateNumberList ;
-        ValueCount ( FilterValues ( omitDateNumberList ; GetAsNumber ( start ) ) ) > 0 ;
-      0
-    ) ;
-  result = 
-    Case (
-      isWeekend or isHoliday ;
-        previousResults ;
-      List ( previousResults ; start )
-    )
-  ] ;
-  Case (
-    start > end ;
-      previousResults ;
+	start = GetAsDate ( startDate ) ;
+	end = GetAsDate ( endDate ) ;
+	dayOfWeek = DayOfWeek ( start ) ;
+	isWeekend =
+		Case (
+			omitWeekends ;
+				dayOfWeek = 7 or dayOfWeek = 1 ;
+			0
+		) ;
+	isHoliday =
+		Case (
+			omitDateNumberList ;
+				ValueCount ( FilterValues ( omitDateNumberList ; GetAsNumber ( start ) ) ) > 0 ;
+			0
+		) ;
+	result =
+		Case (
+			isWeekend or isHoliday ;
+				previousResults ;
+			List ( previousResults ; start )
+		)
+	] ;
+	Case (
+		start > end ;
+			previousResults ;
 
-    DatesInRangeLoop (
-      start + 1 ;
-      endDate ;
-      omitWeekends ;
-      omitDateNumberList ;
-      result
-    )
+		DatesInRangeLoop (
+			start + 1 ;
+			endDate ;
+			omitWeekends ;
+			omitDateNumberList ;
+			result
+		)
 
-  )
+	)
 )
 
-/* —————————————————————————————— //
-NAME:
-  DatesInRangeLoop ( startDate ; endDate ; omitWeekends ; omitDateNumberList ; previousResults )
+/* __________________________________________________
 
-PURPOSE:
-  Performs recursive operation for DatesInRange().  Returns list of dates as specified. 
-
+NAME:   DatesInRangeLoop ( startDate ; endDate ; omitWeekends ; omitDateNumberList ; previousResults )
+PURPOSE:  Performs recursive operation for DatesInRange().  Returns list of dates as specified.
 EXAMPLES:
-  DatesInRangeLoop ( "10/2/2010" ; "10/4/2010" ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
-
+	DatesInRangeLoop ( "10/2/2010" ; "10/4/2010" ; "10/1/2010" ) = "10/1/2010¶10/4/2010"
 HISTORY:
-  Created: 2010-Oct-15 12h11 PST — Donovan A. Chandler
-  Modified: 2010-Nov-30 12h11 PST — Donovan Chandler ; Replaced "omitHolidays" param with "omitDateNumberList"
-
+	Created:  2010-10-15 12:11 PT - Donovan A. Chandler
+	Modified: 2010-11-30 12:11 PT - Donovan Chandler : Replaced "omitHolidays" param with "omitDateNumberList"
 */

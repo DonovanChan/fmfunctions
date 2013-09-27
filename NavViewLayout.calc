@@ -1,0 +1,29 @@
+Let ( [
+/*
+	rank = 2.1 ;
+	targetView = "list" ;
+*/
+	~rank = If ( not IsEmpty ( rank ) ; rank ; navLayoutrank ( Get ( LayoutName ) ) ) ;
+	~rankInt = Int ( ~rank ) ;
+	~layouts =
+		Case (
+			~rankInt = ~rank ; FOCUS::NAV_LAYOUT_LIST_REP[ ~rank ] ;
+			FOCUS::NAV_SUB_LAYOUT_LIST_REP[ ~rank ]
+		)
+	] ;
+	#IDValue ( ~layouts ; targetView )
+)
+
+/* __________________________________________________
+
+NAME:	NavViewLayout ( rank ; targetView )
+PURPOSE:	Returns layout corresponding to view for rank.
+		If rank is empty, uses current layout's rank.
+EXAMPLES:
+	NavViewLayout ( 2.1 ; "list" )	//= "Contact List"
+	NavViewLayout ( 2.1 ; "table" )	//= "Contact Table"
+	NavViewLayout ( "" ; "table" )	//= "Contact Table" where current layout has rank of 2.1
+HISTORY:
+	Created:	2013-05-16 10:08 PT - Donovan Chandler
+	Modified:
+*/

@@ -1,15 +1,11 @@
 FOCUS::HOLIDAY_LIST
 
-/* —————————————————————————————— //
-NAME:
-	DatesHolidayList
+/* __________________________________________________
 
-PURPOSE:
-	Returns list of dates considered to be holidays
-
+NAME:	DatesHolidayList
+PURPOSE:	Returns list of dates considered to be holidays
 EXAMPLES:
-	
 
 HISTORY:
-	Created: 2010-Oct-19 14h11 PST — Donovan A. Chandler
+	Created:	2010-10-19 14:11 PST - Donovan A. Chandler
 */

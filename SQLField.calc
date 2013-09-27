@@ -1,23 +1,43 @@
 Let ( [
-	fieldName = GetFieldName ( field ) ;
-	fieldName = If ( fieldName = "?" ; field ; fieldName ) ;
-	fieldList = Substitute ( fieldName ; "::" ; ¶ ) ;
-	table = GetValue ( fieldList ; 1 ) ;
-	field = GetValue ( fieldList ; ValueCount ( fieldList ) )
+	error = EvaluationError ( GetFieldName ( field ) ) ;
+	fieldNameRaw = If ( error ; field ; GetFieldName ( field ) ) ;
+
+	//-- Extract repetition
+	fieldList = Substitute ( fieldNameRaw ; [ "[" ; "¶" ] ; [ "]" ; "" ] ) ;
+	fieldNameFull = GetValue ( fieldList ; 1 ) ;
+	fieldRep = GetValue ( fieldList ; 2 ) ;
+
+	//-- Extract table and field
+	fieldNameList = Substitute ( fieldNameFull ; "::" ; ¶ ) ;
+	fieldNameListCnt = ValueCount ( fieldNameList ) ;
+	table = If ( fieldNameListCnt > 1 ; GetValue ( fieldNameList ; 1 ) ) ;
+	field = GetValue ( fieldNameList ; fieldNameListCnt )
 	];
-	"\"" & Lower ( table ) & "\".\"" & Lower ( field ) & "\""
+	If ( not IsEmpty ( table ) ; Lower ( Quote ( table ) ) & "." ) &
+	Lower ( Quote ( field ) ) &
+	If ( not isEmpty ( fieldRep ) ; "[" & fieldRep & "]" )
 )
 
 /* __________________________________________________
 
-NAME:		SQLField ( field )
-PURPOSE:	Returns name of field for use in SQL statements. Accepts field or name of field.
+NAME:	SqField ( field )
+PURPOSE:	Returns name of field for use in SQL statements. Accepts field reference or name of field.
 EXAMPLES:
-	SQLField ( GetFieldName ( CONTACT::Name ) ) = "contact.\"name\""
-	SQLField ( CONTACT::Name ) = "contact.\"name\""
-	SQLField ( "CONTACT::Name" ) = "contact.\"name\""
+	SqField ( "CONTACT::Name" )		= "\"contact\".\"name\""
+	SqField ( CONTACT::Name[3] )		= "\"contact\".\"name\"[3]"
+	SqField ( "Name" )				= "\"name\""
+	SqField ( GetFieldName ( CONTACT::Name" ) )	= "\"contact\".\"name\""
+TESTS:
+	List (
+		SqField ( "FIELD_NAME" )			= "\"field_name\"" ;
+		SqField ( "FIELD_NAME[2]" )		= "\"field_name\"[2]" ;
+		SqField ( "TABLE::FIELD_NAME" )	= "\"table\".\"field_name\"" ;
+		SqField ( "TABLE::FIELD_NAME[2]" )	= "\"table\".\"field_name\"[2]"
+	) // Each line should = 1
 HISTORY:
 	Created:	2011-11-04 16:45 PT - Donovan Chandler
 	Modified:	2011-11-28 14:20 PT - Donovan Chandler : added support for field name if reference fails; also returns field name of no table is provided
-	Modified:	2012-11-20 17:44 PT - Donovan Chandler : quotes table name
+	Modified:	2012-12-10 14:28 PT - Will M. Baker : uses error-free logic to test for field name or field referenced; quotes table name.
+	Modified:	2013-02-18 12:50 PT - Donovan Chandler : returns just field name if table is missing.
+	Modified:	2013-05-16 12:51 PT - Donovan Chandler : places field repetition outside field quotes.
 */
