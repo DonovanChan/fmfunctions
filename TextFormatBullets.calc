@@ -1,0 +1,44 @@
+Let ( [
+	~validBullets = "-*•~" ;
+	~line = GetValue ( text ; startLineNumber ) ;
+	~lineTrimmed = TrimWhitespaceLeft ( ~line ) ;
+	~bullet = Filter ( Left ( ~lineTrimmed ; 1 ) ; ~validBullets ) ;
+	~bulletStart = If ( IsEmpty ( ~bullet ) ; 0 ; Position ( ~line ; ~bullet ; 1 ; 1 ) ) ;
+	~addBullet = ( ~bulletStart > 0 or bulletAllLines ) ;
+	~bulletNew = If ( ~addBullet ; desiredBulletChar ) ;
+	~bulletPadding =
+		Case (
+			IsEmpty ( ~bullet ) ;
+				Left ( ~line ; Length ( ~line ) - Length ( ~lineTrimmed ) ) ;
+			Left ( ~line ; ~bulletStart - 1 )
+		) ;
+	~textPadding = If ( ~addBullet ; desiredTextPadding ) ;
+	~text = Middle ( ~line ; ~bulletStart + Length ( ~bullet ) ; Length ( ~line ) ) ;
+	~textNew = TrimWhitespaceLeft ( ~text )
+	] ;
+
+	List (
+		//~bulletPadding & "|" & ~bulletNew & "|" & ~textPadding & "|" & ~textNew ;
+		~bulletPadding & ~bulletNew & ~textPadding & ~textNew ;
+		If ( ValueCount ( text ) > startLineNumber ; TextFormatBullets ( text ; desiredBulletChar ; desiredTextPadding ; bulletAllLines ; startLineNumber + 1 ) )
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	TextFormatBullets ( text ; desiredBulletChar ; desiredTextPadding ; bulletAllLines ; startLineNumber )
+PURPOSE:	Unifies or removes bullet characters.
+EXAMPLES:
+	For $_text = "- dog¶ *    cat¶comment"
+
+	TextFormatBullets ( $_text ; "~" ; "..." ; False ; 1 )	= "~...dog¶ ~...cat¶comment"
+	TextFormatBullets ( $_text ; "~" ; "..." ; True ; 1 )	= "~...dog¶ ~...cat¶~...comment"
+	TextFormatBullets ( $_text ; "" ; "..." ; False ; 1 )	= "...dog¶ ...cat¶comment"
+	TextFormatBullets ( $_text ; "~" ; "" ; False ; 1 )		= "~dog¶ ~cat¶comment"
+	TextFormatBullets ( $_text ; "~" ; "..." ; False ; 1 )	= "dog¶ cat¶comment"
+
+HISTORY:
+	Created:	2013-09-27 10:30 PT - Donovan Chandler
+	Modified:
+*/

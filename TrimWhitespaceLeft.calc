@@ -1,0 +1,24 @@
+Let ( [
+	~char = Left ( text ; 1 ) ;
+	~charToTrim =
+			  "¶"
+			& " "
+			& Char ( 9 )	/* TAB */
+			& Char ( 10 )	/* LF */
+	] ;
+	Case (
+		not IsEmpty ( Filter ( ~char ; ~charToTrim ) ) ;
+			TrimWhitespaceLeft ( Right ( text ; Length ( text ) - 1 ) ) ;
+		text
+	)
+)
+
+/* __________________________________________________
+
+NAME:	TrimWhitespaceLeft ( text )
+PURPOSE:	Removes leading whitespace from text.
+EXAMPLES:
+	TrimWhitespaceLeft ( "¶ ¶text¶" ) = "text¶"
+HISTORY:
+	2013-09-27 12:13 PT - Donovan Chandler
+*/

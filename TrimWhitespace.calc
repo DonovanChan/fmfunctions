@@ -1,5 +1,11 @@
 Let ( [
-	cleanString = Substitute ( text ; [ ¶ ; "" ] ; [ Char ( 10 ) ; "" ] ; [ " " ; "" ] ; [ Char ( 9 ) ; "" ] ) ;
+	cleanString =
+		Substitute ( text ;
+			[ ¶ ; "" ] ;
+			[ Char ( 10 ) ; "" ] ;	/*  LF */
+			[ " " ; "" ] ;
+			[ Char ( 9 ) ; "" ]		/* TAB */
+		) ;
 	first = Left ( cleanString ; 1 ) ;
 	leftPosition = Position ( text ; first ; 1 ; 1 ) ;
 	last = Right ( cleanString ; 1 ) ;
