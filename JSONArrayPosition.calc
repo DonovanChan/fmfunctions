@@ -1,25 +1,28 @@
 Let ( [
-	whitespace =
-		","
-		& Char ( 32 )	// space
-		& Char ( 9 )	// horizontal tab
-		& Char ( 10 )	// line feed
-		& Char ( 11 )	// vertical tab
-		& Char ( 12 )	// form feed
-		& Char ( 13 ) ;	// carriate return
-	nodeStart = PositionIgnoring ( text ; whitespace ; startPosition ) ;
-	openDelim = Middle ( text ; nodeStart ; 1 ) ;
-	closeDelim =
+	~whitespace = List ( "," ; JSONWhitespace ) ;
+	~nodeStart = PositionIgnoring ( text ; ~whitespace ; startPosition ) ;
+	~openDelim = Middle ( text ; ~nodeStart ; 1 ) ;
+	~closeDelim =
 		Case (
-			openDelim = "{" ; "}" ;
-			openDelim = "[" ; "]"
+			~openDelim = "{" ; "}" ;
+			~openDelim = "[" ; "]" ;
+			~openDelim = "\"" ; "\""
 		) ;
-	nodeEnd = TextClosePosition ( text ; openDelim ; closeDelim ; nodeStart )
+	~nodeEndSearchStart = ~nodeStart + If ( ~closeDelim = "\"" ; 1 ) ;
+	~nodeEnd =
+		If (
+			not IsEmpty ( ~closeDelim ) ;
+			TextClosePosition ( text ; ~openDelim ; ~closeDelim ; ~nodeEndSearchStart )
+		) ;
+	~nextStart = If ( ~nodeEnd ; ~nodeEnd ; ~nodeStart ) + 1
 	] ;
+	// Used for debugging
+	//"~nodeStart=" & ~nodeStart & ", ~openDelim=" & ~openDelim & ", ~nodeEnd=" & ~nodeEnd & ¶ &
+
 	Case (
-		nodeStart = 0 or nodeEnd = 0 ; "?" ;
-		index = 1 ; nodeStart ;
-		JSONArrayPosition ( text ; nodeEnd + 1 ; index - 1 )
+		~nodeStart = 0 or ~nodeEnd = 0 ; "?" ;
+		index = 1 ; ~nodeStart ;
+		JSONArrayPosition ( text ; ~nextStart + 1 ; index - 1 )
 	)
 )
 
@@ -34,7 +37,7 @@ EXAMPLES:
 	JSONArrayPosition ( $_text ; 2 ; 2 ) = 17
 HISTORY:
 	Created:	2012-10-17 12:51 PT - Donovan Chandler
-	Modified:
+	Modified:	2013-11-03 23:20 PT - Donovan Chandler : supports number values
 NOTES:
 	Be sure that text parameter is the *contents* of the array. Omit the enclosing "[" and "]".
 */

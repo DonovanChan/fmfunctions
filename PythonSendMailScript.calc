@@ -1,0 +1,321 @@
+"#!/usr/bin/python" & ¶ &
+"" & ¶ &
+"\"\"\"Email.py: Sends emails including HTML and attachments.\"\"\"" & ¶ &
+"" & ¶ &
+"__author__      = \"Donovan Chandler\"" & ¶ &
+"__copyright__   = \"Copyright 2013, Beezwax Datatools, Inc.\"" & ¶ &
+"__credits__     = [\"Simon Brown\", \"unknown\"]" & ¶ &
+"" & ¶ &
+"" & ¶ &
+"import email.Encoders as encoders" & ¶ &
+"from email.MIMEBase import MIMEBase" & ¶ &
+"from email.MIMEMultipart import MIMEMultipart" & ¶ &
+"from email.MIMEText import MIMEText" & ¶ &
+"from email.MIMEImage import MIMEImage" & ¶ &
+"from email.MIMEAudio import MIMEAudio" & ¶ &
+"" & ¶ &
+"import mimetypes" & ¶ &
+"import os" & ¶ &
+"import re" & ¶ &
+"import smtplib" & ¶ &
+"" & ¶ &
+"" & ¶ &
+"class Email:" & ¶ &
+"    \"\"\"" & ¶ &
+"    Sends HTML email with optional attachments." & ¶ &
+"    Compiled from various sources." & ¶ &
+"    \"\"\"" & ¶ &
+"    def __init__(self, smtpServer, smtpPort, username, password):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Create a new empty email message object." & ¶ &
+"" & ¶ &
+"        @param smtpServer: The address of the SMTP server" & ¶ &
+"        @type smtpServer: String" & ¶ &
+"        \"\"\"" & ¶ &
+"        self._textBody = None" & ¶ &
+"        self._htmlBody = None" & ¶ &
+"        self._subject = \"\"" & ¶ &
+"        self._smtpServer = smtpServer" & ¶ &
+"        self._smtpPort = locals().get(25, smtpPort)  # 25 or 587" & ¶ &
+"        self._username = username" & ¶ &
+"        self._password = password" & ¶ &
+"        self._reEmail = re.compile(\"^([\\w \\._]+\\<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\>|[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$\")" & ¶ &
+"        self.clearRecipients()" & ¶ &
+"        self.clearAttachments()" & ¶ &
+"" & ¶ &
+"    def send(self):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Send the email message represented by this object." & ¶ &
+"        \"\"\"" & ¶ &
+"        # Validate message" & ¶ &
+"        if self._textBody is None and self._htmlBody is None:" & ¶ &
+"            raise Exception(\"Error! Must specify at least one body type (HTML or Text)\")" & ¶ &
+"        if len(self._to) == 0:" & ¶ &
+"            raise Exception(\"Must specify at least one recipient\")" & ¶ &
+"" & ¶ &
+"        # Create the message part" & ¶ &
+"        if self._textBody is not None and self._htmlBody is None:" & ¶ &
+"            msg = MIMEText(self._textBody, \"plain\")" & ¶ &
+"        elif self._textBody is None and self._htmlBody is not None:" & ¶ &
+"            msg = MIMEText(self._htmlBody, \"html\")" & ¶ &
+"        else:" & ¶ &
+"            msg = MIMEMultipart(\"alternative\")" & ¶ &
+"            msg.attach(MIMEText(self._textBody, \"plain\"))" & ¶ &
+"            msg.attach(MIMEText(self._htmlBody, \"html\"))" & ¶ &
+"" & ¶ &
+"        # Add attachments, if any" & ¶ &
+"        if len(self._attach) != 0:" & ¶ &
+"            tmpmsg = msg" & ¶ &
+"            msg = MIMEMultipart()" & ¶ &
+"            msg.attach(tmpmsg)" & ¶ &
+"        for fname, attachname in self._attach:" & ¶ &
+"            if not os.path.exists(fname):" & ¶ &
+"                raise Exception(\"File '{0}' does not exist.  Not attaching to email.\".format(fname))" & ¶ &
+"                continue" & ¶ &
+"            if not os.path.isfile(fname):" & ¶ &
+"                raise Exception(\"Attachment '{0}' is not a file.  Not attaching to email.\".format(fname))" & ¶ &
+"                continue" & ¶ &
+"            # Guess at encoding type" & ¶ &
+"            ctype, encoding = mimetypes.guess_type(fname)" & ¶ &
+"            if ctype is None or encoding is not None:" & ¶ &
+"                # No guess could be made so use a binary type." & ¶ &
+"                ctype = 'application/octet-stream'" & ¶ &
+"            maintype, subtype = ctype.split('/', 1)" & ¶ &
+"            if maintype == 'text':" & ¶ &
+"                fp = open(fname)" & ¶ &
+"                attach = MIMEText(fp.read(), _subtype=subtype)" & ¶ &
+"                fp.close()" & ¶ &
+"            elif maintype == 'image':" & ¶ &
+"                fp = open(fname, 'rb')" & ¶ &
+"                attach = MIMEImage(fp.read(), _subtype=subtype)" & ¶ &
+"                fp.close()" & ¶ &
+"            elif maintype == 'audio':" & ¶ &
+"                fp = open(fname, 'rb')" & ¶ &
+"                attach = MIMEAudio(fp.read(), _subtype=subtype)" & ¶ &
+"                fp.close()" & ¶ &
+"            else:" & ¶ &
+"                fp = open(fname, 'rb')" & ¶ &
+"                attach = MIMEBase(maintype, subtype)" & ¶ &
+"                attach.set_payload(fp.read())" & ¶ &
+"                fp.close()" & ¶ &
+"                # Encode the payload using Base64" & ¶ &
+"                encoders.encode_base64(attach)" & ¶ &
+"            # Set the filename parameter" & ¶ &
+"            if attachname is None:" & ¶ &
+"                filename = os.path.basename(fname)" & ¶ &
+"            else:" & ¶ &
+"                filename = attachname" & ¶ &
+"            attach.add_header('Content-Disposition', 'attachment', filename=filename)" & ¶ &
+"            msg.attach(attach)" & ¶ &
+"" & ¶ &
+"        # Complete header" & ¶ &
+"        # This is where To, CC, BCC are differentiated" & ¶ &
+"        msg['Subject'] = self._subject" & ¶ &
+"        msg['From'] = self._from" & ¶ &
+"        msg['To'] = \", \".join(self._to)" & ¶ &
+"        msg['CC'] = \", \".join(self._cc)" & ¶ &
+"        msg['BCC'] = \", \".join(self._bcc)" & ¶ &
+"        msg.preamble = \"You need a MIME enabled mail reader to see this message\"" & ¶ &
+"" & ¶ &
+"        # Send message" & ¶ &
+"        msg = msg.as_string()" & ¶ &
+"        server = smtplib.SMTP(self._smtpServer, self._smtpPort, '', 5)" & ¶ &
+"        # Change debugLevel to 1 to see more debug info." & ¶ &
+"        # This may terminate executions that would otherwise succeed." & ¶ &
+"        server.set_debuglevel(0)" & ¶ &
+"        server.ehlo()" & ¶ &
+"" & ¶ &
+"        if self._username:" & ¶ &
+"            server.starttls()" & ¶ &
+"            server.ehlo()" & ¶ &
+"            server.login(self._username, self._password)" & ¶ &
+"        allRecipients = self._to + self._cc + self._bcc" & ¶ &
+"        result = server.sendmail(self._from, allRecipients, msg)" & ¶ &
+"        server.quit()" & ¶ &
+"        return result" & ¶ &
+"" & ¶ &
+"    def setSubject(self, subject):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Set the subject of the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        self._subject = subject" & ¶ &
+"" & ¶ &
+"    def setFrom(self, address):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Set the email sender." & ¶ &
+"        \"\"\"" & ¶ &
+"        if not self.validateEmailAddress(address):" & ¶ &
+"            raise Exception(\"Invalid email address '{0}'\".format(address))" & ¶ &
+"        self._from = address" & ¶ &
+"" & ¶ &
+"    def clearRecipients(self):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Remove all currently defined recipients for" & ¶ &
+"        the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        self._to = []" & ¶ &
+"        self._cc = []" & ¶ &
+"        self._bcc = []" & ¶ &
+"" & ¶ &
+"    def addRecipient(self, address, type='To'):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Add a new recipient to the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        if not self.validateEmailAddress(address):" & ¶ &
+"            raise Exception(\"Invalid email address '{0}'\".format(address))" & ¶ &
+"        if type == 'CC':" & ¶ &
+"            self._cc.append(address)" & ¶ &
+"        elif type == 'BCC':" & ¶ &
+"            self._bcc.append(address)" & ¶ &
+"        else:" & ¶ &
+"            self._to.append(address)" & ¶ &
+"" & ¶ &
+"    def addRecipients(self, addressList, type=None):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Add one or more reciepients to the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        for address in re.split('[,\n]\s*', addressList):" & ¶ &
+"            self.addRecipient(address, type)" & ¶ &
+"" & ¶ &
+"    def setTextBody(self, body):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Set the plain text body of the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        self._textBody = body" & ¶ &
+"" & ¶ &
+"    def setHtmlBody(self, body):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Set the HTML portion of the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        self._htmlBody = body" & ¶ &
+"" & ¶ &
+"    def clearAttachments(self):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Remove all file attachments." & ¶ &
+"        \"\"\"" & ¶ &
+"        self._attach = []" & ¶ &
+"" & ¶ &
+"    def addAttachment(self, filepath, attachname=None):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Add a file attachment to this email message." & ¶ &
+"" & ¶ &
+"        @param filepath: The full path and file name of the file" & ¶ &
+"                      to attach." & ¶ &
+"        @type filepath: String" & ¶ &
+"        @param attachname: This will be the name of the file in" & ¶ &
+"                           the email message if set.  If not set" & ¶ &
+"                           then the filename will be taken from" & ¶ &
+"                           the filepath parameter above." & ¶ &
+"        @type attachname: String" & ¶ &
+"        \"\"\"" & ¶ &
+"        if filepath is None:" & ¶ &
+"            return" & ¶ &
+"        self._attach.append((filepath, attachname))" & ¶ &
+"" & ¶ &
+"    def addAttachments(self, filepathList):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Add one or more file attachments to the email message." & ¶ &
+"        \"\"\"" & ¶ &
+"        for thisFile in re.split('[,\n]\s*', filepathList):" & ¶ &
+"            self.addAttachment(thisFile)" & ¶ &
+"" & ¶ &
+"    def validateEmailAddress(self, address):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Validate the specified email address." & ¶ &
+"" & ¶ &
+"        @return: True if valid, False otherwise" & ¶ &
+"        @rtype: Boolean" & ¶ &
+"        \"\"\"" & ¶ &
+"        if self._reEmail.search(address) is None:" & ¶ &
+"            return False" & ¶ &
+"        return True" & ¶ &
+"" & ¶ &
+"# Enable for debugging" & ¶ &
+"if False:" & ¶ &
+"    attachmentPath = \"\"" & ¶ &
+"    bccAddress = \"\"" & ¶ &
+"    bodyHTML = \"The following should be <b>bold</b>\n<br>\n\"" & ¶ &
+"    ccAddress = \"donovan_chandler@apple.com\"" & ¶ &
+"    emailServer = \"smtp.gmail.com\"" & ¶ &
+"    fromAddress = \"donovan.chandler@gmail.com\"" & ¶ &
+"    password = \"__FILL_ME_IN__\"" & ¶ &
+"    smtpPort = 587" & ¶ &
+"    subject = \"TEST bBox HTML Email\"" & ¶ &
+"    toAddress = \"donovan_c@beezwax.net, donovan.chandler@gmail.com\"" & ¶ &
+"    username = \"donovan.chandler@gmail.com\"" & ¶ &
+"if False:" & ¶ &
+"    # attachmentPath = \"\"" & ¶ &
+"    bccAddress = \"\"" & ¶ &
+"    # bodyHTML = \"This email was sent using an <b>open relay</b>\n<br>\n\"" & ¶ &
+"    bodyHTML = \"This email was sent using an open relay\"" & ¶ &
+"    ccAddress = \"\"" & ¶ &
+"    emailServer = \"relay.apple.com\"" & ¶ &
+"    fromAddress = \"donovan_chandler@apple.com\"" & ¶ &
+"    password = \"\"" & ¶ &
+"    smtpPort = 25" & ¶ &
+"    subject = \"TEST bBox HTML Email\"" & ¶ &
+"    toAddress = \"donovan_c@beezwax.net\"" & ¶ &
+"    username = \"\"" & ¶ &
+"" & ¶ &
+"# Localize parameters instantiated by bBox" & ¶ &
+"mBody = bodyHTML" & ¶ &
+"mFrom = fromAddress" & ¶ &
+"mPort = smtpPort" & ¶ &
+"mServer = emailServer" & ¶ &
+"mSubject = subject" & ¶ &
+"mTo = toAddress" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mBCC = bccAddress" & ¶ &
+"except Exception, e:" & ¶ &
+"    mBCC = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mCC = ccAddress" & ¶ &
+"except Exception, e:" & ¶ &
+"    mCC = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mFile = attachmentPath" & ¶ &
+"except Exception, e:" & ¶ &
+"    mFile = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mPassword = password" & ¶ &
+"except Exception, e:" & ¶ &
+"    mPassword = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mUsername = username" & ¶ &
+"except Exception, e:" & ¶ &
+"    mUsername = ''" & ¶ &
+"" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    # Create and send message" & ¶ &
+"    m = Email(mServer, mPort, mUsername, mPassword)" & ¶ &
+"    m.setFrom(mFrom)" & ¶ &
+"    m.addRecipients(mTo)" & ¶ &
+"    if mCC:" & ¶ &
+"        m.addRecipients(mCC, 'CC')" & ¶ &
+"    if mBCC:" & ¶ &
+"        m.addRecipients(mBCC, 'BCC')" & ¶ &
+"    m.setSubject(mSubject)" & ¶ &
+"    m.setHtmlBody(mBody)" & ¶ &
+"    if mFile:" & ¶ &
+"        m.addAttachment(mFile)" & ¶ &
+"    print m.send()" & ¶ &
+"" & ¶ &
+"except Exception, err:" & ¶ &
+"    print \"ERROR:\", str(err)" & ¶ &
+""
+
+/* __________________________________________________
+
+NAME:	PythonSendMailScript ( )
+PURPOSE:	Stores python script for use in bBox plug-in.
+		See http://bbox.beezwax.net/ for plug-in details.
+HISTORY:
+	Created:	2013-10-25 12:36 PT - Donovan Chandler
+	Modified:	
+*/

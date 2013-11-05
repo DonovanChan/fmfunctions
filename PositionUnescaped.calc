@@ -16,7 +16,7 @@ Case (
 /* __________________________________________________
 
 NAME:	PositionUnescaped ( text ; character ; start ; repMax ; rep )
-PURPOSE:	Finds position of first unescaped quotation mark.
+PURPOSE:	Finds position of first unescaped occurrence of character.
 EXAMPLES:
 	Where $_text = "[ \[ \] ]"
 	PositionUnescaped ( $_text ; 1 ; Length ( $_text ) ; 1 ) = 9

@@ -1,5 +1,5 @@
-If (
-	GetAsNumber ( textOrNumber ) = textOrNumber ; textOrNumber ;
+Case (
+	not IsEmpty ( textOrNumber ) and GetAsNumber ( textOrNumber ) = textOrNumber ; textOrNumber ;
 	SqString ( textOrNumber )
 )
 
@@ -10,10 +10,11 @@ PURPOSE:	Quotes string for use in SQL if it is a string.
 EXAMPLES:
 	SqStringSmart ( "contact" ) = "'contact'"
 	SqStringSmart ( "2.5" ) = "2.5"
+	SqStringSmart ( "" ) = "''"
 NOTES:
 	Use the optional arguments parameter in ExecuteSql( )
 	if you want to be sure of proper handling of strings.
 HISTORY:
 	Created:	2013-02-14 11:48 PT - Donovan Chandler
-	Modified:	
+	Modified:	2013-10-11 14:19 PT - Donovan Chandler : accounts for empty values.
 */

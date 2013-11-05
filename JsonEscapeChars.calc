@@ -1,27 +1,30 @@
-Substitute ( Quote ( text ) ;
-	[ Char ( 147 )	; "\"" ] ;	// left curly quote
-	[ Char ( 148 )	; "\"" ] ;	// right curly quote
-	[ Char ( 8220 )	; "\"" ] ;	// left curly quote
-	[ Char ( 8221 )	; "\"" ] ;	// right curly quote
+Case (
+	GetAsNumber ( text ) = text ; text ;
 
-	[ "\¶"	; ":‡:" ] ;
-	[ "¶"	; Char ( 32 ) ] ;	// CR to space
-	[ ":‡:"	; "¶" ]
+	Substitute ( Quote ( text ) ;
+		  [ Char ( "/" )		; "\\/" ]	// forward slash
+		; [ Char ( 147 )		; "\"" ]	// left curly quote
+		; [ Char ( 148 )		; "\"" ]	// right curly quote
+		; [ Char ( 8220 )	; "\"" ]	// left curly quote
+		; [ Char ( 8221 )	; "\"" ]	// right curly quote
+
+		//-- Collapse lines for efficiency
+	//	; [ "\¶"		; ":‡:" ]
+	//	; [ "¶"		; Char ( 32 ) ]	// CR to space
+	//	; [ ":‡:"		; "¶" ]
+	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	JsonEscapeChars ( text )
+/* __________________________________________________
 
-PURPOSE:
-	Escapes or removes invalid characters in JSON
-
+NAME:	JSONEncode ( text )
+PURPOSE:	Escapes or removes invalid characters in JSON
 EXAMPLES:
-	
-
+	JSONEncode ( "Jim said \"what's that \ / ?\"" )
+	// returns "Jim said \"what's that \\ \/ ?\""
 HISTORY:
-	Created: 2011-Jul-22 14h14 PST — Donovan Chandler
-
+	Created:	2011-07-22 14:14 PT - Donovan Chandler
+	Modified:	2013-10-20 16:53 PT - Donovan Chandler : Doesn't quote numbers.
 NOTES:
 	Code ( "
 	" ) = 32

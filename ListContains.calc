@@ -2,7 +2,7 @@ Position ( ¶ & listOfValues & ¶ ; ¶ & searchValue & ¶ ; 1 ; 1 ) > 0
 
 /* __________________________________________________
 
-NAME:		ListContains ( listOfValues ; searchValue )
+NAME:	ListContains ( listOfValues ; searchValue )
 PURPOSE:	Returns true if listOfValues contains match for searchValue
 EXAMPLES:
 	ListContains ( "foo¶fum" ; "FOO" ) = 1
@@ -10,7 +10,6 @@ EXAMPLES:
 HISTORY:
 	Created:	2010-11-10 11:56 PST - Donovan A. Chandler
 	Modified:	2011-12-13 18:09 PST - Donovan Chandler ; Increased speed using Position()
-	
-	NOTES:
+NOTES:
 	For case sensitive search, use ListFilterCustom()
 */

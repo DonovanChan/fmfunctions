@@ -1,10 +1,10 @@
-Let([
+Let ( [
 	//-- Determine end point of last search
 	numCloseChars = If ( not IsEmpty ( $$text_numCloseChars ) ; $$text_numCloseChars ; 1 ) ;
 
 	sCloseChars = Position( text ; closeChars ; startPosition ; numCloseChars ) ;
-	vBlock = Middle ( text ; startPosition ; sCloseChars - startPosition + 1 ) ;
-	countopenChars = PatternCount ( vBlock ; openChars ) ;
+	vBlock = Middle ( text ; startPosition ; sCloseChars - startPosition ) ;
+	countOpenChars = PatternCount ( vBlock ; openChars ) ;
 	countCloseChars = PatternCount ( vBlock ; closeChars )
 
 	] ;
@@ -21,7 +21,7 @@ Let([
 			& sCloseChars ;
 
 		//-- Error
-		0
+		"?"
 
 	)
 
@@ -40,5 +40,5 @@ HISTORY:
 	Created:	2009-07-17 12:00 PT - Donovan Chandler
 OUTPUT:
 	Integer of position where closeChars occurs.
-	Errors return result of 0.
+	Errors return result of "?".
 */

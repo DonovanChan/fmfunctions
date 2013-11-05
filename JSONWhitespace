@@ -1,0 +1,17 @@
+List (
+  Char ( 32 )	// space
+; Char ( 9 )	// horizontal tab
+; Char ( 10 )	// line feed
+; Char ( 11 )	// vertical tab
+; Char ( 12 )	// form feed
+; Char ( 13 )	// carriate return
+)
+
+/* __________________________________________________
+
+NAME:	JSONWhitespace ( )
+PURPOSE:	Returns list of characters to ignore when searching for JSON values.
+HISTORY:
+	Created:	2013-11-03 22:50 PT - Donovan Chandler
+	Modified:
+*/

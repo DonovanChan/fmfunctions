@@ -1,62 +1,114 @@
-Case (
-	IsEmpty ( name ) ; JSONArrayValue ( text ; index ) ;
+Let ( [
+	~quote = Char ( 34 ) ;
+	~textLen = Length ( text ) ;
+	~whitespace = JSONWhitespace ;
+	~searchByIndex = IsEmpty ( name ) ;
+	~preserveWhitespaceOfChildObjects = True ;
 
-	Let ( [
-		QuotationMark = Char ( 34 ) ;
-		textLen = Length ( text ) ;
-		whitespace =
-			Char ( 32 )	// space
-			& Char ( 9 )	// horizontal tab
-			& Char ( 10 )	// line feed
-			& Char ( 11 )	// vertical tab
-			& Char ( 12 )	// form feed
-			& Char ( 13 ) ;	// carriate return
-		nameStart = Position ( text ; JSONEncode ( name ) & ":" ; 1 ; index ) ;
-		delimStart = PositionUnescaped ( text ; ":" ; nameStart ; textLen ; 1 ) + 1 ;
-		valueStart = PositionIgnoring ( text ; whitespace ; delimStart ) ;
-		char1 = Middle ( text ; valueStart ; 1 ) ;
-		valueEnd =
-			Case (
-				char1 = QuotationMark ;
-					PositionUnescaped ( text ; char1 ; valueStart + 1 ; textLen ; 1 ) ;
-				char1 = "{" ;
-					TextClosePosition ( text ; "{" ; "}" ; valueStart ) ;
-				char1 = "[" ;
-					TextClosePosition ( text ; "[" ; "]" ; valueStart ) ;
-				0
-			) ;
-		value =
-			Case (
-				nameStart = 0 ; "?" ;
-				char1 = QuotationMark ;
-					Middle ( text ; valueStart + 1 ; valueEnd - valueStart - 1 ) ;
-				Middle ( text ; valueStart ; valueEnd - valueStart + 1 )
-			)
-		] ;
-	/*	// Used for debugging
-		"nameStart=" & nameStart & ", delimStart=" & delimStart & ", valueStart=" & valueStart & ¶ &
-		"valueStart=" & valueStart & ", valueEnd=" & valueEnd & ", char1=" & Quote ( char1 ) & ¶ &
-	*/
+	//---- Locate key ----
+	~nameStart =
+		If (
+			not ~searchByIndex ;
+				Position ( text ; JSONEncode ( name ) & ":" ; 1 ; index )
+		) ;
+	~nameStart =
+		If (
+			not ~searchByIndex and ~nameStart = 0 ;
+				Position ( text ; JSONEncode ( name ) & " :" ; 1 ; index ) ;
+			~nameStart
+		) ;
+	~nameEnd = PositionUnescaped ( text ; ~quote ; ~nameStart + 1 ; ~textLen ; 1 ) ;
 
-		JSONDecode ( value)
-	)
+	//---- Locate beginning of value ----
+	~assignmentStart = Position ( text ; ":" ; ~nameEnd ; 1 ) + 1 ;
+	~valueStartRough =
+		If (
+			~searchByIndex ;
+				JSONArrayPosition ( text ; Position ( text ; "[" ; ~assignmentStart ; 1 ) + 1 ; index ) ;
+			PositionIgnoring ( text ; ~whitespace ; ~assignmentStart )
+		) ;
+	~valueRough = Middle ( text ; ~valueStartRough ; ~textLen ) ;
+	~valueChar1 = Left ( ~valueRough ; 1 ) ;
+	~valueWord1 = LeftWords ( ~valueRough ; 1 ) ;
+	// Preserve whitespace unless retrieving single number or string
+	~valueStart =
+		Case (
+			~searchByIndex ;
+				~valueStartRough ;
+			~preserveWhitespaceOfChildObjects
+			and ~valueChar1 = "{" or ~valueChar1 = "[" ;
+				~assignmentStart ;
+			~valueStartRough
+		) ;
 
+	//---- Extract value ----
+	~valueIsNumber = Filter ( ~valueChar1 ; "0123456789" ) ;
+	~valueEnd =
+		Case (
+			~valueChar1 = ~quote ;
+				PositionUnescaped ( text ; ~valueChar1 ; ~valueStart + 1 ; ~textLen ; 1 ) ;
+			~valueChar1 = "{" ;
+				TextClosePosition ( text ; "{" ; "}" ; ~valueStart ) ;
+			~valueChar1 = "[" ;
+				TextClosePosition ( text ; "[" ; "]" ; ~valueStart ) ;
+			~valueIsNumber ;
+				Let ( [
+					~a = Position ( text ; "," ; ~valueStart ; 1 ) ;
+					~b = Position ( text ; "}" ; ~valueStart ; 1 )
+					] ;
+					Min (
+						If ( ~a ; ~a - 1 ) ;
+						If ( ~b ; ~b - 1 )
+					)
+				) ;
+			0
+		) ;
+	~value =
+		Case (
+			~nameStart = 0 ;
+				"?" ;
+			~valueEnd = 0 ;
+				Case (
+					~valueWord1 = "true" ; 1 ;
+					~valueWord1 = "false" ; 0 ;
+					~valueWord1 = "null" ; "\"\"" ;
+					"?"
+				) ;
+			~valueChar1 = ~quote ;
+				Middle ( text ; ~valueStart + 1 ; ~valueEnd - ~valueStart - 1 ) ;
+			~valueIsNumber ;
+				GetAsNumber ( Middle ( text ; ~valueStart ; ~valueEnd - ~valueStart + 1 ) ) ;
+			Middle ( text ; ~valueStart ; ~valueEnd - ~valueStart + 1 )
+		)
+	] ;
+/*	// Used for debugging
+	"~nameStart=" & ~nameStart & ", ~nameEnd=" & ~nameEnd & ", ~assignmentStart=" & ~assignmentStart & ¶ &
+	"~valueStartRough=" & ~valueStartRough & ", ~valueStart=" & ~valueStart & ", ~valueEnd=" & ~valueEnd & ", ~valueChar1=" & Quote ( ~valueChar1 ) & ¶ &
+*/
+
+	JSONDecode ( ~value)
 )
 
 /* __________________________________________________
 
 NAME:	JSONValueNth ( text ; name ; index )
 PURPOSE:	Retrieves value of specified pair.
-EXAMPLES:
-	Where $_text = "{\"a\":\"dog\",\"a\":{\"dog\"},\"a\":[\"dog\"]}"
+EXAMPLES / TESTS:
+	List (
+	  JSONValueNth ( "{\"a\":\"foo\"}"	; "a" ; 1 )		= "foo"
+	; JSONValueNth ( "{\"a\" :\"\\\"foo\\\"\" }"	; "a" ; 1 )	= "\"foo\""
+	; JSONValueNth ( "{\"a\" : 12.3 }"	; "a" ; 1 )		= 12.3
+	; JSONValueNth ( "{\"a\" : true }"	; "a" ; 1 )		= 1
+	; JSONValueNth ( "[ 1,2,3]"			; "" ; 2 )		= 2
+	; JSONValueNth ( "[{},[]]"			; "" ; 1 )		= "{}"
+	; JSONValueNth ( "[{},[]]"			; "" ; 2 )		= "[]"
+	)
 
-	#NthValue ( $_text ; "a" ; 1 )	= "dog"
-	#NthValue ( $_text ; "a" ; 2 )	= "{\"dog\"}"
-	#NthValue ( $_text ; "a" ; 3 )	= "[\"dog\"]"
 HISTORY:
 	Created:	2012-02-13 13:00 PT - Will M. Baker
-	Modified:	2012-05-29 12:00 PT - Donovan Chandler : nameStart now searches using #Encode() instead of Quote(); removed QuotationMark();
+	Modified:	2012-05-29 12:00 PT - Donovan Chandler : ~nameStart now searches using #Encode() instead of Quote(); removed ~quote();
 	Modified:	2012-10-17 11:25 PT - Donovan Chandler : Added support for arrays. Fixed bug where nested arrays or objects were partially returned.
+	Modified:	2013-11-03 22:34 PT - Donovan Chandler : Supports number values and some reserved words (true, false, null)
 NOTES:
-	All values must be wrapped in double quotes – even numbers!
+	Returns first occurrence of key (contrary to other JSON parsers).
 */

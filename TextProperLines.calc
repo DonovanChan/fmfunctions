@@ -1,0 +1,58 @@
+Let ( [
+	// Enable for testing
+	// text = "lorem" ;
+	// reservedWords = "iPad" ;
+	// startLineNumber = 1 ;
+
+	~line = GetValue ( text ; startLineNumber ) ;
+	~word = LeftWords ( ~line ; 1 ) ;
+	~lineNew =
+		Case (
+			IsEmpty ( ~line ) ;
+				"" ;
+			Exact ( Upper ( ~word ) ; ~word ) ;
+				~line ;
+			Position ( ¶ & reservedWords & ¶ ; ¶ & ~word & ¶ ; 1 ; 1 ) ;
+				~line ;
+			Let ( [
+				~wordStart = Position ( ~line ; ~word ; 1 ; 1 ) ;
+				~postStart = ~wordStart + Length ( ~word )
+				] ;
+				Left ( ~line ; ~wordStart - 1 ) &
+				Proper ( ~word ) &
+				Middle ( ~line ; ~postStart ; Length ( ~line ) )
+			)
+		)
+	] ;
+	~lineNew &
+	If ( ValueCount ( text ) > startLineNumber ;
+		¶ & TextProperLines ( text ; reservedWords ; startLineNumber + 1 )
+	)
+)
+
+/* __________________________________________________
+
+NAME:		TextProperLines ( text ; reservedWords ; startLineNumber )
+PURPOSE:	Converts each line in text to title case.
+			Ignores designated reserved words like "ATM" and "iPhone"
+EXAMPLES / TESTS:
+	List (
+		TextProperLines ( "lorem ipsum"	; "" ; 1 ) ;	//= "Lorem ipsum"
+		TextProperLines ( "¶ LOREM ipsum"	; "" ; 2 ) ;	//= " LOREM ispum"
+		TextProperLines ( "• lorem IPSUM"	; "" ; 1 ) ;	//= "• Lorem IPSUM"
+		TextProperLines ( "• iPad ipsum"	; "" ; 1 ) ;	//= "• Ipad ipsum"
+		TextProperLines ( "• iPad¶iPod¶iPhone"	; "iPad¶iPod" ; 1 ) ;	//= "• iPad¶iPod¶Iphone"
+	)
+
+	= List (
+		"Lorem ipsum" ;
+		" LOREM ipsum" ;
+		"• Lorem IPSUM" ;
+		"• Ipad ipsum" ;
+		"• iPad¶iPod¶Iphone"
+	)
+
+HISTORY:
+	Created:	2013-10-24 11:08 PT - Donovan Chandler
+	Modified:
+*/

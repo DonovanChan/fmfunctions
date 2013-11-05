@@ -1,17 +1,31 @@
-QuotationMark &
-Substitute ( text ;
-	[ Backslash ; Backslash & Backslash ] ;
-	[ QuotationMark ; Backslash & QuotationMark ]
-) &
-QuotationMark
+"\""
+& Substitute ( text ;
+	  [ "\\"			; "\\\\" ]	// back slash
+	; [ "\""			; "\\\"" ]	// double quote
+	; [ "/"			; "\/" ]	// forward slash
+	; [ Char ( 147 )		; "\"" ]	// left curly quote
+	; [ Char ( 148 )		; "\"" ]	// right curly quote
+	; [ Char ( 8220 )	; "\"" ]	// left curly quote
+	; [ Char ( 8221 )	; "\"" ]	// right curly quote
+
+	//-- Collapse lines for efficiency
+//	; [ "\¶"		; ":‡:" ]
+//	; [ "¶"		; Char ( 32 ) ]	// CR to space
+//	; [ ":‡:"		; "¶" ]
+)
+& "\""
 
 /* __________________________________________________
 
 NAME:	JSONEncode ( text )
-PURPOSE:	Creates quoted string for use in JSON, escaping characters as necessary.
+PURPOSE:	Escapes or removes invalid characters in JSON, wrapping value in double quotes.
 EXAMPLES:
-
+	JSONEncode ( "Jim's \fun/ place" )	// returns "\"Jim's \\fun\/ place\""
 HISTORY:
-	Created:	2012-02-13 13:00 PT - Will M. Baker
-	Modified:
+	Created:	2011-07-22 14:14 PT - Donovan Chandler
+	Modified:	2013-11-03 22:07 PT - Donovan Chandler : Escapes front and back slashes.
+NOTES:
+	Code ( "
+	" ) = 32
+	Code ( "¶" ) = 13
 */

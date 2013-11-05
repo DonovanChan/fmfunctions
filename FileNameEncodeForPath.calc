@@ -1,0 +1,23 @@
+Substitute (
+	text ;
+	[ "/"	; "-" ] ;
+	[ ¶	; " " ] ;
+	[ "|"	; " " ] ;
+	[ "<"	; " " ] ;
+	[ ">"	; " " ] ;
+	[ "..."	; "." ] ;
+	[ "\""	; "" ] ;
+	[ ","	; "" ]
+)
+
+/* __________________________________________________
+
+NAME:	FileNameEncodeForPath ( text )
+PURPOSE:	Ensures file name is valid for use in a path
+EXAMPLES:
+	FileNameEncodeForPath ( "in/out values.pdf" )
+	// Returns "in-out values.pdf"
+HISTORY:
+	Created:	2013-10-04 12:06 PT - Donovan Chandler
+	Modified:
+*/

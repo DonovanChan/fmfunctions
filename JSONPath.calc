@@ -38,7 +38,7 @@ EXAMPLES:
 	JSONPath ( $_text ; "state/cities" ) = "[\"Oakland\",\"Pasadena\"]"
 	JSONPath ( $_text ; "state[2]/cities" ) = "[\"Portland\"]"
 DEPENDENCIES:
-	Custom Functions:	JSONValue()
+	Custom Functions:	JSONValueNth()
 HISTORY:
 	Created:	2012-08-07 12:00 PT - Donovan Chandler
 	Modified:

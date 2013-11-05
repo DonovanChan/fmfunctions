@@ -17,10 +17,10 @@ Let ( [
 	~textNew = TrimWhitespaceLeft ( ~text )
 	] ;
 
-	List (
-		//~bulletPadding & "|" & ~bulletNew & "|" & ~textPadding & "|" & ~textNew ;
-		~bulletPadding & ~bulletNew & ~textPadding & ~textNew ;
-		If ( ValueCount ( text ) > startLineNumber ; TextFormatBullets ( text ; desiredBulletChar ; desiredTextPadding ; bulletAllLines ; startLineNumber + 1 ) )
+	//~bulletPadding & "|" & ~bulletNew & "|" & ~textPadding & "|" & ~textNew & ¶ &
+	~bulletPadding & ~bulletNew & ~textPadding & ~textNew &
+	If ( ValueCount ( text ) > startLineNumber ;
+		¶ & TextFormatBullets ( text ; desiredBulletChar ; desiredTextPadding ; bulletAllLines ; startLineNumber + 1 )
 	)
 
 )
@@ -40,5 +40,5 @@ EXAMPLES:
 
 HISTORY:
 	Created:	2013-09-27 10:30 PT - Donovan Chandler
-	Modified:
+	Modified:	2013-10-24 11:53 PT - Donovan Chandler : preserves blank lines
 */
