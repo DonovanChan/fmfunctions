@@ -1,24 +1,23 @@
 Let ( [
-	rep = occurrence ;
-	sOpen = Position ( text ; openCharacter ; 1 ; rep ) ;
-	sString = sOpen + Length ( openCharacter ) ;
-	sClose = Position ( text ; closeCharacter ; sString ; 1 ) ;
-	sClose = If ( sClose = 0 ; Length ( text ) ; sClose ) ;
-	lenString = sClose - sString
+	~openStart = Position ( text ; openCharacter ; 1 ; occurrence ) ;
+	~stringStart = ~openStart + Length ( openCharacter ) ;
+	~closeStart = Position ( text ; closeCharacter ; ~stringStart ; 1 ) ;
+	~closeStart = If ( ~closeStart = 0 ; Length ( text ) ; ~closeStart ) ;
+	~stringLen = ~closeStart - ~stringStart
 	] ;
 	Case (
 		//-- Empty characters - use text boundary
 		IsEmpty ( openCharacter ) ;
-			Left ( text ; Position ( text ; closeCharacter ; 1 ; rep ) - Length ( closeCharacter ) ) ;
+			Left ( text ; Position ( text ; closeCharacter ; 1 ; occurrence ) - Length ( closeCharacter ) ) ;
 		IsEmpty ( closeCharacter ) ;
-			Middle ( text ; sString ; Length ( text ) ) ;
+			Middle ( text ; ~stringStart ; Length ( text ) ) ;
 
 		//-- Search characters not found
-		sOpen = 0 or sClose = 0 ;
+		~openStart = 0 or ~closeStart = 0 ;
 			"" ;
 
 		//-- Default: Return enclosed string
-		Middle ( text ; sString ; sClose - sString )
+		Middle ( text ; ~stringStart ; ~closeStart - ~stringStart )
 	)
 )
 
@@ -26,11 +25,14 @@ Let ( [
 
 NAME:	TextBetween ( text ; openCharacter ; closeCharacter ; occurrence )
 PURPOSE:	Returns the text between the first instance of the two enclosing characters. If both characters are not present, with open before close, null is returned.
-EXAMPLES:
+TESTS:
+	List (
 	TextBetween ( "Repetition[5][3]" ; "[" ; "]" ; 1 ) = 5
-	TextBetween ( "Repetition[5][3]" ; "[" ; "]" ; 2 ) = "3"
+	TextBetween ( "Repetition[5][3]" ; "[" ; "]" ; 2 ) = 3
 	TextBetween ( "Repetition[5][3]" ; "[" ; "" ; 1 ) = "5][3]"
+	)
 HISTORY:
-	Created:	2010-04-27 00:00 PST - Donovan Chandler
-	Modified	2011-11-10 00:00 PST - Donovan Chandler: Now supports empty open and close chars
+	Created:	2010-04-27 00:00 PT - Donovan Chandler
+	Modified:	2011-11-10 00:00 PT - Donovan Chandler: Now supports empty open and close chars.
+	Modified:	2013-12-07 21:11 PT - Donovan Chandler: Updated conventions.
 */
