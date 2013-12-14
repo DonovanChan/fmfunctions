@@ -3,10 +3,10 @@
 	  [ "\\"			; "\\\\" ]	// back slash
 	; [ "\""			; "\\\"" ]	// double quote
 	; [ "/"			; "\/" ]	// forward slash
-	; [ Char ( 147 )		; "\"" ]	// left curly quote
-	; [ Char ( 148 )		; "\"" ]	// right curly quote
-	; [ Char ( 8220 )	; "\"" ]	// left curly quote
-	; [ Char ( 8221 )	; "\"" ]	// right curly quote
+	; [ Char ( 147 )		; "\\\"" ]	// left curly quote
+	; [ Char ( 148 )		; "\\\"" ]	// right curly quote
+	; [ Char ( 8220 )	; "\\\"" ]	// left curly quote
+	; [ Char ( 8221 )	; "\\\"" ]	// right curly quote
 
 	//-- Collapse lines for efficiency
 //	; [ "\¶"		; ":‡:" ]
@@ -24,8 +24,13 @@ EXAMPLES:
 HISTORY:
 	Created:	2011-07-22 14:14 PT - Donovan Chandler
 	Modified:	2013-11-03 22:07 PT - Donovan Chandler : Escapes front and back slashes.
+	Modified:	2013-11-17 21:46 PT - Donovan Chandler : Fixed escaping of curly quotes.
 NOTES:
 	Code ( "
 	" ) = 32
 	Code ( "¶" ) = 13
 */
+
+8220
+8221
+34
