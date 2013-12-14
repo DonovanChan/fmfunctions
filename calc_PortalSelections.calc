@@ -1,0 +1,41 @@
+Let ( [
+~indexCur = Get ( ActivePortalRowNumber ) ;
+~indexPrev = $$_dlog_import_type_last ;
+~indexMin = Min ( ~indexCur ; ~indexPrev ) ;
+~indexMax = Max ( ~indexCur ; ~indexPrev ) ;
+~mod = Get ( ActiveModifierKeys ) ;
+~modShift = If ( ~mod = 1 or ~mod = 3 ; True ; False ) ;
+~listCur = $$_dlog_import_type_id_list ;
+~listSelected =
+	Case (
+		//-- Shift key
+		~modShift ;
+			MiddleValues ( List ( FOC__META_IMPORT_TYPE::ID ) ; ~indexMin ; ~indexMax - ~indexMin + 1 ) ;
+		FOC__META_IMPORT_TYPE::ID
+	) ;
+~listNew =
+	Case (
+		//-- Shift-selected and removing
+		~modShift and $$_dlog_import_type_last_removed ;
+			ListRemoveValues ( ~listCur ; ~listSelected ) ;
+		//-- Shift-selected
+		~modShift ;
+			List ( ~listCur ; ~listSelected ) ;
+		//-- Click add/remove
+		ListAddOrRemove ( ~listCur ; ~listSelected )
+	) ;
+
+$$_dlog_import_type_id_list = ~listNew ;
+$$_dlog_import_type_last = ~indexCur
+$$_dlog_import_type_last_removed = ( ~modShift = 0 and ListContains ( ~listCur ; ~listSelected ) )
+] ;
+$$_dlog_import_type_id_list
+)
+
+/*
+Calc for managing portal selections.
+Click to toggle selection of one or more rows.
+Update variable and field referenes to suite your purposes.
+Use this calc as the parameter to a button script on your portal row that refreshes the layout (to get conditional formatting to update for rows you didn't click on).
+2013-11-06 16:05 PT - Donovan Chandler
+*/

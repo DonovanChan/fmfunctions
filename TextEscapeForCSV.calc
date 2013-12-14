@@ -1,0 +1,26 @@
+Let ( [
+	~text = Substitute ( text ; "\"" ; "\"\"" )
+	] ;
+	If (
+		Position ( ~text ; "," ; 1 ; 1 )
+		or Position ( ~text ; "¶" ; 1 ; 1 ) ;
+			"\"" & ~text & "\"" ;
+		~text
+	)
+)
+
+/* __________________________________________________
+
+NAME:	TextEscapeForCSV ( text )
+PURPOSE:	Ensures text is valid csv value
+TESTS:
+	List (
+	TextEscapeForCSV ( "foo" ) = "foo" ;
+	TextEscapeForCSV ( "foo," ) = "\"foo,\"" ;
+	TextEscapeForCSV ( "foo\"" ) = "foo\"\""
+	)
+
+HISTORY:
+	Created:	2013-12-03 15:40 PT - Donovan Chandler
+	Modified:
+*/

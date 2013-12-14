@@ -1,0 +1,29 @@
+Let ( [
+	~value = GetValue ( listOfValues ; startIndex )
+	] ;
+	Case (
+		startIndex > indexCount ;
+			0 ;
+		matchCase ;
+			If ( Exact ( ~value ; matchValue ) ; startIndex ; 0 ) ;
+		~value = matchValue ;
+			startIndex ;
+		ListIndexLoop ( listOfValues ; matchValue ; startIndex + 1 ; indexCount ; matchCase )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	ListIndexLoop ( listOfValues ; matchValue ; startIndex ; indexCount ; matchCase )
+PURPOSE:	Searches return-delimited list, returning index/value number of first value matching matchValue.
+TESTS:
+	List (
+	ListIndexLoop ( "lemur¶sky bison¶bear" ; "sky" ; 1 ; 3 ; 0 ) = 0 ;
+	ListIndexLoop ( "lemur¶sky bison¶bear" ; "bear" ; 1 ; 2 ; 0 ) = 0 ;
+	ListIndexLoop ( "lemur¶sky bison¶bear" ; "bear" ; 1 ; 3 ; 0 ) = 3 ;
+	ListIndexLoop ( "lemur¶sky bison¶bear" ; "Lemur" ; 1 ; 3 ; 0 ) = 1 ;
+	ListIndexLoop ( "lemur¶sky bison¶bear" ; "Lemur" ; 1 ; 3 ; 1 ) = 0
+	)
+HISTORY:
+	Created:	2010-01-29 17:00 PT - Will M. Baker
+*/

@@ -1,0 +1,16 @@
+ListIndexLoop ( listOfValues ; matchValue ; 1 ; ValueCount ( listOfValues ) ; False )
+
+/* __________________________________________________
+
+NAME:	ListIndex ( listOfValues ; matchValue )
+PURPOSE:	Searches return-delimited list, returning index/value number of first value matching matchValue.
+TESTS:
+	List (
+	ListIndex ( "lemur¶sky bison¶bear" ; "sky" ) = 0 ;
+	ListIndex ( "lemur¶sky bison¶bear" ; "bear" ) = 3 ;
+	ListIndex ( "lemur¶sky bison¶bear" ; "Lemur" ) = 1
+	)
+HISTORY:
+	Created:	2013-12-09 21:43 PT - Donovan Chandler
+	Modified:
+*/

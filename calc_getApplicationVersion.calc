@@ -1,0 +1,23 @@
+/*-- Application is Pro, Runtime, or Go --*/
+
+Let ( [
+	~app = Get ( ApplicationVersion )
+	] ;
+	Position ( ~app ; "Pro" ; 1 ; 1 )
+	//a or Position ( ~app ; "ProAdvanced" ; 1 ; 1 )
+	or Position ( ~app ; "Runtime" ; 1 ; 1 )
+	or Position ( ~app ; "Go" ; 1 ; 1 )
+)
+
+/*
+Application versions (minus version number):
+- Pro			// FileMaker Pro
+- ProAdvanced	// FileMaker Pro Advanced
+- Runtime		// FileMaker Runtime
+- FileMaker Web Publishing	// FileMaker Web Client
+- Web Publishing Engine		// FileMaker Server Web Client
+- xDBC		// xDBC Client
+- Server		// FileMaker Server
+- Go			// FileMaker Go on the iPhone or iPod touch
+- Go_iPad		// FileMaker Go on the iPad
+*/
