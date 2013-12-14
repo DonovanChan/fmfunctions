@@ -3,7 +3,7 @@ Let ( [
 	numCloseChars = If ( not IsEmpty ( $$text_numCloseChars ) ; $$text_numCloseChars ; 1 ) ;
 
 	sCloseChars = Position( text ; closeChars ; startPosition ; numCloseChars ) ;
-	vBlock = Middle ( text ; startPosition ; sCloseChars - startPosition ) ;
+	vBlock = Middle ( text ; startPosition ; sCloseChars - startPosition + 1 ) ;
 	countOpenChars = PatternCount ( vBlock ; openChars ) ;
 	countCloseChars = PatternCount ( vBlock ; closeChars )
 
@@ -11,7 +11,7 @@ Let ( [
 
 	Case(
 		//-- CloseChars is for child element
-		countopenChars > countCloseChars ;
+		countOpenChars > countCloseChars ;
 			Let ( [ $$text_numCloseChars = numCloseChars + 1 ] ; "" )
 			& TextClosePosition ( text ; openChars ; closeChars ; startPosition ) ;
 
