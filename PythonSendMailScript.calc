@@ -1,7 +1,36 @@
+/* __________________________________________________
+
+NAME:	PythonSendMailScript ( )
+PURPOSE:	Stores python script for use in bBox plug-in.
+		See http://bbox.beezwax.net/ for plug-in details.
+PARAMETERS:
+	Required:
+		fromAddress
+		toAddress			(return- or comma-delimited)
+		subject
+		bodyHTML or bodyText
+		emailServer
+		smtpPort
+	Optional:
+		attachmentPath		(return-delimited list of posix paths, e.g., "/Users/donovan/Desktop/pic.png")
+		bccAddress		(return- or comma-delimited)
+		ccAddress			(return- or comma-delimited)
+		replyAddress
+		username
+		password
+		debugLevel
+HISTORY:
+	Created:	2013-10-25 12:36 PT - Donovan Chandler
+	Modified:	2013-11-19 17:06 PT - Donovan Chandler : optional text body and debug level.
+	Modified:	2013-12-10 10:21 PT - Donovan Chandler : (3.02) fixed attachments; added reply-to option.
+	Modified:	2013-12-11 16:25 PT - Donovan Chandler : (3.2.1) error specifies which address is invalid (TO, CC, etc)
+__________________________________________________ */
+
 "#!/usr/bin/python" & ¶ &
 "" & ¶ &
-"\"\"\"Email.py: Sends emails including HTML and attachments.\"\"\"" & ¶ &
+"\"\"\"Email.py: Sends text or HTML emails with optional attachments.\"\"\"" & ¶ &
 "" & ¶ &
+"__version__     = \"3.2.1\"" & ¶ &
 "__author__      = \"Donovan Chandler\"" & ¶ &
 "__copyright__   = \"Copyright 2013, Beezwax Datatools, Inc.\"" & ¶ &
 "__credits__     = [\"Simon Brown\", \"unknown\"]" & ¶ &
@@ -25,21 +54,27 @@
 "    Sends HTML email with optional attachments." & ¶ &
 "    Compiled from various sources." & ¶ &
 "    \"\"\"" & ¶ &
-"    def __init__(self, smtpServer, smtpPort, username, password):" & ¶ &
+"    def __init__(self, smtpServer, smtpPort=25, username='', password='', debugLevel=0):" & ¶ &
 "        \"\"\"" & ¶ &
 "        Create a new empty email message object." & ¶ &
 "" & ¶ &
 "        @param smtpServer: The address of the SMTP server" & ¶ &
-"        @type smtpServer: String" & ¶ &
+"        @param smtpPort: Optional. Defaults to 25. Common ports include 25, 587." & ¶ &
+"        @param username: Optional." & ¶ &
+"        @param password: Optional." & ¶ &
+"        @param debugLevel: Optional. 0 for less info; 1 for more info (may cause some messages to fail compared to 0)" & ¶ &
+"" & ¶ &
 "        \"\"\"" & ¶ &
 "        self._textBody = None" & ¶ &
 "        self._htmlBody = None" & ¶ &
 "        self._subject = \"\"" & ¶ &
 "        self._smtpServer = smtpServer" & ¶ &
-"        self._smtpPort = locals().get(25, smtpPort)  # 25 or 587" & ¶ &
+"        self._smtpPort = smtpPort" & ¶ &
 "        self._username = username" & ¶ &
 "        self._password = password" & ¶ &
-"        self._reEmail = re.compile(\"^([\\w \\._]+\\<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\>|[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$\")" & ¶ &
+"        self._debugLevel = debugLevel" & ¶ &
+"        self._replyTo = None" & ¶ &
+"        self._reEmail = re.compile(\"^([\w \._]+\<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\>|[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$\")" & ¶ &
 "        self.clearRecipients()" & ¶ &
 "        self.clearAttachments()" & ¶ &
 "" & ¶ &
@@ -115,14 +150,14 @@
 "        msg['To'] = \", \".join(self._to)" & ¶ &
 "        msg['CC'] = \", \".join(self._cc)" & ¶ &
 "        msg['BCC'] = \", \".join(self._bcc)" & ¶ &
+"        if self._replyTo is not None:" & ¶ &
+"            msg['reply-to'] = self._replyTo" & ¶ &
 "        msg.preamble = \"You need a MIME enabled mail reader to see this message\"" & ¶ &
 "" & ¶ &
 "        # Send message" & ¶ &
 "        msg = msg.as_string()" & ¶ &
 "        server = smtplib.SMTP(self._smtpServer, self._smtpPort, '', 5)" & ¶ &
-"        # Change debugLevel to 1 to see more debug info." & ¶ &
-"        # This may terminate executions that would otherwise succeed." & ¶ &
-"        server.set_debuglevel(0)" & ¶ &
+"        server.set_debuglevel(self._debugLevel)" & ¶ &
 "        server.ehlo()" & ¶ &
 "" & ¶ &
 "        if self._username:" & ¶ &
@@ -145,7 +180,7 @@
 "        Set the email sender." & ¶ &
 "        \"\"\"" & ¶ &
 "        if not self.validateEmailAddress(address):" & ¶ &
-"            raise Exception(\"Invalid email address '{0}'\".format(address))" & ¶ &
+"            raise Exception(\"Invalid FROM email address '{0}'\".format(address))" & ¶ &
 "        self._from = address" & ¶ &
 "" & ¶ &
 "    def clearRecipients(self):" & ¶ &
@@ -157,12 +192,12 @@
 "        self._cc = []" & ¶ &
 "        self._bcc = []" & ¶ &
 "" & ¶ &
-"    def addRecipient(self, address, type='To'):" & ¶ &
+"    def addRecipient(self, address, type='TO'):" & ¶ &
 "        \"\"\"" & ¶ &
 "        Add a new recipient to the email message." & ¶ &
 "        \"\"\"" & ¶ &
 "        if not self.validateEmailAddress(address):" & ¶ &
-"            raise Exception(\"Invalid email address '{0}'\".format(address))" & ¶ &
+"            raise Exception(\"Invalid {1} email address '{0}'\".format(address, type))" & ¶ &
 "        if type == 'CC':" & ¶ &
 "            self._cc.append(address)" & ¶ &
 "        elif type == 'BCC':" & ¶ &
@@ -174,8 +209,11 @@
 "        \"\"\"" & ¶ &
 "        Add one or more reciepients to the email message." & ¶ &
 "        \"\"\"" & ¶ &
-"        for address in re.split('[,\n]\s*', addressList):" & ¶ &
-"            self.addRecipient(address, type)" & ¶ &
+"        for address in re.split('[,\n\r]\s*', addressList):" & ¶ &
+"            if type != None:" & ¶ &
+"                self.addRecipient(address, type)" & ¶ &
+"            else:" & ¶ &
+"                self.addRecipient(address)" & ¶ &
 "" & ¶ &
 "    def setTextBody(self, body):" & ¶ &
 "        \"\"\"" & ¶ &
@@ -188,6 +226,15 @@
 "        Set the HTML portion of the email message." & ¶ &
 "        \"\"\"" & ¶ &
 "        self._htmlBody = body" & ¶ &
+"" & ¶ &
+"    def setReplyTo(self, address):" & ¶ &
+"        \"\"\"" & ¶ &
+"        Set Reply-To address." & ¶ &
+"        \"\"\"" & ¶ &
+"        if not self.validateEmailAddress(address):" & ¶ &
+"            raise Exception(\"Invalid REPLY-TO email address '{0}'\".format(address))" & ¶ &
+"        else:" & ¶ &
+"            self._replyTo = address" & ¶ &
 "" & ¶ &
 "    def clearAttachments(self):" & ¶ &
 "        \"\"\"" & ¶ &
@@ -216,7 +263,7 @@
 "        \"\"\"" & ¶ &
 "        Add one or more file attachments to the email message." & ¶ &
 "        \"\"\"" & ¶ &
-"        for thisFile in re.split('[,\n]\s*', filepathList):" & ¶ &
+"        for thisFile in re.split('[,\n\r]\s*', filepathList):" & ¶ &
 "            self.addAttachment(thisFile)" & ¶ &
 "" & ¶ &
 "    def validateEmailAddress(self, address):" & ¶ &
@@ -230,40 +277,25 @@
 "            return False" & ¶ &
 "        return True" & ¶ &
 "" & ¶ &
-"# Enable for debugging" & ¶ &
-"if False:" & ¶ &
-"    attachmentPath = \"\"" & ¶ &
-"    bccAddress = \"\"" & ¶ &
-"    bodyHTML = \"The following should be <b>bold</b>\n<br>\n\"" & ¶ &
-"    ccAddress = \"donovan_chandler@apple.com\"" & ¶ &
-"    emailServer = \"smtp.gmail.com\"" & ¶ &
-"    fromAddress = \"donovan.chandler@gmail.com\"" & ¶ &
-"    password = \"__FILL_ME_IN__\"" & ¶ &
-"    smtpPort = 587" & ¶ &
-"    subject = \"TEST bBox HTML Email\"" & ¶ &
-"    toAddress = \"donovan_c@beezwax.net, donovan.chandler@gmail.com\"" & ¶ &
-"    username = \"donovan.chandler@gmail.com\"" & ¶ &
-"if False:" & ¶ &
-"    # attachmentPath = \"\"" & ¶ &
-"    bccAddress = \"\"" & ¶ &
-"    # bodyHTML = \"This email was sent using an <b>open relay</b>\n<br>\n\"" & ¶ &
-"    bodyHTML = \"This email was sent using an open relay\"" & ¶ &
-"    ccAddress = \"\"" & ¶ &
-"    emailServer = \"relay.apple.com\"" & ¶ &
-"    fromAddress = \"donovan_chandler@apple.com\"" & ¶ &
-"    password = \"\"" & ¶ &
-"    smtpPort = 25" & ¶ &
-"    subject = \"TEST bBox HTML Email\"" & ¶ &
-"    toAddress = \"donovan_c@beezwax.net\"" & ¶ &
-"    username = \"\"" & ¶ &
-"" & ¶ &
 "# Localize parameters instantiated by bBox" & ¶ &
-"mBody = bodyHTML" & ¶ &
 "mFrom = fromAddress" & ¶ &
 "mPort = smtpPort" & ¶ &
 "mServer = emailServer" & ¶ &
 "mSubject = subject" & ¶ &
 "mTo = toAddress" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mBodyHTML = bodyHTML" & ¶ &
+"except Exception, e:" & ¶ &
+"    mBodyHTML = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mBodyText = bodyText" & ¶ &
+"except Exception, e:" & ¶ &
+"    mBodyText = ''" & ¶ &
+"" & ¶ &
+"if mBodyHTML == '' and mBodyText == '':" & ¶ &
+"    raise Exception(\"bodyHTML or bodyText must be declared for message body.\")" & ¶ &
 "" & ¶ &
 "try:" & ¶ &
 "    mBCC = bccAddress" & ¶ &
@@ -274,6 +306,11 @@
 "    mCC = ccAddress" & ¶ &
 "except Exception, e:" & ¶ &
 "    mCC = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
+"    mReplyTo = replyAddress" & ¶ &
+"except Exception, e:" & ¶ &
+"    mReplyTo = ''" & ¶ &
 "" & ¶ &
 "try:" & ¶ &
 "    mFile = attachmentPath" & ¶ &
@@ -290,32 +327,32 @@
 "except Exception, e:" & ¶ &
 "    mUsername = ''" & ¶ &
 "" & ¶ &
+"try:" & ¶ &
+"    mDebugLevel = debugLevel" & ¶ &
+"except Exception, e:" & ¶ &
+"    mDebugLevel = 0" & ¶ &
+"" & ¶ &
 "" & ¶ &
 "try:" & ¶ &
 "    # Create and send message" & ¶ &
-"    m = Email(mServer, mPort, mUsername, mPassword)" & ¶ &
+"    m = Email(mServer, mPort, mUsername, mPassword, mDebugLevel)" & ¶ &
 "    m.setFrom(mFrom)" & ¶ &
 "    m.addRecipients(mTo)" & ¶ &
 "    if mCC:" & ¶ &
 "        m.addRecipients(mCC, 'CC')" & ¶ &
 "    if mBCC:" & ¶ &
 "        m.addRecipients(mBCC, 'BCC')" & ¶ &
+"    if mReplyTo:" & ¶ &
+"        m.setReplyTo(mReplyTo)" & ¶ &
 "    m.setSubject(mSubject)" & ¶ &
-"    m.setHtmlBody(mBody)" & ¶ &
+"    if mBodyHTML:" & ¶ &
+"        m.setHtmlBody(mBodyHTML)" & ¶ &
+"    else:" & ¶ &
+"        m.setTextBody(mBodyText)" & ¶ &
 "    if mFile:" & ¶ &
-"        m.addAttachment(mFile)" & ¶ &
+"        m.addAttachments(mFile)" & ¶ &
 "    print m.send()" & ¶ &
 "" & ¶ &
 "except Exception, err:" & ¶ &
 "    print \"ERROR:\", str(err)" & ¶ &
 ""
-
-/* __________________________________________________
-
-NAME:	PythonSendMailScript ( )
-PURPOSE:	Stores python script for use in bBox plug-in.
-		See http://bbox.beezwax.net/ for plug-in details.
-HISTORY:
-	Created:	2013-10-25 12:36 PT - Donovan Chandler
-	Modified:	
-*/
