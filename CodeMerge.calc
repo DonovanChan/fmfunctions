@@ -10,9 +10,21 @@ Let ( [
 	//-- Don't leave label in place if it isn't recognized, to prevent open loop
 	code =
 		Case (
-			markerType = "CODE" or markerType = "*CODE" ; FOCUS::CODE_INCLUDE_REP[index] ;
-			markerType = "CODE_LINK" or markerType = "*CODE_LINK" ; FOCUS::CODE_LINK_REP[index] ;
-			markerType = "CODE_NAME" or markerType = "*CODE_NAME" ; FOCUS::CODE_FILE_NAMESPACE[index] & FOCUS::CODE_FILE_NAME_REP[index] ;
+			markerType = "CODE" ; FOCUS::CODE_INCLUDE_rep[index] ;
+			markerType = "CODE_LINK" ;
+				CodeMerge (
+					Substitute ( FOCUS::CODE_LINK_rep[index] ;
+						[ "‡‡CODE‡‡" ; FOCUS::CODE_rep ] ;
+						[ "‡‡NAME‡‡" ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
+					)
+				) ;
+			markerType = "CODE_NAME" ;
+				CodeMerge (
+					Substitute ( FOCUS::CODE_FILE_NAME_rep[index] ;
+						[ "‡‡CODE‡‡" ; FOCUS::CODE_rep ] ;
+						[ "‡‡NAME‡‡" ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
+					)
+				) ;
 			"INVALID CODE LABEL: " & Substitute ( marker ; delim ; delim & " " )
 		) ;
 	textNew =
@@ -39,5 +51,6 @@ EXAMPLES:
 	CodeMergeLoop ( "Hello ‡‡CODE[1]‡‡" ) = "Hello Beezwax!"
 	CodeMergeLoop ( "Hello ‡‡CODE_LINK[1]‡‡" ) = "http://beezwax.net"
 HISTORY:
-	Created:	2010-08-27 21:06 PST - Donovan A. Chandler
+	Created:	2010-08-27 21:06 PT - Donovan Chandler
+	Modified:	2013-11-18 14:18 PT - Donovan Chandler : Merges NAME and CODE tags.
 */
