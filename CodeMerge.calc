@@ -1,31 +1,33 @@
 Let ( [
-	delim = "‡‡" ;
-	delimLen = Length ( delim ) ;
-	posMarker = Position ( text ; delim & "CODE" ; 1 ; 1 ) ;
+	tagOpen = "‡‡" ;
+	tagClose = "‡‡" ;
+	tagOpenLen = Length ( tagOpen ) ;
+	tagCloseLen = Length ( tagClose ) ;
+	posMarker = Position ( text ; tagOpen & "CODE" ; 1 ; 1 ) ;
 	endMarkerType = Position ( text ; "[" ; posMarker ; 1 ) - 1 ;
-	endMarker = Position ( text ; delim ; posMarker + 1 ; 1 ) + delimLen - 1 ;
-	marker = Middle ( text ; posMarker ; endMarker + delimLen - 1 - posMarker ) ;
-	markerType = Middle ( text ; posMarker + delimLen  ; endMarkerType - posMarker - delimLen + 1 ) ;
+	endMarker = Position ( text ; tagClose ; posMarker + 1 ; 1 ) + tagCloseLen - 1 ;
+	marker = Middle ( text ; posMarker ; endMarker + tagCloseLen - 1 - posMarker ) ;
+	markerType = Middle ( text ; posMarker + tagOpenLen  ; endMarkerType - posMarker - tagCloseLen + 1 ) ;
 	index = GetAsNumber ( marker ) ;
-	//-- Don't leave label in place if it isn't recognized, to prevent open loop
 	code =
 		Case (
 			markerType = "CODE" ; FOCUS::CODE_INCLUDE_rep[index] ;
 			markerType = "CODE_LINK" ;
 				CodeMerge (
 					Substitute ( FOCUS::CODE_LINK_rep[index] ;
-						[ "‡‡CODE‡‡" ; FOCUS::CODE_rep ] ;
-						[ "‡‡NAME‡‡" ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
+						[ tagOpen & "CODE" & tagClose ; FOCUS::CODE_rep[index] ] ;
+						[ tagOpen & "NAME" & tagClose ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
 					)
 				) ;
 			markerType = "CODE_NAME" ;
 				CodeMerge (
 					Substitute ( FOCUS::CODE_FILE_NAME_rep[index] ;
-						[ "‡‡CODE‡‡" ; FOCUS::CODE_rep ] ;
-						[ "‡‡NAME‡‡" ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
+						[ tagOpen & "CODE" & tagClose ; FOCUS::CODE_rep[index] ] ;
+						[ tagOpen & "NAME" & tagClose ; FOCUS::CODE_FILE_NAMESPACE & FOCUS::CODE_FILE_NAME_rep[index] ]
 					)
 				) ;
-			"INVALID CODE LABEL: " & Substitute ( marker ; delim ; delim & " " )
+			//-- Modify tag so it doesn't get processed again
+			"INVALID CODE LABEL: " & Substitute ( marker ; [ tagOpen ; tagOpen & " " ] ; [ tagClose ; " " & tagClose ] )
 		) ;
 	textNew =
 		If (
@@ -34,7 +36,7 @@ Let ( [
 		)
 	] ;
 	Case (
-		Position ( textNew ; "‡‡CODE" ; 1 ; 1 ) ;
+		Position ( textNew ; tagOpen & "CODE" ; 1 ; 1 ) ;
 			CodeMerge ( textNew ) ;
 		textNew
 	)
@@ -46,11 +48,12 @@ NAME:	CodeMerge ( text )
 PURPOSE:	Merges value from LIBRARY_CODE table into text.
 		Useful for on-the-fly merging of code libraries in a web viewer.
 EXAMPLES:
-	// Where FOCUS::LIBRARY_CODE_INCLUDE[index] = "Beezwax!"
-	// Where FOCUS::LIBRARY_CODE_LINK[index] = "http://beezwax.net"
-	CodeMergeLoop ( "Hello ‡‡CODE[1]‡‡" ) = "Hello Beezwax!"
-	CodeMergeLoop ( "Hello ‡‡CODE_LINK[1]‡‡" ) = "http://beezwax.net"
+	// Where FOCUS::LIBRARY_CODE_INCLUDE[1] = "Beezwax!"
+	// Where FOCUS::LIBRARY_CODE_LINK[1] = "http://beezwax.net"
+	CodeMerge ( "Hello ‡‡CODE[1]‡‡" ) = "Hello Beezwax!"
+	CodeMerge ( "Hello ‡‡CODE_LINK[1]‡‡" ) = "http://beezwax.net"
 HISTORY:
 	Created:	2010-08-27 21:06 PT - Donovan Chandler
 	Modified:	2013-11-18 14:18 PT - Donovan Chandler : Merges NAME and CODE tags.
+	Modified:	2013-12-16 18:26 PT - Donovan Chandler : Easier to change tag format.
 */
