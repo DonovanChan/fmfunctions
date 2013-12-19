@@ -22,15 +22,17 @@ PARAMETERS:
 HISTORY:
 	Created:	2013-10-25 12:36 PT - Donovan Chandler
 	Modified:	2013-11-19 17:06 PT - Donovan Chandler : optional text body and debug level.
-	Modified:	2013-12-10 10:21 PT - Donovan Chandler : (3.02) fixed attachments; added reply-to option.
+	Modified:	2013-12-10 10:21 PT - Donovan Chandler : (3.02) fix attachments; add reply-to option.
 	Modified:	2013-12-11 16:25 PT - Donovan Chandler : (3.2.1) error specifies which address is invalid (TO, CC, etc)
+	Modified:	2013-12-14 12:49 PT - Donovan Chandler : (3.2.2) loosen validation on email address
+	Modified:	2013-12-16 17:42 PT - Donovan Chandler : (3.2.3) strip trailing delimiters
 __________________________________________________ */
 
 "#!/usr/bin/python" & ¶ &
 "" & ¶ &
 "\"\"\"Email.py: Sends text or HTML emails with optional attachments.\"\"\"" & ¶ &
 "" & ¶ &
-"__version__     = \"3.2.1\"" & ¶ &
+"__version__     = \"3.2.3\"" & ¶ &
 "__author__      = \"Donovan Chandler\"" & ¶ &
 "__copyright__   = \"Copyright 2013, Beezwax Datatools, Inc.\"" & ¶ &
 "__credits__     = [\"Simon Brown\", \"unknown\"]" & ¶ &
@@ -65,6 +67,7 @@ __________________________________________________ */
 "        @param debugLevel: Optional. 0 for less info; 1 for more info (may cause some messages to fail compared to 0)" & ¶ &
 "" & ¶ &
 "        \"\"\"" & ¶ &
+"        self._delimiters = ',\n\r' # delimit between multiple addresses and attachments" & ¶ &
 "        self._textBody = None" & ¶ &
 "        self._htmlBody = None" & ¶ &
 "        self._subject = \"\"" & ¶ &
@@ -74,7 +77,8 @@ __________________________________________________ */
 "        self._password = password" & ¶ &
 "        self._debugLevel = debugLevel" & ¶ &
 "        self._replyTo = None" & ¶ &
-"        self._reEmail = re.compile(\"^([\w \._]+\<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\>|[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$\")" & ¶ &
+"        # Don't bother with complex validation, because it won't cover everything" & ¶ &
+"        self._reEmail = re.compile(\"^[^@]+@[^@]+\.[^@]+$\")" & ¶ &
 "        self.clearRecipients()" & ¶ &
 "        self.clearAttachments()" & ¶ &
 "" & ¶ &
@@ -209,7 +213,7 @@ __________________________________________________ */
 "        \"\"\"" & ¶ &
 "        Add one or more reciepients to the email message." & ¶ &
 "        \"\"\"" & ¶ &
-"        for address in re.split('[,\n\r]\s*', addressList):" & ¶ &
+"        for address in re.split('['+self._delimiters+']\s*', addressList.strip(self._delimiters)):" & ¶ &
 "            if type != None:" & ¶ &
 "                self.addRecipient(address, type)" & ¶ &
 "            else:" & ¶ &
@@ -263,7 +267,7 @@ __________________________________________________ */
 "        \"\"\"" & ¶ &
 "        Add one or more file attachments to the email message." & ¶ &
 "        \"\"\"" & ¶ &
-"        for thisFile in re.split('[,\n\r]\s*', filepathList):" & ¶ &
+"        for thisFile in re.split('['+self._delimiters+']\s*', filepathList.strip(self._delimiters)):" & ¶ &
 "            self.addAttachment(thisFile)" & ¶ &
 "" & ¶ &
 "    def validateEmailAddress(self, address):" & ¶ &
