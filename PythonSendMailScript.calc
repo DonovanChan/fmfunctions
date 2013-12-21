@@ -26,13 +26,14 @@ HISTORY:
 	Modified:	2013-12-11 16:25 PT - Donovan Chandler : (3.2.1) error specifies which address is invalid (TO, CC, etc)
 	Modified:	2013-12-14 12:49 PT - Donovan Chandler : (3.2.2) loosen validation on email address
 	Modified:	2013-12-16 17:42 PT - Donovan Chandler : (3.2.3) strip trailing delimiters
+	Modified:	2013-12-20 21:01 PT - Donovan Chandler : (3.3.0) add hostname parameter; use TLS by default for authentication; don't prefix errors
 __________________________________________________ */
 
 "#!/usr/bin/python" & ¶ &
 "" & ¶ &
 "\"\"\"Email.py: Sends text or HTML emails with optional attachments.\"\"\"" & ¶ &
 "" & ¶ &
-"__version__     = \"3.2.3\"" & ¶ &
+"__version__     = \"3.3.0\"" & ¶ &
 "__author__      = \"Donovan Chandler\"" & ¶ &
 "__copyright__   = \"Copyright 2013, Beezwax Datatools, Inc.\"" & ¶ &
 "__credits__     = [\"Simon Brown\", \"unknown\"]" & ¶ &
@@ -50,13 +51,12 @@ __________________________________________________ */
 "import re" & ¶ &
 "import smtplib" & ¶ &
 "" & ¶ &
-"" & ¶ &
 "class Email:" & ¶ &
 "    \"\"\"" & ¶ &
 "    Sends HTML email with optional attachments." & ¶ &
 "    Compiled from various sources." & ¶ &
 "    \"\"\"" & ¶ &
-"    def __init__(self, smtpServer, smtpPort=25, username='', password='', debugLevel=0):" & ¶ &
+"    def __init__(self, smtpServer, smtpPort=25, hostname='', username='', password='', debugLevel=0):" & ¶ &
 "        \"\"\"" & ¶ &
 "        Create a new empty email message object." & ¶ &
 "" & ¶ &
@@ -69,6 +69,7 @@ __________________________________________________ */
 "        \"\"\"" & ¶ &
 "        self._delimiters = ',\n\r' # delimit between multiple addresses and attachments" & ¶ &
 "        self._textBody = None" & ¶ &
+"        self._hostname = hostname" & ¶ &
 "        self._htmlBody = None" & ¶ &
 "        self._subject = \"\"" & ¶ &
 "        self._smtpServer = smtpServer" & ¶ &
@@ -157,20 +158,29 @@ __________________________________________________ */
 "        if self._replyTo is not None:" & ¶ &
 "            msg['reply-to'] = self._replyTo" & ¶ &
 "        msg.preamble = \"You need a MIME enabled mail reader to see this message\"" & ¶ &
+"        msg = msg.as_string()" & ¶ &
+"        allRecipients = self._to + self._cc + self._bcc" & ¶ &
 "" & ¶ &
 "        # Send message" & ¶ &
-"        msg = msg.as_string()" & ¶ &
-"        server = smtplib.SMTP(self._smtpServer, self._smtpPort, '', 5)" & ¶ &
-"        server.set_debuglevel(self._debugLevel)" & ¶ &
-"        server.ehlo()" & ¶ &
-"" & ¶ &
-"        if self._username:" & ¶ &
-"            server.starttls()" & ¶ &
+"        try:" & ¶ &
+"            server = smtplib.SMTP(self._smtpServer, self._smtpPort, self._hostname, 5)" & ¶ &
+"            server.set_debuglevel(self._debugLevel)" & ¶ &
 "            server.ehlo()" & ¶ &
-"            server.login(self._username, self._password)" & ¶ &
-"        allRecipients = self._to + self._cc + self._bcc" & ¶ &
-"        result = server.sendmail(self._from, allRecipients, msg)" & ¶ &
-"        server.quit()" & ¶ &
+"            if self._username:" & ¶ &
+"                if server.has_extn('STARTTLS'):" & ¶ &
+"                    server.starttls()" & ¶ &
+"                else:" & ¶ &
+"                    server.quit()" & ¶ &
+"                    server = smtplib.SMTP_SSL(self._smtpServer, self._smtpPort, self._hostname)" & ¶ &
+"                    server.set_debuglevel(self._debugLevel)" & ¶ &
+"                server.ehlo() # re-identify ourselves over secure connection" & ¶ &
+"                server.login(self._username, self._password)" & ¶ &
+"" & ¶ &
+"            result = server.sendmail(self._from, allRecipients, msg)" & ¶ &
+"        # except Exception, e:" & ¶ &
+"        #     raise e" & ¶ &
+"        finally:" & ¶ &
+"            server.quit()" & ¶ &
 "        return result" & ¶ &
 "" & ¶ &
 "    def setSubject(self, subject):" & ¶ &
@@ -281,6 +291,7 @@ __________________________________________________ */
 "            return False" & ¶ &
 "        return True" & ¶ &
 "" & ¶ &
+"" & ¶ &
 "# Localize parameters instantiated by bBox" & ¶ &
 "mFrom = fromAddress" & ¶ &
 "mPort = smtpPort" & ¶ &
@@ -332,6 +343,11 @@ __________________________________________________ */
 "    mUsername = ''" & ¶ &
 "" & ¶ &
 "try:" & ¶ &
+"    mHostname = hostname" & ¶ &
+"except Exception, e:" & ¶ &
+"    mHostname = ''" & ¶ &
+"" & ¶ &
+"try:" & ¶ &
 "    mDebugLevel = debugLevel" & ¶ &
 "except Exception, e:" & ¶ &
 "    mDebugLevel = 0" & ¶ &
@@ -339,7 +355,7 @@ __________________________________________________ */
 "" & ¶ &
 "try:" & ¶ &
 "    # Create and send message" & ¶ &
-"    m = Email(mServer, mPort, mUsername, mPassword, mDebugLevel)" & ¶ &
+"    m = Email(mServer, mPort, mHostname, mUsername, mPassword, mDebugLevel)" & ¶ &
 "    m.setFrom(mFrom)" & ¶ &
 "    m.addRecipients(mTo)" & ¶ &
 "    if mCC:" & ¶ &
@@ -358,5 +374,5 @@ __________________________________________________ */
 "    print m.send()" & ¶ &
 "" & ¶ &
 "except Exception, err:" & ¶ &
-"    print \"ERROR:\", str(err)" & ¶ &
+"    print str(err)" & ¶ &
 ""
