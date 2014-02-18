@@ -26,7 +26,7 @@ HISTORY:
 	Modified:	2013-12-11 16:25 PT - Donovan Chandler : (3.2.1) error specifies which address is invalid (TO, CC, etc)
 	Modified:	2013-12-14 12:49 PT - Donovan Chandler : (3.2.2) loosen validation on email address
 	Modified:	2013-12-16 17:42 PT - Donovan Chandler : (3.2.3) strip trailing delimiters
-	Modified:	2013-12-20 21:01 PT - Donovan Chandler : (3.3.0) add hostname parameter; use TLS by default for authentication; don't prefix errors
+	Modified:	2013-12-20 21:01 PT - Donovan Chandler : (3.3.0) include plain text alternative; add hostname parameter; use TLS by default for authentication; don't prefix errors
 __________________________________________________ */
 
 "#!/usr/bin/python" & ¶ &
@@ -177,10 +177,14 @@ __________________________________________________ */
 "                server.login(self._username, self._password)" & ¶ &
 "" & ¶ &
 "            result = server.sendmail(self._from, allRecipients, msg)" & ¶ &
-"        # except Exception, e:" & ¶ &
-"        #     raise e" & ¶ &
+"        except Exception, err:" & ¶ &
+"            raise err" & ¶ &
 "        finally:" & ¶ &
-"            server.quit()" & ¶ &
+"            try:" & ¶ &
+"                server.quit()" & ¶ &
+"            except Exception:" & ¶ &
+"                pass" & ¶ &
+"" & ¶ &
 "        return result" & ¶ &
 "" & ¶ &
 "    def setSubject(self, subject):" & ¶ &
@@ -365,10 +369,12 @@ __________________________________________________ */
 "    if mReplyTo:" & ¶ &
 "        m.setReplyTo(mReplyTo)" & ¶ &
 "    m.setSubject(mSubject)" & ¶ &
+"    # Set HTML text last, so that it's preferred, if present" & ¶ &
+"    # According to RFC 2046, the last part of a multipart message preferred" & ¶ &
+"    if mBodyText:" & ¶ &
+"        m.setTextBody(mBodyText)" & ¶ &
 "    if mBodyHTML:" & ¶ &
 "        m.setHtmlBody(mBodyHTML)" & ¶ &
-"    else:" & ¶ &
-"        m.setTextBody(mBodyText)" & ¶ &
 "    if mFile:" & ¶ &
 "        m.addAttachments(mFile)" & ¶ &
 "    print m.send()" & ¶ &
