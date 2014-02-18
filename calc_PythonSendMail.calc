@@ -1,0 +1,11 @@
+/* __________________________________________________
+
+NAME:	PythonSendMailScript ( )
+PURPOSE:	Stores python script for use in bBox plug-in.
+		See http://bbox.beezwax.net/ for plug-in details.
+HISTORY:
+	Created:	2013-10-25 12:36 PT - Donovan Chandler
+	Modified:	2013-11-19 17:06 PT - Donovan Chandler : optinal text body and debug level.
+*/
+
+

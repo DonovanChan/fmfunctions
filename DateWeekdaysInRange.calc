@@ -4,18 +4,23 @@ Let ( [
 		- GetAsNumber ( GetAsDate ( dateStart ) ) + 1 ;
 	workWeeks = Int ( dayTotal / 7 ) ;
 	workLeftover = Mod ( dayTotal ; 7 ) - 1 ;
-	workLeftover = If ( workLeftover < 1 ; 0 ; workLeftover )
+	workLeftover = If ( workLeftover < 1 ; 0 ; workLeftover ) ;
+	workLeftover = workLeftover + If ( workWeeks ≥ 1 ; 1 )
 	] ;
-	workWeeks*5 + workLeftover + 1
+	workWeeks*5 + workLeftover
 )
 
 /* __________________________________________________
 
 NAME:	DateWeekdaysInRange ( dateStart ; dateEnd )
 PURPOSE:	Returns number of weekdays in given range
-EXAMPLES:
-	DateWeekdaysInRange ( "7/1/2013" ; "7/8/2013" ) = 6 /* Mon - Mon */
+EXAMPLES/TESTS:
+	List (
+	  DateWeekdaysInRange ( "7/1/2013" ; "7/8/2013" ) = 6	/* Mon - Mon */
+	; DateWeekDaysInRange ( "2/14/14" ; "2/18/14" ) = 4	/* Tue - Sat */
+	)
 HISTORY:
 	Created:	2011-03-25 12:52 PT - Donovan Chandler
 	Modified:	2013-07-09 17:11 PT - Donovan Chandler: Now includes last day in range.
+	Modified:	2014-02-04 15:45 PT - Donovan Chandler: Fixed bug with ranges less than a week.
 */

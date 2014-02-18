@@ -1,0 +1,10 @@
+Let ( [
+	~path = "" ;
+	~drive = Get ( SystemDrive ) ;
+	~driveStart = Position ( ~path ; ~drive ; 1 ; 1 )
+	] ;
+	If (
+		~driveStart = 0 ; ~path ;
+		"/" & Middle ( ~path ; ~driveStart + Length ( ~drive ) ; Length ( ~path ) )
+	)
+)

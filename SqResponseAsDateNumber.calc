@@ -1,0 +1,33 @@
+Let ( [
+	lst = Substitute ( listOfSQLDates ; [ "-" ; ¶ ] ; [ " " ; ¶ ] ; [ ":" ; ¶ ] ) ;
+	yr = GetAsNumber ( GetValue ( lst ; 1 ) ) ;
+	mnth = GetAsNumber ( GetValue ( lst ; 2 ) ) ;
+	dy = GetAsNumber ( GetValue ( lst ; 3 ) ) ;
+	valueCnt = ValueCount ( listOfSQLDates ) ;
+	valueDate =
+		Case (
+			IsEmpty ( lst ) ; "" ;
+			Date ( mnth ; dy ; yr )
+		) ;
+	value = GetAsNumber ( valueDate )
+	] ;
+	value
+	& If ( valueCnt > 1 ;
+		¶ & SqResponseAsDateNumber ( RightValues ( listOfSQLDates ; valueCnt - 1 ) )
+	)
+)
+
+/* __________________________________________________
+
+NAME:	SqResponseAsDateNumber ( listOfSQLDates )
+PURPOSE:	Converts one or more return-delimted SQL dates to FileMaker equivalent as number
+EXAMPLES / TESTS: List (
+	  SqResponseAsDateNumber ( "2012-08-18" ) = "734733"
+	; SqResponseAsDateNumber ( "2014-01-18¶2014-02-19" ) = "735251¶735283"
+	)
+HISTORY:
+	Created:	2012-08-18 11:18 PST - Hanzel Morato
+	Modified:	2012-09-27 16:08 PST — Will M. Baker. Updated for TimeStamp.
+	Modified:	2014-02-11 13:16 PT - Donovan Chandler. Recursive; changed name from SqDateConvertSqlToFileMaker().
+	Modified:	2014-02-11 16:09 PT - Donovan Chandler. Forked from SqResponseAsDate(); returns datas as numbers.
+*/
