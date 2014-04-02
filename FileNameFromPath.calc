@@ -12,10 +12,10 @@ Let ( [
 
 /* __________________________________________________
 
-NAME:	FileNameFromPath ( path )
+NAME:	PathFileName ( path )
 PURPOSE:	Returns name of file referenced in path
 EXAMPLES:
-	FileNameFromPath ( "dir/fileName.txt/" ) = "fileName.txt"
+	PathFileName ( "dir/fileName.txt/" ) = "fileName.txt"
 HISTORY:
 	Created:	2011-10-06 13:09 PST - Donovan A. Chandler
 */

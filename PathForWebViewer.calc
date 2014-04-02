@@ -1,0 +1,44 @@
+Let ( [
+	//-- Remove disk from path (e.g., "C:/")
+	tag = "!!DISK!!" ;
+	drive = Get ( SystemDrive ) ;
+	path = Substitute ( path ; drive ; tag ) ;
+
+	//-- Remove prefixes
+	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
+	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
+
+	//-- Restore disk to path
+	path = Substitute ( path ; tag ; drive ) ;
+
+	//-- Remove leading slashes
+	path = If ( Left ( path ; 1 ) = "/" ; Middle ( path ; 2 ; 999 ) ; path ) ;
+	path = If ( Left ( path ; 1 ) = "/" ; Middle ( path ; 2 ; 999 ) ; path ) ;
+
+	isMac = Abs ( Get ( SystemPlatform ) ) = 1 ;
+	path = "file://" & If ( isMac ; "/Volumes/" ) & path
+	];
+	path
+)
+
+/* __________________________________________________
+
+NAME:	PathForWebViewer ( path )
+PURPOSE:	Removes prefix from file path.
+EXAMPLES:
+
+	// Where desktop path = "/Macintosh HD/Users/donovan/Desktop/"
+	PathForWebViewer ( "file:/" & Get ( DesktopPath ) )
+	= "file:///Volumes/Macintosh HD/Users/donovan/Desktop/"
+	
+	// Where desktop path = "/C:/Users/Donovan/Desktop/"
+	PathForWebViewer ( "file:/" & Get ( DesktopPath ) )
+	= "file://C:/Users/Donovan/Desktop/"
+	
+	PathForWebViewer ( "fmnet:/your.server.com/FOCUS.fmp12" )
+	= "file:///Volumes/your.server.com/FOCUS.fmp12"
+
+HISTORY:
+	Created:	2014-03-18 17:32 PT - Donovan Chandler
+	Modified:	
+*/

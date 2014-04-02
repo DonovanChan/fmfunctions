@@ -1,0 +1,21 @@
+Let ( [
+	~date = GetAsDate ( "1/2/14" ) ;
+	~month = Month ( ~date ) ;
+	~day = Day ( ~date ) ;
+	~year = Year ( ~date )
+	] ;
+	Right ( "0" & ~month ; 2 ) & "/" &
+	Right ( "0" & ~day ; 2 ) & "/" &
+	~year
+)
+
+/* __________________________________________________
+
+NAME:	DatePadded ( theDate )
+PURPOSE:	Pads month and day with zero for single-digit numbers
+EXAMPLES:
+	DatePadded ( "1/2/14" ) = "01/02/2014"
+HISTORY:
+	Created:	2014-02-26 12:21 PT - Donovan Chandler
+	Modified:	
+*/

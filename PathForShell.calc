@@ -22,7 +22,21 @@ Let([
 		) ;
 
 	//-- Strip invalid characters
-	pathEncoded = If ( not stripInvalidChars ; pathNew ; TextEncodeForFilePath ( pathNew ) ) ;
+	pathEncoded =
+		If (
+			not stripInvalidChars ;
+				pathNew ;
+			Substitute (
+				pathNew ;
+				[ ¶	; " " ] ;
+				[ "|"	; " " ] ;
+				[ "<"	; " " ] ;
+				[ ">"	; " " ] ;
+				[ "..."	; "." ] ;
+				[ "\""	; "" ] ;
+				[ ","	; "" ]
+			)
+		) ;
 
 	//-- Escape characters for shell
 	pathEncoded =
@@ -47,5 +61,5 @@ EXAMPLES:
 	= "/Library/FileMaker\ Server/Data"
 HISTORY:
 	Created:	2011-11-04 14:28 PT - Donovan Chandler
-	Modified:
+	Modified:	2014-03-03 17:45 PT - Donovan Chandler : Removed dependency on TextEncodeForFilePath().
 */

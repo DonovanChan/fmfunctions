@@ -1,16 +1,12 @@
-ArrayColumnLoop ( array ; columnIndex ; columnDelimiter ; "" )
+ArrayColumnLoop ( array ; columnIndex ; columnDelimiter ; rowDelimiter ; "" )
 
-/* —————————————————————————————— //
-NAME:
-	 ArrayColumn ( array ; columnIndex ; columnDelimiter )
+/* __________________________________________________
 
-PURPOSE:
-	Returns entire row from 2-dimensional array
-
-EXAMPLES:
-	ArrayColumn ( "City|State¶Oakland|CA¶Portland|OR" ; 2 ; "|" )
-	= "State¶CA¶OR"
-
+NAME:	ArrayColumn ( array ; columnIndex ; columnDelimiter ; rowDelimiter )
+PURPOSE:	Returns entire row from 2-dimensional array.
+TESTS:
+	
 HISTORY:
-	Created: 2011-Oct-24 19h40 PST — Donovan Chandler
+	Created:	2011-10-24 19:40 PST — Donovan Chandler
+	Modified:	2014-03-20 12:22 PDT - Donovan Chandler : Added rowDelimiter parameter.
 */

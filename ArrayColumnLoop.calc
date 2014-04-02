@@ -1,23 +1,51 @@
 Let ( [
-	row  = GetValue ( array ; 1 ) ;
+	rowDelimiter = If ( IsEmpty ( rowDelimiter ) ; "¶" ; rowDelimiter ) ;
+	rowDelimiterLen = Length ( rowDelimiter ) ;
+	arrayRows = rowDelimiter & array & rowDelimiter ;
+	rowStart = Position ( arrayRows ; rowDelimiter ; 1 ; 1 ) + rowDelimiterLen ;
+	rowEnd = Position ( arrayRows ; rowDelimiter ; rowStart + 1 ; 1 ) - rowDelimiterLen ;
+	row  = Middle ( arrayRows ; rowStart ; rowEnd - rowStart + rowDelimiterLen ) ;
+	// Substituting the column delimiter isn't the fastest, but it will do for now
 	cell = GetValue ( Substitute ( row ; columnDelimiter ; ¶ ) ; columnIndex ) ;
-	rowsRemaining = RightValues ( array ; ValueCount ( array ) - 1 ) ;
+	rowsRemaining = Middle ( array ; rowEnd + rowDelimiterLen ; Length ( array ) - rowEnd ) ;
 	result = If ( not IsEmpty ( previousResults ) ; previousResults & ¶ ) & cell
 	] ;
 	Case (
 		not IsEmpty ( rowsRemaining ) ;
-			ArrayColumnLoop ( rowsRemaining ; columnIndex ; columnDelimiter ; result ) ;
-		previousResults
+			ArrayColumnLoop ( rowsRemaining ; columnIndex ; columnDelimiter ; rowDelimiter ; result ) ;
+		result
 	)
 )
 
-/* —————————————————————————————— //
-NAME:
-	ArrayColumnLoop ( array ; columnIndex ; columnDelimiter ; previousResults )
+/* __________________________________________________
 
-PURPOSE:
-	Performs recursion for ArrayColumn()
+NAME:	ArrayColumnLoop ( array ; columnIndex ; columnDelimiter ; rowDelimiter ; previousResults )
+PURPOSE:	Performs recursion for ArrayColumn()
+TESTS:
+	List (
+	ArrayColumnLoop ( "City|State|Country" ; 2 ; "|" ; "" ; "" )
+	= "State" ;
 
+	ArrayColumnLoop ( "City||Country¶Oakland||US" ; 2 ; "|" ; "" ; "" )
+	= "" ;
+
+	ArrayColumnLoop ( "City||State||Country+++||||+++Portland||OR||US" ; 1 ; "||" ; "+++" ; "" )
+	= "City¶¶Portland" ;
+
+	ArrayColumnLoop ( "City||State||Country+++||||+++Portland||OR||US" ; 2 ; "||" ; "+++" ; "" )
+	= "State¶¶OR" ;
+
+	ArrayColumnLoop ( "City||State||Country+++||||+++Portland||OR||US" ; 3 ; "||" ; "+++" ; "" )
+	= "Country¶¶US" ;
+
+	ArrayColumnLoop ( "City||State||Country" ; 1 ; "||" ; "" ; "" )
+	= "City" ;
+
+	ArrayColumnLoop ( "City|State|Country¶Oakland|CA|US¶Portland|OR|US" ; 2 ; "" ; "¶" ; "" )
+	= ""
+	)
+	
 HISTORY:
-	Created: 2011-Oct-24 19h43 PST — Donovan Chandler
+	Created:	2011-10-24 19h43 PST — Donovan Chandler
+	Modified:	2014-03-20 11:46 PDT - Donovan Chandler : Fixed bug where last value was omitted; Added rowDelimiter param.
 */
