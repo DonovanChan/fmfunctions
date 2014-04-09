@@ -1,8 +1,9 @@
 Let ( [
-	path = Get ( FilePath ) ;
-	pathNew = PathStripPrefix ( path )
+	~isHosted = PatternCount ( Get ( HostApplicationVersion ) ; "Server" )
 	] ;
-	"fmp://" & Get ( AccountName ) & "" & "@" & pathNew & "?script=" & script & "&param=" & parameter
+	"fmp://" &
+	If ( ~isHosted ; PathStripPrefix ( Get ( FilePath ) ) ; "$/" & Get ( FileName ) ) &
+	If ( Length ( script ) ; "?script=" & script & If ( Length ( parameter ) ; "&param=" & parameter ) )
 )
 
 /* __________________________________________________
@@ -13,5 +14,5 @@ EXAMPLES:
 
 HISTORY:
 	Created:	2012-04-27 11:56 PST - Donovan Chandler
-	Modified:	
+	Modified:	2014-04-03 14:05 PDT - Donovan Chandler : Incorporate Will M. Baker's mods for FMP 13.0v3 support for local references.
 */
