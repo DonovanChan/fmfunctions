@@ -1,15 +1,19 @@
-Position ( ¶ & listOfValues & ¶ ; ¶ & searchValue & ¶ ; 1 ; 1 ) > 0
+not IsEmpty ( FilterValues ( searchValue ; listOfValues ) )
 
 /* __________________________________________________
 
 NAME:	ListContains ( listOfValues ; searchValue )
 PURPOSE:	Returns true if listOfValues contains match for searchValue
 EXAMPLES:
-	ListContains ( "foo¶fum" ; "FOO" ) = 1
-	ListContains ( "foo¶fum" ; "FOG" ) = 0
+	List (
+	  ListContains ( "foo¶fum¶fap" ; "FOO" ) = 1 
+	; ListContains ( "foo¶fum¶fap" ; "FOG" ) = 0
+	; ListContains ( "foo¶fum¶fap" ; "fu" ) = 0
+	; ListContains ( "foo¶fum¶fap" ; "fum¶fap" ) = 1
+	)
 HISTORY:
-	Created:	2010-11-10 11:56 PST - Donovan A. Chandler
-	Modified:	2011-12-13 18:09 PST - Donovan Chandler ; Increased speed using Position()
+	Created:	2012-03-15 21:59 PST - Donovan Chandler
+	Modified:	2014-04-09 12:25 PDT - Jeremy Bante : Improving performance
 NOTES:
 	For case sensitive search, use ListFilterCustom()
 */

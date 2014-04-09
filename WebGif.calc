@@ -1,0 +1,50 @@
+"data:text/html,<html><head>
+<style type=\"text/css\">
+¶
+  body {¶
+    border: 0 ;¶
+    margin: 0 ;¶
+    background: #" &
+      Case (
+        //-- If empty, use white
+        IsEmpty ( backgroundColorHex ) ; "FFFFFF" ;
+        Substitute ( backgroundColorHex ; "#" ; "" )
+      ) &
+    "}¶
+¶
+  /* Scale image to size of viewer */¶
+  img {¶
+    width: 100%;¶
+    height: auto;¶
+  }¶
+¶
+</style>
+</head>
+<body>
+<img src=\"data:image/gif;base64," & ¶ &
+
+// ---- Replace base64 data here ---- //
+
+base64Text & "\">¶" &
+
+// ---- End base64 data ---- //
+
+"</body>
+</html>"
+
+/* __________________________________________________
+
+NAME: WebGif( base64Text ; backgroundColorHex )
+PURPOSE:  Displays "in process" type of spinning icon
+EXAMPLES:
+  WebGif ( global::gif ; "FFFFFF" ) or
+  WebGif ( global::gif ; RGBToHex ( RGB ( 255 ; 255 ; 255 ) ) )
+  // Returns HTML for use in webviewer.
+  // Webviewer displays spinning icon with white background.
+NOTE:
+  Use the Edit -> Remove Styles menu command to remove the web viewer's padding.
+HISTORY:
+  Technique discovered from Kevin Vile of Cleveland Consulting, Inc. in Sindelar's "Year in Review" session, DevCon 2009
+  Created:  2009-09-31 00:00 PDT - Donovan Chandler
+  Modified: 2014-03-26 12:36 PDT - Donovan Chandler : removes # from backgroundColorHex
+*/
