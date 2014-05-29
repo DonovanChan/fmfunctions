@@ -1,23 +1,9 @@
-/* TODO: Extract friendly codes from here instead:
-http://webdesign.about.com/od/localization/l/blhtmlcodes-ascii.htm
-
-See ref on regex conditionals: http://www.regular-expressions.info/conditional.html
-
-Current regex for converting table to calc:
-
-(.+?)\t(.+?)\t.*;(.*?)$
-to
-; [ "$1"\t; "$2" ]\t//$3
-
-*/
-
 Substitute ( text ;
 
 	//-- Characters used in future substitutions
-	  [ ";"		; "‡‡‡59;" ]	// Semi-colon
-	; [ "&"	; "‡‡‡amp;" ]	// Ampersand
-	; [ "#"	; "‡‡‡35;" ]	// Number sign
-	; [ "‡‡‡"	; "&#" ]
+	  [ ";"		; "llamperpoundll59;" ]	// Semi-colon
+	; [ "&"	; "llampersandllamp;" ]	// Ampersand
+	; [ "#"	; "llamperpoundll35;" ]	// Number sign
 
 	//-- Insert entity placeholders
 //	  [ " "		; "&#09;" ]		// Horizontal tab
@@ -104,8 +90,85 @@ Substitute ( text ;
 	; [ "´"	; "&acute;" ]	// acute accent (&#180;)
 	; [ "µ"	; "&micro;" ]	// micro sign (Greek mu) (&#181;)
 
+	; [ "¸"	; "&cedil;" ]	//Cedilla (&#184; or &#xB8;)
+	; [ "¹"		; "&sup1;" ]	//Superscript 1 (&#185; or &#xB9;)
+	; [ "º"		; "&ordm;" ]	//Masculine ordinal indicator (superscript o) (&#186; or &#xBA;)
+	; [ "»"		; "&raquo;" ]	//Right angle quote (&#187; or &#xBB;)
+	; [ "¼"	; "&frac14;" ]	//One quarter fraction (&#188; or &#xBC;)
+	; [ "½"	; "&frac12;" ]	//One half fraction (&#189; or &#xBD;)
+	; [ "¾"	; "&frac34;" ]	//Three quarters fraction (&#190; or &#xBE;)
+	; [ "¿"		; "&iquest;" ]	//Inverted question mark (&#191; or &#xBF;)
+	; [ "À"	; "&Agrave;" ]	//A grave accent (&#192; or &#xC0;)
+	; [ "Á"	; "&Aacute;" ]	//A accute accent (&#193; or &#xC1;)
+	; [ "Â"	; "&Acirc;" ]	//A circumflex (&#194; or &#xC2;)
+	; [ "Ã"	; "&Atilde;" ]	//A tilde (&#195; or &#xC3;)
+	; [ "Ä"	; "&Auml;" ]	//A umlaut (&#196; or &#xC4;)
+	; [ "Å"	; "&Aring;" ]	//A ring (&#197; or &#xC5;)
+	; [ "Æ"	; "&AElig;" ]	//AE ligature (&#198; or &#xC6;)
+	; [ "Ç"	; "&Ccedil;" ]	//C cedilla (&#199; or &#xC7;)
+	; [ "È"	; "&Egrave;" ]	//E grave (&#200; or &#xC8;)
+	; [ "É"	; "&Eacute;" ]	//E acute (&#201; or &#xC9;)
+	; [ "Ê"	; "&Ecirc;" ]	//E circumflex (&#202; or &#xCA;)
+	; [ "Ë"	; "&Euml;" ]	//E umlaut (&#203; or &#xCB;)
+	; [ "Ì"		; "&Igrave;" ]	//I grave (&#204; or &#xCC;)
+	; [ "Í"		; "&Iacute;" ]	//I acute (&#205; or &#xCD;)
+	; [ "Î"		; "&Icirc;" ]	//I circumflex (&#206; or &#xCE;)
+	; [ "Ï"		; "&Iuml;" ]	//I umlaut (&#207; or &#xCF;)
+	; [ "Ð"	; "&ETH;" ]	//Eth (&#208; or &#xD0;)
+	; [ "Ñ"	; "&Ntilde;" ]	//N tilde (enye) (&#209; or &#xD1;)
+	; [ "Ò"	; "&Ograve;" ]	//O grave (&#210; or &#xD2;)
+	; [ "Ó"	; "&Oacute;" ]	//O acute (&#211; or &#xD3;)
+	; [ "Ô"	; "&Ocirc;" ]	//O circumflex (&#212; or &#xD4;)
+	; [ "Õ"	; "&Otilde;" ]	//O tilde (&#213; or &#xD5;)
+	; [ "Ö"	; "&Ouml;" ]	//O umlaut (&#214; or &#xD6;)
+	; [ "×"	; "&times;" ]	//Multiplication sign (&#215; or &#xD7;)
+	; [ "Ø"	; "&Oslash;" ]	//O slash (&#216; or &#xD8;)
+	; [ "Ù"	; "&Ugrave;" ]	//U grave (&#217; or &#xD9;)
+	; [ "Ú"	; "&Uacute;" ]	//U acute (&#218; or &#xDA;)
+	; [ "Û"	; "&Ucirc;" ]	//U circumflex (&#219; or &#xDB;)
+	; [ "Ü"	; "&Uuml;" ]	//U umlaut (&#220; or &#xDC;)
+	; [ "Ý"	; "&Yacute;" ]	//Y acute (&#221; or &#xDD;)
+	; [ "Þ"	; "&THORN;" ]	//Thorn (&#222; or &#xDE;)
+	; [ "ß"	; "&szlig;" ]	//SZ ligature (&#223; or &#xDF;)
+	; [ "à"	; "&agrave;" ]	//a grave (&#224; or &#xE0;)
+	; [ "á"	; "&aacute;" ]	//a acute (&#225; or &#xE1;)
+	; [ "â"	; "&acirc;" ]	//a circumflex (&#226; or &#xE2;)
+	; [ "ã"	; "&atilde;" ]	//a tilde (&#227; or &#xE3;)
+	; [ "ä"	; "&auml;" ]	//a umlaut (&#228; or &#xE4;)
+	; [ "å"	; "&aring;" ]	//a ring (&#229; or &#xE5;)
+	; [ "æ"	; "&aelig;" ]	//ae ligature (&#230; or &#xE6;)
+	; [ "ç"		; "&ccedil;" ]	//c cedilla (&#231; or &#xE7;)
+	; [ "è"	; "&egrave;" ]	//e grave (&#232; or &#xE8;)
+	; [ "é"	; "&eacute;" ]	//e acute (&#233; or &#xE9;)
+	; [ "ê"	; "&ecirc;" ]	//e circumflex (&#234; or &#xEA;)
+	; [ "ë"	; "&euml;" ]	//e umlaut (&#235; or &#xEB;)
+	; [ "ì"		; "&igrave;" ]	//i grave (&#236; or &#xEC;)
+	; [ "í"		; "&iacute;" ]	//i acute (&#237; or &#xED;)
+	; [ "î"		; "&icirc;" ]	//i circumflex (&#238; or &#xEE;)
+	; [ "ï"		; "&iuml;" ]	//i umlaut (&#239; or &#xEF;)
+	; [ "ð"	; "&eth;" ]	//eth (&#240; or &#xF0;)
+	; [ "ñ"	; "&ntilde;" ]	//n tilde (&#241; or &#xF1;)
+	; [ "ò"	; "&ograve;" ]	//o grave (&#242; or &#xF2;)
+	; [ "ó"	; "&oacute;" ]	//o acute (&#243; or &#xF3;)
+	; [ "ô"	; "&ocirc;" ]	//o circumflex (&#244; or &#xF4;)
+	; [ "õ"	; "&otilde;" ]	//o tilde (&#245; or &#xF5;)
+	; [ "ö"	; "&ouml;" ]	//o umlaut (&#246; or &#xF6;)
+	; [ "÷"	; "&divide;" ]	//Division symbol (&#247; or &#xF7;)
+	; [ "ø"	; "&oslash;" ]	//o slash (&#248; or &#xF8;)
+	; [ "ù"	; "&ugrave;" ]	//u grave (&#249; or &#xF9;)
+	; [ "ú"	; "&uacute;" ]	//u acute (&#250; or &#xFA;)
+	; [ "û"	; "&ucirc;" ]	//u circumflex (&#251; or &#xFB;)
+	; [ "ü"	; "&uuml;" ]	//u umlaut (&#252; or &#xFC;)
+	; [ "ý"		; "&yacute;" ]	//y acute (&#253; or &#xFD;)
+	; [ "þ"	; "&thorn;" ]	//thorn (&#254; or &#xFE;)
+	; [ "ÿ"		; "&yuml;" ]	//y umlaut (&#255; or &#xFF;)
+
 	; [ "\¶"	; "&para;" ]	// Paragraph (&#182;)
 	; [ "¶"	; "<br>" ]
+
+	//-- Revert placeholders
+	; [ "llamperpoundll"	; "&#" ]
+	; [ "llampersandll"	; "&" ]
 
 )
 
@@ -120,12 +183,16 @@ EXAMPLES:
 	
 
 NOTES:
-	Generated using http://www.december.com/html/spec/codes.html
+ 	Generated using http://webdesign.about.com/od/localization/l/blhtmlcodes-ascii.htm
+	s / (.+?)\t(.+?)\t(.+?)\t(.+?)\t(.*?)$ / ; [ "$1"\t; "$2" ]\t//$3 / g
+
+	See also http://www.december.com/html/spec/codes.html
 	See also http://www.tedmontgomery.com/tutorial/htmlchrc.html
 	Function does not support encoding of integers, so don't enable those lines unless you modify the function further.
 
 HISTORY:
-	Created:	2011-Apr-19 10h08 PST — Donovan A. Chandler
-	Modified:	2014-02-27 12:53 PT - Donovan Chandler : Added currency symbols; removed most unused substitutions.
-	Modified:	2014-03-12 12:43 PT - Donovan Chandler : Reduced substitutions, added more characters.
+	2011-04-19 10:08 PDT — Donovan Chandler
+	2014-02-27 12:53 PST - Donovan Chandler : Added currency symbols; removed most unused substitutions.
+	2014-03-12 12:43 PDT - Donovan Chandler : Reduced substitutions, added more characters.
+	2014-04-17 10:20 PDT - Donovan Chandler : 
 */
