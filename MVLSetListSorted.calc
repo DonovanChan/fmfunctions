@@ -41,6 +41,35 @@ sortField = GetFieldname ( "" ) ;
 	)
 )
 
+/*
+Let ( [
+	idFieldName = GetFieldName ( run::id ) ;
+	nameFieldName = GetFieldName ( run::run_id ) ;
+	matchFieldName = GetFieldName ( run::id_area ) ;
+	matchFieldValue = flight_log::id_area ;
+	~sqlQuery = List (
+		  "SELECT " & SqField ( idFieldName )
+		; ", " & SqField ( nameFieldName )
+		; "FROM " & SqTable ( idFIeldName )
+		; "WHERE " & SqField ( matchFieldName ) & " = ?"
+		; "ORDER BY " & SqField ( nameFieldName ) & " ASC"
+		) ;
+	~sqlResult = ExecuteSQL ( ~sqlQuery ; SqFieldSeparator ; SqRowSeparator ; matchFieldValue ) ;
+	col1 = SqResponseCol ( ~sqlResult ; 1 ) ;
+	col2 = SqResponseCol ( ~sqlResult ; 2 ) ;`
+	col1Result = MVLSetVar ( 1 ; col1 ) ;
+	col2Result = MVLSetVar ( 2 ; ListPrependBOM ( col2 ; 1 ) )
+	] ;
+	Case (
+		col1Result + col2Result = 0 ; "Error: invalid id and name lists" ;
+		col1Result = 0 ; "Error: invalid id list" ;
+		col2Result = 0 ; "Error: invalid name list" ;
+		1
+	)
+)
+*/
+
+
 /* __________________________________________________
 
 NAME:	MVLSetListSorted ( idFieldName ; nameFieldName ; matchFieldName ; matchFieldValue ; sortField )

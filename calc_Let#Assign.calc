@@ -1,4 +1,4 @@
-/* Parse Let variables into script $variables */
+/*-- Parse Let variables into script $variables --*/
 
 /**
  * =====================================
