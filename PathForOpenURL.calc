@@ -1,0 +1,54 @@
+Let ( [
+
+	//-- Remove prefixes like "filemac:"
+	colonPos = Position ( path ; ":" ; 1 ; 1 ) ;
+	slashPos = Position ( path ; "/" ; 1 ; 1 ) ;
+	path =
+		If (
+			colonPos < slashPos ; Middle ( path ; colonPos + 1 ; 999 ) ;
+			path
+		) ;
+	path =
+		If (
+			Left ( path ; 2 ) = "//" ; Middle ( path ; 2 ; 999 ) ;
+			path
+		) ;
+
+	//-- Add system drive
+	path = If ( Left ( path ; 1 ) ≠ "/" ; "/" ) & path ;
+	drive = Get ( SystemDrive ) ;
+	path = If ( Position ( path ; drive ; 1 ; 1 ) = 0 ; drive ) & path ;
+	path = Substitute ( path ; "//" ; "/" ) ;
+
+	//-- Add prefix
+	prefix = "file:///Volumes"
+	] ;
+	Case (
+		IsEmpty ( path ) ;
+			"" ;
+		prefix & path
+	)
+)
+
+/* __________________________________________________
+
+NAME:	PathForOpenURL ( path )
+PURPOSE:	Returns path suitable for using in Open URL script step (opens dir in finder)
+EXAMPLES:
+	Let ( [
+	~disk = Get ( SystemDrive )
+	] ;
+	List (
+	  PathForOpenURL ( ~disk & "tmp/1A-2B@me.com/foo 5:23.xlsx" ) = "file:///Volumes" & ~disk & "tmp/1A-2B@me.com/foo 5:23.xlsx"
+	; PathForOpenURL ( "bar/foo.txt" ) = "file:///Volumes" & ~disk & "bar/foo.txt"
+	; PathForOpenURL ( "file:/" & ~disk & "tmp/foo.txt" ) = "file:///Volumes" & ~disk & "tmp/foo.txt"
+	; PathForOpenURL ( "filemac:/" & ~disk & "tmp/foo.txt" ) = "file:///Volumes" & ~disk & "tmp/foo.txt"
+	//; PathForOpenURL ( "filewin:/" & ~disk & "tmp/foo.txt" ) = "/tmp/foo.txt"
+	//; PathForOpenURL ( "filewin://computerName/share/tmp/foo.txt" ) = "computerName/share/tmp/foo.txt"
+	//; PathForOpenURL ( "fmnet:/172.0.0.1/foo.txt" ) = "172.0.0.1/foo.txt"
+	) )
+HISTORY:
+	2012-04-17 20:52 PDT - Donovan Chandler
+	2014-03-07 20:58 PST - Donovan Chandler : Add "Volumes" to path
+	2014-05-29 12:58 PDT - Donovan Chandler : Refactor for encapsulation and reliability.
+*/

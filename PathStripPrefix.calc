@@ -1,38 +1,48 @@
 Let ( [
-	//-- Remove disk from path (e.g., "C:/")
-	tag = "!!DISK!!" ;
-	drive = Get ( SystemDrive ) ;
-	path = Substitute ( path ; drive ; tag ) ;
+	pathCount = ValueCount ( pathList ) ;
+	path = GetValue ( pathList ; 1 ) ;
 
-	//-- Remove prefixes
-	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
-	path = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
-
-	//-- Restore disk to path
-	path = Substitute ( path ; tag ; drive ) ;
-
-	//-- Remove leading slashes
-	path = TextStripLeft ( path ; "/" )
+	//-- Remove prefixes like "filemac:"
+	colonPos = Position ( path ; ":" ; 1 ; 1 ) ;
+	slashPos = Position ( path ; "/" ; 1 ; 1 ) ;
+	path =
+		If (
+			colonPos < slashPos ; Middle ( path ; colonPos + 1 ; 999 ) ;
+			path
+		) ;
+	path =
+		If (
+			Left ( path ; 2 ) = "//" ; Middle ( path ; 2 ; 999 ) ;
+			path
+		)
 	];
-	path
+	List (
+		If ( not IsEmpty ( path ) ; path ) ;
+		If ( pathCount > 1 ;
+			PathStripPrefix ( RightValues ( pathList ; pathCount - 1 ) )
+		)
+	)
 )
 
 /* __________________________________________________
 
-NAME:	PathStripPrefix ( path )
+NAME:	PathStripPrefix ( pathList )
 PURPOSE:	Removes prefix from file path.
-EXAMPLES:
-	// Where desktop path = "/Macintosh HD/Users/donovan/Desktop/"
-	PathStripPrefix ( "file:/" & Get ( DesktopPath ) )
-	= "/Macintosh HD/Users/donovan/Desktop/"
-	
-	// Where desktop path = "/C:/Users/Donovan/Desktop/"
-	PathStripPrefix ( "file:/" & Get ( DesktopPath ) )
-	= "C:/Users/Donovan/Desktop/"
-	
-	PathStripPrefix ( "fmnet:/your.server.com/FOCUS.fmp12" )
-	= "your.server.com/FOCUS.fmp12"
+TESTS:
+	List (
+	  PathStripPrefix ( "/tmp/1A-2B@me.com/foo 5:23.xlsx" ) = "/tmp/1A-2B@me.com/foo 5:23.xlsx"
+	; PathStripPrefix ( "bar/foo.txt" ) = "bar/foo.txt"
+	; PathStripPrefix ( "file:tmp/foo.txt" ) = "tmp/foo.txt"
+	; PathStripPrefix ( "filemac:/tmp/foo.txt" ) = "/tmp/foo.txt"
+	; PathStripPrefix ( "file:bar/foo.txt¶file:/bar/foo.txt" ) = "bar/foo.txt¶/bar/foo."
+	//; PathStripPrefix ( "filewin:/C:/tmp/foo.txt" ) = "C:/tmp/foo.txt"
+	//; PathStripPrefix ( "filewin://computerName/share/tmp/foo.txt" ) = "computerName/share/tmp/foo.txt"
+	//; PathStripPrefix ( "fmnet:/172.0.0.1/foo.txt" ) = "172.0.0.1/foo.txt"
+	)
+NOTES:
+	Not tested on Windows or network paths.
 HISTORY:
-	Created:	2012-02-03 21:57 PT - Donovan Chandler
-	Modified:	2013-01-22 17:24 PT - Donovan Chandler : Windows compatible.
+	2012-02-03 21:57 PST - Donovan Chandler
+	2013-01-22 17:24 PST - Donovan Chandler : Windows compatible.
+	2014-05-29 12:03 PDT - Donovan Chandler : Refactor to use Position(); add tests; support multiple values.
 */

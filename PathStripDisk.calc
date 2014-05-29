@@ -1,22 +1,60 @@
 Let ( [
-	raw = PathStripPrefix ( path ) ;
-	ready = If ( Left ( raw ; 1 ) ≠ "/" ; "/" ) & raw ;
-	stripped = "/" & Substitute ( ready ; Get ( SystemDrive ) ; "" )
+	pathCount = ValueCount ( pathList ) ;
+	path = GetValue ( pathList ; 1 ) ;
+
+	//-- Remove prefixes like "filemac:"
+	colonPos = Position ( path ; ":" ; 1 ; 1 ) ;
+	slashPos = Position ( path ; "/" ; 1 ; 1 ) ;
+	path =
+		If (
+			colonPos < slashPos ; Middle ( path ; colonPos + 1 ; 999 ) ;
+			path
+		) ;
+	path =
+		If (
+			Left ( path ; 2 ) = "//" ; Middle ( path ; 2 ; 999 ) ;
+			path
+		) ;
+
+	//-- Remove disk name
+	diskName = Get ( SystemDrive ) ;
+	diskNameLen = Length ( diskName ) ;
+	pathNew =
+		If (
+			Left ( path ; diskNameLen ) = diskName ;
+				Middle ( path ; diskNameLen ; 999 ) ; // Include a leading "/"
+			path
+		)
 	] ;
-	If (
-		//-- Adjust for cases where disk isn't in path (e.g., hosted file)
-		Left ( stripped ; 2 ) = "//" ; Right ( stripped ; Length ( stripped ) - 1 ) ;
-		stripped
+	List (
+		If ( not IsEmpty ( pathNew ) ; pathNew ) ;
+		If ( pathCount > 1 ;
+			PathStripDisk ( RightValues ( pathList ; pathCount - 1 ) )
+		)
 	)
 )
 
 /* __________________________________________________
 
-NAME:	PathStripDisk ( path )
+NAME:	PathStripDisk ( pathList )
 PURPOSE:	Removes prefix and system drive from path.
-EXAMPLES:
-	PathStripDisk ( "file:/HD/Users/donovan" ) = "/Users/donovan"
+TESTS:
+	Let ( [
+	~disk = Get ( SystemDrive )
+	] ;
+	List (
+	  PathStripDisk ( ~disk & "tmp/1A-2B@me.com/foo 5:23.xlsx" ) = "/tmp/1A-2B@me.com/foo 5:23.xlsx"
+	; PathStripDisk ( "bar/foo.txt" ) = "bar/foo.txt"
+	; PathStripDisk ( "file:/" & ~disk & "tmp/foo.txt" ) = "/tmp/foo.txt"
+	; PathStripDisk ( "filemac:/" & ~disk & "tmp/foo.txt" ) = "/tmp/foo.txt"
+	//; PathStripDisk ( "filewin:/" & ~disk & "tmp/foo.txt" ) = "/tmp/foo.txt"
+	//; PathStripDisk ( "filewin://computerName/share/tmp/foo.txt" ) = "computerName/share/tmp/foo.txt"
+	//; PathStripDisk ( "fmnet:/172.0.0.1/foo.txt" ) = "172.0.0.1/foo.txt"
+	) )
+NOTES:
+	Not tested on Windows or network paths.
 HISTORY:
-	Created:	2012-04-18 09:32 PT - Donovan Chandler
-	Modified:	2013-02-05 09:43 PT - Donovan Chandler : accounts for cases where disk is not in path.
+	2012-04-18 09:32 PDT - Donovan Chandler
+	2013-02-05 09:43 PST - Donovan Chandler : accounts for cases where disk is not in path.
+	2014-05-29 12:09 PDT - Donovan Chandler : refactor; support multiple values.
 */

@@ -2,22 +2,27 @@ Let ( [
 	path = GetValue ( pathList ; 1 ) ;
 	pathCount = ValueCount ( pathList ) ;
 
-	//-- Remove prefixes
-	posColon = Position ( path ; ":" ; 1 ; 1 ) ;
-	path2 = If ( posColon = 0 ; path ; Middle ( path ; posColon + 1 ; 999 ) ) ;
-	path3 = If ( Left ( path2 ; 1 ) ≠ "/" ; path2 ; Middle ( path2 ; 2 ; 999 ) ) ;
+	//-- Remove prefixes like "filemac:"
+	colonPos = Position ( path ; ":" ; 1 ; 1 ) ;
+	slashPos = Position ( path ; "/" ; 1 ; 1 ) ;
+	path =
+		If (
+			colonPos < slashPos ; Middle ( path ; colonPos + 1 ; 999 ) ;
+			path
+		) ;
+	path =
+		If (
+			Left ( path ; 2 ) = "//" ; Middle ( path ; 2 ; 999 ) ;
+			path
+		) ;
 
 	//-- Remove disk name
-	hdName =
-		GetValue (
-			Substitute ( Get ( DesktopPath ) ; "/" ; ¶ ) ;
-			2
-		) ;
-	hdNameLen = Length ( hdName ) ;
+	diskName = Get ( SystemDrive ) ;
+	diskNameLen = Length ( diskName ) ;
 	pathNew =
 		If (
-			Left ( path3 ; hdNameLen + 1 ) = hdName & "/" ;
-			 	Middle ( path3 ; hdNameLen + 1 ; 999 ) ;
+			Left ( path ; diskNameLen ) = diskName ;
+				Middle ( path ; diskNameLen ; 999 ) ; // Include a leading "/"
 			path
 		) ;
 
@@ -32,7 +37,7 @@ Let ( [
 				[ "|"	; " " ] ;
 				[ "<"	; " " ] ;
 				[ ">"	; " " ] ;
-				[ "..."	; "." ] ;
+				[ ".."	; "." ] ;
 				[ "\""	; "" ] ;
 				[ ","	; "" ]
 			)
@@ -57,13 +62,22 @@ Let ( [
 
 NAME:	PathForShell ( pathList ; stripInvalidChars )
 PURPOSE:	Returns path usable in shell
-EXAMPLES:
-	PathForShell ( "HD/Library/FileMaker Server/Bob's data" )
-	= "'/Library/FileMaker Server/Bob'"'"' data'"
+TESTS:
+	List (
+	  PathForShell ( "/tmp/1A-2B@me.com/foo 5:23.xlsx" ; 0 ) = "'/tmp/1A-2B@me.com/foo 5:23.xlsx'"
+	; PathForShell ( "bar/foo.txt" ; 0 ) = "'bar/foo.txt'"
+	; PathForShell ( "file:tmp/foo.txt" ; 0 ) = "'tmp/foo.txt'"
+	; PathForShell ( "filemac:/tmp/foo.txt" ; 0 ) = "'/tmp/foo.txt'"
+	; PathForShell ( "/tmp/Bob's data" ; 0 ) = "'/tmp/Bob'\"'\"'s data'"
+	//; PathForShell ( "filewin:/C:/tmp/foo.txt" ; 0 ) = "'C:/tmp/foo.txt'"
+	//; PathForShell ( "filewin://computerName/share/tmp/foo.txt" ; 0 ) = "'computerName/share/tmp/foo.txt"'
+	//; PathForShell ( "fmnet:/172.0.0.1/foo.txt" ; 0 ) = "'172.0.0.1/foo.txt'"
+	)
 NOTES:
-	Need to create unit tests!
+	Not tested on Windows or network paths.
 HISTORY:
 	2011-11-04 14:28 PST - Donovan Chandler
 	2014-03-03 17:45 PST - Donovan Chandler : Removed dependency on TextEncodeForFilePath().
 	2014-05-14 11:39 PDT - Donovan Chandler : Use single quotes instead of escaping spaces, etc.
+	2014-05-29 10:27 PDT - Donovan Chandler : Less aggressive removing prefix.
 */
