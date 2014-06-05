@@ -5,7 +5,7 @@ Substitute ( text ;
 	; [ "&"	; "llampersandllamp;" ]	// Ampersand
 	; [ "#"	; "llamperpoundll35;" ]	// Number sign
 
-	//-- Insert entity placeholders
+	//-- Characters that may render without encoding
 //	  [ " "		; "&#09;" ]		// Horizontal tab
 //	; [ " "		; "&#10;" ]		// Line feed
 //	; [ " "		; "&#11; to &#12;" ]	// Unused
@@ -26,7 +26,7 @@ Substitute ( text ;
 	; [ ","		; "&#44;" ]		// Comma
 	; [ "-"	; "&#45;" ]		// Hyphen
 	; [ "."		; "&#46;" ]		// Period (fullstop)
-	; [ "/"	; "&frasl;" ]	// Solidus (slash) (&#47;)
+	; [ "/"	; "&#47;" ]		// Slash (&frasl; is different)
 	; [ ":"		; "&#58;" ]		// Colon
 
 	; [ "<"	; "&lt;" ]		// Less than (&#60;)
@@ -40,6 +40,8 @@ Substitute ( text ;
 	; [ "]"		; "&#93;" ]		// Right square bracket
 	; [ "^"	; "&#94;" ]		// Caret
 	; [ "_"		; "&#95;" ]		// Horizontal bar
+
+	//-- Everything below here will not render properly without encoding!
 
 	; [ "~"	; "&tilde;" ]	// Tilde (&#126;)
 	; [ "‚"		; "&sbquo;" ]	// Single low quote
@@ -65,10 +67,10 @@ Substitute ( text ;
 	; [ "’"		; "&rsquo;" ]	// Right curly quote ( &#146; or &#8217;)
 	; [ Code ( 8220 )	; "&ldquo;" ]	// Left curly double quote (&#147; or &#8220;)
 	; [ Code ( 8221 )	; "&rdquo;" ]	// Right curly double quote (&#148; or &#8221;)
-	; [ Code ( 8222 )	; "&#dbquo;" ]	// Double low-9 quote (&#8222;)
+	; [ Code ( 8222 )	; "&#132;" ]	// Double low-9 quote (&#;) (&dbquo; not working in Safari)
 	; [ "†"	; "&dagger;" ]	// Dagger (&#134; or &#8224;)
 	; [ "‡"	; "&Dagger;" ]	// Double dagger (&#135; or &#8225;)
-	; [ "•"	; "&#bull;" ]	// Bullet (&#149; or &#8226;)
+	; [ "•"	; "&bull;" ]	// Bullet (&#149; or &#8226;)
 	; [ Code ( 8230 )	; "&#8230;" ]	// Horizontal ellipsis (&#133;)
 	; [ "‰"	; "&permil;" ]	// Per thousand (&#137; or &#8240;)
 	; [ "™"	; "&#8482;" ]	// Trade mark
@@ -180,7 +182,7 @@ PURPOSE:
 	Escapes characters with numeric code equivalent for use in HTML.
 
 EXAMPLES:
-	
+
 
 NOTES:
  	Generated using http://webdesign.about.com/od/localization/l/blhtmlcodes-ascii.htm
@@ -190,9 +192,13 @@ NOTES:
 	See also http://www.tedmontgomery.com/tutorial/htmlchrc.html
 	Function does not support encoding of integers, so don't enable those lines unless you modify the function further.
 
+	For testing results in HTML (rough shell commands):
+		HTML=$(cat TextEncodeForHTML.calc | sed -E -e 's%\s*; \[ (.+)\s*; (.+) \].*%<p>\1 = \2</p>%g'); echo "<html><body>$HTML</body></html>" > TextEncodeForHTML.html; open TextEncodeForHTML.html
+
 HISTORY:
 	2011-04-19 10:08 PDT — Donovan Chandler
-	2014-02-27 12:53 PST - Donovan Chandler : Added currency symbols; removed most unused substitutions.
-	2014-03-12 12:43 PDT - Donovan Chandler : Reduced substitutions, added more characters.
-	2014-04-17 10:20 PDT - Donovan Chandler : 
+	2014-02-27 12:53 PST - Donovan Chandler : Add currency symbols; removed most unused substitutions.
+	2014-03-12 12:43 PDT - Donovan Chandler : Reduce substitutions, added more characters.
+	2014-04-17 10:20 PDT - Donovan Chandler
+	2014-06-05 10:19 PDT - Donovan Chandler : Generate html test file and fix several characters.
 */
