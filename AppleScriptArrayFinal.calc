@@ -1,0 +1,20 @@
+"{" &
+Substitute ( TextStripRight ( unenclosedArray ; "," ) ;
+	[ "}, ¶{"	; "},{" ] ;
+	[ "},¶{"	; "},{" ] ;
+	[ "}¶}"	; "}}" ] ;
+	[ "{¶{"	; "{{"]
+)
+& "}"
+
+/* __________________________________________________
+
+NAME:	AppleScriptArrayFinal ( unenclosedArray )
+PURPOSE:	Formats array for use in AppleScript
+		Removes carriage returns and extraneous commas
+EXAMPLES:
+	AppleScriptArrayFinal ( "{foo:123},¶{bar:345}," )
+	= "{{foo:123},{bar:345}}"
+HISTORY:
+	2014-07-24 08:09 PT - Donovan Chandler
+*/
