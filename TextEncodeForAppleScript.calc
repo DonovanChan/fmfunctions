@@ -1,17 +1,18 @@
-Substitute ( text ;
+"\"" & Substitute ( text ;
 	[ "\\"	; "\\\\" ] ;
 	[ "	"	; "\t" ] ;
 	[ "\""	; "\\\"" ]
-)
+) & "\""
 
 /* __________________________________________________
 
 NAME:	TextEncodeForAppleScript ( text )
 PURPOSE:	Escapes string literals for AppleScript
 EXAMPLES:
-	TextEncodeForAppleScript ( "Quotation: \", Tab:	, Backslash:\" )
-	= "Quotation: \\", Tab:\t, Backslash:\\"
-	which reads as "Quotation: \", Tab:\t, Backslash:\"
+	TextEncodeForAppleScript ( "Quotation: \"hello\", Tab:	, Backslash:\\" )
+	= "\"Quotation: \\\"hello\\\", Tab:\t, Backslash:\\\\\""
+	which reads in the data viewer as: "Quotation: \"hello\", Tab:\t, Backslash:\\"
 HISTORY:
-	Created:	2011-03-15 17:50 PT - Donovan Chandler
+	2011-03-15 17:50 PDT - Donovan Chandler
+	2014-07-21 10:40 PDT - Donovan Chandler : Wrap result in quotation marks
 */
