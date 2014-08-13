@@ -1,0 +1,63 @@
+Let ( [
+	//-- Identify first node in newPairs
+	~nodeOpen = "<:" ;
+	~nodeAssign = ":=" ;
+	~nodeClose = ":>" ;
+
+	~newNodeStart = Position ( newPairs ; ~nodeOpen ; 1 ; 1 ) ;
+	~newNodeAssignEnd = Position ( newPairs ; ~nodeAssign ; ~newNodeStart ; 1 ) + Length ( ~nodeAssign ) - 1 ;
+	~newNodeEnd = Position ( newPairs ; ~nodeClose ; ~newNodeAssignEnd ; 1 ) + Length ( ~nodeClose ) - 1 ;
+	~newNodeMatch = Middle ( newPairs ; ~newNodeStart ; ~newNodeAssignEnd - ~newNodeStart + 1 ) ;
+	~newNode = Middle ( newPairs ; ~newNodeStart ; ~newNodeEnd - ~newNodeStart + 1 ) ;
+
+	//-- Isolate first matching node in originalPairs
+	~origNodeStart = Position ( originalPairs ; ~newNodeMatch ; 1 ; 1 ) ;
+	~origNodePad =
+		Middle (
+			originalPairs ;
+			Position ( originalPairs ; ~nodeClose ; 1 ; 1 ) + Length ( ~nodeClose ) ;
+			1
+		) ;
+	~origNodePad = If ( ~origNodePad = Left ( ~nodeOpen ; 1 ) ; "" ; ~origNodePad ) ;
+
+	//-- Append new pair, or replace old one
+	~newHash =
+		If (
+			~origNodeStart = 0 ; originalPairs & ~origNodePad & ~newNode ;
+
+			Left ( originalPairs ; ~origNodeStart - 1 )
+			& ~newNode
+			& Middle ( originalPairs ;
+				Position ( originalPairs ; ~nodeClose ; ~origNodeStart ; 1 ) + Length ( ~nodeClose ) ;
+				999999
+			)
+		)
+	] ;
+
+	//-- Continue merging remaining newPairs
+	If (
+		Position ( newPairs ; ~nodeOpen ; ~newNodeEnd ; 1 ) ;
+			#Merge ( ~newHash ; Middle ( newPairs ; ~newNodeEnd + 1 ; 999999 ) ) ;
+		~newHash
+	)
+)
+
+/* __________________________________________________
+NAME:	#Merge ( originalPairs ; newPairs )
+PURPOSE:	Addes newPairs to originalPairs, overriding values of duplicate pairs.
+EXAMPLES/TESTS:
+	Let ( [
+		~orig = List ( # ( "foo" ; 123 ) ; # ( "fum" ; 456 ) ) ;
+		~orig2 = # ( "foo" ; 123 ) & # ( "fum" ; 456 )
+		] ;
+		List (
+			#Merge ( ~orig ; # ( "foo" ; 321 ) ) = List ( # ( "foo" ; 321 ) ; # ( "fum" ; 456 ) ) ;
+			#Merge ( ~orig ; # ( "fum" ; 654 ) ) = List ( # ( "foo" ; 123 ) ; # ( "fum" ; 654 ) ) ;
+			#Merge ( ~orig ; # ( "bar" ; 789 ) ) = List ( ~orig ; # ( "bar" ; 789 ) ) ;
+			#Merge ( ~orig2 ; # ( "bar" ; 789 ) ) = ~orig2 & # ( "bar" ; 789 )
+		)
+	)
+
+HISTORY:
+	Created: 2010-Oct-25 10h21 PST — Donovan Chandler
+*/
