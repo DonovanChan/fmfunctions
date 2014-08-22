@@ -6,14 +6,14 @@ Substitute (
 
 /* —————————————————————————————— //
 NAME:
-	ListCollapseAndJoin ( text ; newDelimiter )
+	ListTrimAndJoin ( text ; newDelimiter )
 
 PURPOSE:
 	Replaces carriage returns in return-delimited list with new delimiter.
 	Also strips whitespace from ends of each line.
 
 EXAMPLES:
-	ListJoin ( "dog¶ cat ¶¶mouse¶" ; ", " ) = "dog,cat,mouse"
+	ListTrimAndJoin ( "dog¶ cat ¶¶mouse¶" ; ", " ) = "dog,cat,mouse"
 
 HISTORY:
 	Created: 2011-Mar-08 09h33 PST — Donovan A. Chandler

@@ -1,0 +1,46 @@
+Let ( [
+	vString = GetValue ( valuesToRemove ; 1 ) ;
+	vStringRemaining = MiddleValues ( valuesToRemove ; 2 ; 999 ) ;
+	vListEncoded = Substitute ( ¶ & theList & ¶ ; ¶ ; "¶|" ) ;
+	vListFiltered =
+		Substitute ( vListEncoded ;
+			[ "|" & vString & ¶ ; "" ] ;
+			[ "¶|" ; ¶ ]
+		) ;
+	vListNew = Middle ( vListFiltered ; 2 ; Length ( vListFiltered ) - 2 )
+	];
+	Case (
+		not IsEmpty ( vStringRemaining ) ;
+			ListStrip ( vListNew ; vStringRemaining ) ;
+		vListNew
+	)
+)
+
+/* __________________________________________________
+
+NAME:	ListStrip ( theList ; valuesToRemove )
+PURPOSE:
+	Removes values in valuesToRemove from theList.
+NOTES:
+	Not the fastest method, but it is case-sensitive.
+	valuesToRemove accepts return-delimited lists.
+	Empty valuesToRemove value removes blank lines from list.
+EXAMPLES:
+	List (
+	  ListStrip ( "foo"	; "" ) = "foo"
+	; ListStrip ( "¶¶¶"	; "¶" ) = ""
+	; ListStrip ( "¶foo¶"	; "¶" ) = "foo"
+	; ListStrip ( "¶¶¶"	; "" ) = ""
+	; ListStrip ( "¶foo"	; "" ) = "foo"
+	; ListStrip ( "¶¶foo"	; "" ) = "foo"
+	; ListStrip ( "foo¶"	; "" ) = "foo"
+	; ListStrip ( "foo¶¶"	; "" ) = "foo"
+	; ListStrip ( "foo¶foo"		; "" ) = "foo¶foo"
+	; ListStrip ( "foo¶¶foo"	; "" ) = "foo¶foo"
+	; ListStrip ( "foo¶FOO"	; "foo" ) = "FOO"
+	; ListStrip ( "foo¶fool"	; "foo" ) = "fool"
+	)
+HISTORY:
+	2011-04-11 13h59 PST - Donovan Chandler
+	2014-08-18 15:06 PDT - Donovan Chandler : Rename from ListRemoveValues( ); Expand tests
+*/
