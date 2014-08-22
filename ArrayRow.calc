@@ -1,0 +1,12 @@
+ArrayRowLoop ( array; searchValue; searchColumn; 1 )
+
+/*---------------------------------------------------------------------------------------
+NAME:
+    ArrayRow ( array; searchValue; searchColumn )
+
+PURPOSE:
+    Wrapper for RowValueSearchLoop().  See that function documentation for details.
+
+HISTORY:
+    Created 2010-Mar-22 11h52 PT donovan_c@beezwax.net 
+---------------------------------------------------------------------------------------*/

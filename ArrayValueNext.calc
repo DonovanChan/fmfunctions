@@ -1,0 +1,37 @@
+Let([
+    _row = ArrayRow ( array; rowHeader; headerColumn );
+    _rowNum = ListValueRowNum( Substitute( _row; Tab; ¶ ); searchValue );
+	_rowNumNext = If( _rowNum > 0; _rowNum + 1; "" )
+    ];
+	Case(
+		//-- Column is valid
+		_rowNum > 0;
+			RowValue( _row; _rowNumNext );
+		
+		//-- Column not found
+		""
+	)
+)
+
+/*---------------------------------------------------------------------------------------
+NAME:
+    ArrayValueNext ( array ; rowHeader ; headerColumn ; searchValue )
+
+PURPOSE:
+    Finds row in array (tab-delimited) that corresponds to rowHeader in headerColumn.
+    Then returns value from column following searchValue.
+
+HISTORY:
+    Created 2010-Mar-22 12h44 donovan_c@beezwax.net
+
+EXAMPLE:
+    If $_array =
+      "A » pear » apple¶
+       B » ball » bat¶
+       C » dog » cat¶
+       B » can » bottle¶"
+
+    where " » " represents tab character, then :
+
+    ArrayValueNext ( $_array ; "B" ; 1 ; "ball" ) returns "bat".   
+---------------------------------------------------------------------------------------*/

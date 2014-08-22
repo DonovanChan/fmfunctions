@@ -1,0 +1,40 @@
+Let ( [
+  #_row = GetValue ( array ; rowNum ) ;
+  #_search_value = RowValue ( #_row ; searchColumn )  ;
+  #_return_value = #_row 
+  ] ;
+
+  Case (
+    rowNum > ValueCount ( array ) ; "" ;
+    #_search_value = searchValue ; #_return_value ;
+    ArrayRowLoop ( array ; searchValue ; searchColumn ; rowNum + 1 )
+    )
+
+)
+
+/*---------------------------------------------------------------------------------------
+NAME:
+    ArrayRowLoop ( array; searchValue; searchColumn; rowNum )
+
+PURPOSE:
+    Return row that contains searchValue in searchColumn in tab-delimited array
+
+HISTORY:
+    Created 2010-Mar-22 11h52 PT donovan_c@beezwax.net based on ArrayValueLoop by will_b@beezwax.net
+    
+NOTES:
+    (1) If the user wants to search the entire array for the value, the user should pass "1" to rowNum
+    (2) This function will only return the first corresponding value
+    (3) Returns "" if the searchItem is not found in the searchColumn
+
+EXAMPLE:
+    If $_array =
+      "A » 1 » apple¶
+       B » 2 » bat¶
+       C » 3 » cat¶
+       B » 4 » bottle¶"
+
+    where " » " represents tab character, then :
+
+    ArrayRowLoop ( $_array ; "B" ; 1 ; 1 ) returns "B » 2 » bat".
+---------------------------------------------------------------------------------------*/

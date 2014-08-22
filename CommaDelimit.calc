@@ -1,0 +1,31 @@
+Let ( [
+	~listEncoded = Substitute ( ¶ & theList & ¶ ; ¶ ; "¶|" ) ;
+	~listCulled =
+		Substitute ( ~listEncoded ;
+			[ "|¶" ; "" ] ;
+			[ "¶|" ; ¶ ]
+		) ;
+	~listNew = Middle ( ~listCulled ; 2 ; Length ( ~listCulled ) - 2 )
+	];
+	Substitute ( ~listNew ; "¶" ; ", " )
+)
+
+/* __________________________________________________
+
+NAME:	CommaDelimit ( theList )
+PURPOSE:	Replaces returns with commas
+EXAMPLES:
+	List (
+	  CommaDelimit ( "" )		= ""
+	; CommaDelimit ( "¶" )		= ""
+	; CommaDelimit ( "¶¶" )		= ""
+	; CommaDelimit ( "foo¶fum" )	= "foo, fum"
+	; CommaDelimit ( "foo¶fum¶" )	= "foo, fum"
+	; CommaDelimit ( "¶foo¶fum" )	= "foo, fum"
+	; CommaDelimit ( "foo¶¶fum" )	= "foo, fum"
+	; CommaDelimit ( "¶¶foo" )	= "foo"
+	; CommaDelimit ( "foo¶¶" )	= "foo"
+	)
+HISTORY:
+	2014-08-18 15:13 PDT - Donovan Chandler
+*/
