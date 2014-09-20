@@ -23,6 +23,9 @@ errorNum = 17		; "Attempt to convert foreign character set to UTF-16 failed" ;
 errorNum = 18		; "Client must provide account information to proceed" ;
 errorNum = 19		; "String contains characters other than A-Z, a-z, 0-9 (ASCII)" ;
 errorNum = 20		; "Command/operation canceled by triggered script" ;
+errorNum = 21		; "Request not supported (for example, when creating a hard link on a file system that does not support hard links)" ;
+//errorNum = 21		; "Map Win 32 error of \"ERROR_NOT_SUPPORTED\". Microsoft documentation is \"the request is not supported\"." ;
+errorNum = 26		; "The file path specified is not a valid file path" ;
 errorNum = 100	; "File is missing" ;
 errorNum = 101	; "Record is missing" ;
 errorNum = 102	; "Field is missing" ;
@@ -43,7 +46,7 @@ errorNum = 116	; "Layout object is missing" ;
 errorNum = 117	; "Data source is missing" ;
 errorNum = 118	; "Theme is missing" ;
 errorNum = 130	; "Files are damaged or missing and must be reinstalled" ;
-errorNum = 131	; "Language pack files are missing (such as template files)" ;
+errorNum = 131	; "Language pack files are missing (such as Starter Solutions)" ;
 errorNum = 200	; "Record access is denied" ;
 errorNum = 201	; "Field cannot be modified" ;
 errorNum = 202	; "Field access is denied" ;
@@ -70,7 +73,7 @@ errorNum = 303	; "Database schema is in use by another user" ;
 errorNum = 304	; "Layout is in use by another user" ;
 errorNum = 306	; "Record modification ID does not match" ;
 errorNum = 307	; "Transaction could not be locked because of a communication error with the host" ;
-errorNum = 308	; "Theme is in use by another user" ;
+errorNum = 308	; "Theme is locked and in use by another user" ;
 errorNum = 400	; "Find criteria are empty" ;
 errorNum = 401	; "No records match the request" ;
 errorNum = 402	; "Selected field is not a match field for a lookup" ;
@@ -86,8 +89,11 @@ errorNum = 412	; "Wrong version of FileMakerPro used to recover file" ;
 errorNum = 413	; "Specified field has inappropriate field type" ;
 errorNum = 414	; "Layout cannot display the result" ;
 errorNum = 415	; "One or more required related records are not available" ;
-errorNum = 416	; "Primary key required from data source table" ;
+errorNum = 416	; "A primary key is required from the data source table" ;
 errorNum = 417	; "Database is not a supported data source" ;
+//errorNum = 417	; "Database is not supported for ODBC operations" ;
+errorNum = 418	; "Internal failure in INSERT operation into a field" ;
+//errorNum = 418	; "The base directory specified in the CREATE TABLE ... field blob EXTERNAL 'path' not found" ;
 errorNum = 500	; "Date value does not meet validation entry options" ;
 errorNum = 501	; "Time value does not meet validation entry options" ;
 errorNum = 502	; "Number value does not meet validation entry options" ;
@@ -101,6 +107,8 @@ errorNum = 509	; "Field requires a valid value" ;
 errorNum = 510	; "Related value is empty or unavailable" ;
 errorNum = 511	; "Value in field exceeds maximum field size" ;
 errorNum = 512	; "Record was already modified by another user" ;
+errorNum = 513	; "No validation was specified but data cannot fit into the field" ;
+//errorNum = 513	; "Record must have a value in some field to be created" ;
 errorNum = 600	; "Print error has occurred" ;
 errorNum = 601	; "Combined header and footer exceed one page" ;
 errorNum = 602	; "Body doesn't fit on a page for current column setup" ;
@@ -127,7 +135,8 @@ errorNum = 725	; "You do not have permission to modify records in the target tab
 errorNum = 726	; "There are more records in the import file than in the target table; not all records were imported" ;
 errorNum = 727	; "There are more records in the target table than in the import file; not all records were updated" ;
 errorNum = 729	; "Errors occurred during import; records could not be imported" ;
-errorNum = 730	; "Unsupported Excel version (convert file to Excel 2000 format or a later supported version and try again)" ;
+errorNum = 730	; "Unsupported Excel version (convert file to Excel 2007/2008 format or a later supported version and try again)" ;
+//errorNum = 730	; "Unsupported Excel version. (Convert file to Excel 7.0 (Excel 95), Excel 97, 2000, or XP format and try again)" ;
 errorNum = 731	; "File you are importing from contains no data" ;
 errorNum = 732	; "This file cannot be inserted because it contains other files" ;
 errorNum = 733	; "A table cannot be imported into itself" ;
@@ -135,6 +144,7 @@ errorNum = 734	; "This file type cannot be displayed as a picture" ;
 errorNum = 735	; "This file type cannot be displayed as a picture; it will be inserted and displayed as a file" ;
 errorNum = 736	; "Too much data to export to this format; it will be truncated" ;
 errorNum = 737	; "Bento table you are importing is missing" ;
+errorNum = 738	; "The theme you are importing already exists" ;
 errorNum = 800	; "Unable to create file on disk" ;
 errorNum = 801	; "Unable to create temporary file on System disk" ;
 errorNum = 802	; "Unable to open file.This error can be caused by one or more of the following: ¶- Invalid database name ¶- Invalid database name ¶- File is closed in FileMaker Server ¶- File is closed in FileMaker Server ¶- Invalid permission ¶- Invalid permission" ;
@@ -147,6 +157,7 @@ errorNum = 808	; "Cannot open file because access privileges are damaged" ;
 errorNum = 809	; "Disk/volume is full" ;
 errorNum = 810	; "Disk/volume is locked" ;
 errorNum = 811	; "Temporary file cannot be opened as FileMakerPro file" ;
+errorNum = 812	; "Exceeded host’s capacity" ;
 errorNum = 813	; "Record Synchronization error on network" ;
 errorNum = 814	; "File(s) cannot be opened because maximum number is open" ;
 errorNum = 815	; "Couldn't open lookup file" ;
@@ -163,6 +174,7 @@ errorNum = 826	; "File path specified is not a valid file path" ;
 errorNum = 850	; "Path is not valid for the operating system" ;
 errorNum = 851	; "Cannot delete an external file from disk" ;
 errorNum = 852	; "Cannot write a file to the external storage" ;
+errorNum = 853	; "One or more containers failed to transfer" ;
 errorNum = 900	; "General spelling engine error" ;
 errorNum = 901	; "Main spelling dictionary not installed" ;
 errorNum = 902	; "Could not launch the Help system" ;
@@ -179,7 +191,7 @@ errorNum = 955	; "No database name (*)" ;
 errorNum = 956	; "Maximum number of database sessions exceeded (*)" ;
 errorNum = 957	; "Conflicting commands (*)" ;
 errorNum = 958	; "Parameter missing (*)" ;
-errorNum = 959	; "Custom Web Publishing technology disabled" ;
+errorNum = 959	; "Custom Web Publishing technology is disabled" ;
 errorNum = 960	; "Parameter is invalid" ;
 errorNum = 1200	; "Generic calculation error" ;
 errorNum = 1201	; "Too few parameters in the function" ;
@@ -208,6 +220,7 @@ errorNum = 1223	; "Function referred to is not yet implemented" ;
 errorNum = 1224	; "Function referred to does not exist" ;
 errorNum = 1225	; "Function referred to is not supported in this context" ;
 errorNum = 1300	; "The specified name can’t be used" ;
+errorNum = 1301	; "One of the parameters of the function being imported or pasted has the same name as a function already in the file" ;
 errorNum = 1400	; "ODBC client driver initialization failed; make sure the ODBC client drivers are properly installed" ;
 errorNum = 1401	; "Failed to allocate environment (ODBC)" ;
 errorNum = 1402	; "Failed to free environment (ODBC)" ;
@@ -227,7 +240,7 @@ errorNum = 1502	; "Connection refused by SMTP server" ;
 errorNum = 1503	; "Error with SSL" ;
 errorNum = 1504	; "SMTP server requires the connection to be encrypted" ;
 errorNum = 1505	; "Specified authentication is not supported by SMTP server" ;
-errorNum = 1506	; "Email(s) could not be sent successfully" ;
+errorNum = 1506	; "Email message(s) could not be sent successfully" ;
 errorNum = 1507	; "Unable to log in to the SMTP server" ;
 errorNum = 1550	; "Cannot load the plug-in or the plug-in is not a valid plug-in" ;
 errorNum = 1551	; "Cannot install the plug-in. Cannot delete an existing plug-in or cannot write to the folder or disk" ;
@@ -248,12 +261,17 @@ errorNum = 3002	; "The external file can not be deleted from disk. Do you want t
 errorNum = 3003	; "Can not write file to the external storage." ;
 errorNum = 3004	; "Directory Cant Edit" ;
 errorNum = 3005	; "Directory Cant Delete" ;
+errorNum = 3100	; "Theme is in use" ;
 errorNum = 3219	; "Convert Global To Remote Warning" ;
 errorNum = 3220	; "Directory Not Accessible Warning" ;
 errorNum = 3316	; "Wrning before clearing out existing find requests" ;
 errorNum = 3317	; "Wrning before attempting to restore files from hibernation" ;
+errorNum = 3427	; "Button cannot contain a tab control" ; // NEW in FMP 8.0, modified in FMP 13.0
+errorNum = 3428	; "When a panel is deleted, all the objects on that panel will be deleted" ; // NEW in FMP 8.0, modified in FMP 13.0
+errorNum = 3429	; "One or more of the panels you've selected contain locked objects. Do you you want to delete those panel(s) even though they contain locked object(s)?" ; // NEW in FMP 8.0, modified in FMP 13.0
 errorNum = 3956	; "The total size of all base directory paths cannot exceed ^1 bytes." ;
 errorNum = 3957	; "At least one filter must remain." ;
+errorNum = 3958	; "Please select at least one bar code type" ;
 errorNum = 4103	; "File path is invalid or cannot be resolved during file transfer" ;
 errorNum = 4104	; "File i/o issue during file transfer" ;
 errorNum = 4106	; "The target base directory \1770 is not valid." ;
@@ -262,10 +280,12 @@ errorNum = 4603	; "Spell Export Complete" ;
 errorNum = 7100	; "Data Deferred" ;
 errorNum = 8404	; "An installed OnTimer script could not be found or could not be run with current access privileges" ;
 errorNum = 8213	; "Too many temporary objects created, can't create any more." ;
+errorNum = 8310	; "There is an error in the syntax of the query." ;
 errorNum = 8498	; "Stale Import Order To Be Updated" ;
 errorNum = 8499	; "Import Match May Be Invalid" ;
 errorNum = 20413	; "Too Many Files" ;
 errorNum = 20605	; "No network connection is available" ;
+errorNum = 20606	; "Fail to resolve network address" ;
 
 //-- SQL errors
 errorNum = 8309	; "SQL error: Invalid data type or incorrect use of aliases" ;
@@ -406,10 +426,13 @@ EXAMPLES:
 	ErrorText ( 4 ) = "Command is unknown"
 NOTES:
 	For FileMaker errors, see http://help.filemaker.com/app/answers/detail/a_id/10790/~/filemaker-pro-12-error-code-reference-guide
-	(Less complete list at http://www.filemaker.com/help/html/error_codes.html)
+	(Less complete list at http://www.filemaker.com/help/13/fmp/en/html/error_codes.html)
+	I found a few discrepancies between these sources, in which cases I have included but disabled the first source's value.
+
 	For AppleScript and System error codes, see http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_error_codes.html%23//apple_ref/doc/uid/TP40000983-CH220-SW5
 HISTORY:
 	2012-03-13 13:07 PST - Donovan Chandler
 	2012-08-13 11:00 PDT - Donovan Chandler : Added FMP codes 2021 to 20605
 	2014-08-21 17:39 PDT - Donovan Chandler : Add error 8309
+	2014-09-19 17:12 PDT - Donovan Chandler : Update for FMP 13
 */
