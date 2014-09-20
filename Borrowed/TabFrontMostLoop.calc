@@ -1,0 +1,46 @@
+Case (
+	rep = 0 ; "" ;
+
+	Let ( [
+		object = GetValue ( objectList ; rep )
+		] ;
+
+		Case (
+			// Object is either not a tab, or is a tab but not an active tab.
+			GetLayoutObjectAttribute ( object ; "isFrontTabPanel" ) ≠ 1 ; "" ;
+
+			// If object contains another active tab, the current object is not the frontmost of the two.
+			TabFrontMostLoop ( GetLayoutObjectAttribute ( object ; "containedObjects" ) ; ValueCount ( GetLayoutObjectAttribute ( object ; "containedObjects" ) ) ) ; "" ;
+
+			// If object is contained by another tab, is that tab active (and its tab, etc.).
+			TabActiveLoop ( GetLayoutObjectAttribute ( object ; "enclosingObject" ) ) ; object & ¶ ;
+
+			// Object is not contained by another tab, so is it the front most, all on its own.
+			TabActiveLoop ( object ) ; object & ¶ ; "" ;
+
+			""
+
+		) // end inner Case
+
+		&
+
+		// Continue checking the list, because whether this tab is the frontmost, there might be others that are as well.
+		TabFrontMostLoop ( objectList ; rep - 1 )
+
+	)  //  end Let
+
+)  //  end outer Case
+
+
+
+/* __________________________________________________
+
+NAME:	TabFrontMostLoop ( objectList ; rep )
+PURPOSE:	Returns a list of front-most tab panels on the layout, according to FileMaker's definition of 'active' (i.e. that every tab object always has exactly one active tab panel).
+NOTE:
+	Recursive function, instantiated by FrontMostTab ( ).
+HISTORY:
+	Created:	2010-08-27 12:00 PT - Will M. Baker
+	Modified:	2010-11-19 12:00 PT - Donovan Chandler
+	Modified:	2012-10-17 10:31 PT - Donovan Chandler : Reformatted.
+*/

@@ -1,0 +1,29 @@
+Case (
+	// Object is not an active tab panel.
+	GetLayoutObjectAttribute ( object ; "isFrontTabPanel" ) ≠ 1 ; False ;
+
+	Let ( [
+		parentObject = GetLayoutObjectAttribute ( object ; "enclosingObject" )
+		] ;
+
+		Case (
+			// No parent object, so active tab is outer tab.
+			IsEmpty ( parentObject ) ; True ;
+
+			// Object is only an active tab if its parent is an active tab.
+			TabActive ( parentObject )
+
+		)
+
+	)
+
+)
+
+/* __________________________________________________
+
+NAME:	TabActive ( object )
+PURPOSE:	Determines if the tab panel named by 'object' is active, in the sense of being visible to the user. FileMaker defines 'active' as relevant only to a tab panel's peers, i.e. every tab panel will always have exactly one active tab panel, even if that entire tab object is located on another inactive tab panel. This function returns true only if the tab panel is active from the perspective of the user. If the tab panel is enclosed by an inactive object (e.g. another tab panel) it is not considered active.
+HISTORY:
+	Created:	2010-08-27 12:00 PT - Will M. Baker
+	Modified:	2012-10-17 10:27 PT - Donovan Chandler : Reformatted; renamed from TabActiveLoop( )
+*/

@@ -1,0 +1,30 @@
+Case (
+	PatternCount ( text ; "SELECT" ) ;
+		"Possible injection: SELECT" ;
+	PatternCount ( text ; "UPDATE" ) ;
+		"Possible injection: UPDATE" ;
+	PatternCount ( text ; "INSERT INTO" ) ;
+		"Possible injection: INSERT INTO" ;
+	PatternCount ( text ; "DELETE FROM" ) ;
+		"Possible injection: DELETE FROM" ;
+	PatternCount ( text ; "CREATE TABLE" ) ;
+		"Possible injection: CREATE TABLE" ;
+	PatternCount ( text ; "ALTER TABLE" ) ;
+		"Possible injection: ALTER TABLE" ;
+	PatternCount ( text ; "CREATE INDEX" ) ;
+		"Possible injection: CREATE INDEX" ;
+	PatternCount ( text ; "DROP INDEX" ) ;
+		"Possible injection: DROP INDEX"
+)
+
+
+/* __________________________________________________
+
+NAME:	TextInjected? ( text )
+PURPOSE:	Returns warning if possibly harmful SQL may be present into string (possible injection attack).
+		Used to prevent SQL from being injected into evaluated strings.
+EXAMPLES:
+
+HISTORY:
+	2014-08-29 11:55 PDT - Donovan Chandler
+*/

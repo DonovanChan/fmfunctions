@@ -1,51 +1,42 @@
-/* CombineList ( Start; End; ListFieldsObjects; Separator; Function ) .v1_1  
+/* CombineList ( Start; End; ListFieldsObjects; Separator; Function ) .v1_1
 CombineList () requires CustomList ( Start; End; Function ) - Not recursive */
-              
+
                // ListFieldsObjects = Fields or Objects with ¶ separator : "FieldOrObjectA¶FieldOrObjectB¶FieldOrObjectC¶FieldOrObjectX"
                // Separator = choose a text separator, space, or tag - ex : "|" or " | " or "#" or " " to extract or to present the data
                // Function = Function name with ""  - ex : "GetLayoutObjectAttribute" or "GetValue" or " GetNthRecord" or "GetRepetition"; and other "Left" or "Right"
-              
+
                /* CombineList ( 1; 10; "TableLiee::FieldA¶TableLiee::FieldB¶TableLiee::FieldC"; " | "; "GetNthRecord" )
-               create concatenate list with Fields */            
+               create concatenate list with Fields */
                /* CombineLists ( 1; 10; "ObjetA¶ObjetB¶ObjetC"; " | "; "GetLayoutObjectAttribute" )
-               create concatenate list with Objects (Objects in Portal) */              
+               create concatenate list with Objects (Objects in Portal) */
                //-------------------------------------------------------------------*/
                // Agnès Barouh - novembre 2007 - To report bugs or corrections : barouh.agnes@wanadoo.fr
                //-------------------------------------------------------------------*/
-  
-Let(
-    [
-    $MyListField =
-        Case(
-            Function = "ObtenirAttributObjetModele" or 
-            Function = "GetLayoutObjectAttribute";
-            
-            "\"" & separator & "\"&" & Function & "(\"" &
-            Substitute(
-                ListFieldsObjects;
-                ¶;
-                "\"; \"Content\"; \"\"; [n] ) & \"" & separator & "\"&" & Function &
-                "(\""
-            ) & "\"; \"Content\"; \"\"; [n] ) &\"" & separator & "\"";
-            "\"" & separator & "\"&" & Function & "(" &
-            Substitute(
-                ListFieldsObjects;
-                ¶;
-                "; [n] ) & \"" & separator & "\"&" & Function & "("
-            ) & "; [n] ) &\"" & separator & "\""
-        )
-    ];
-    Substitute(
-        fnCustomList( Start; End; $MyListField );
-        [ Separator & "?"; Separator ]
-    )
-) &
-Let( [ $MyListField = "" ]; "" )
 
-/*           
+           Let ([
+                      $MyListField =  case (
+           Function = "ObtenirAttributObjetModele" or Function = "GetLayoutObjectAttribute";
+
+           """" & separator & """&" & Function  & "(""" &
+           Substitute ( ListFieldsObjects; ¶; """; ""Content""; """"; [n] ) & """ & separator & """&" & Function & "(""" )
+           & """; ""Content""; """"; [n] ) &""" & separator & """"
+           ;
+           """" &  separator & """&" & Function  & "(" &
+           Substitute ( ListFieldsObjects; ¶; "; [n] ) & """ & separator & """&" & Function & "(" )
+           & "; [n] ) &""" & separator & """"
+           )
+                 ];
+           Substitute (
+                 CustomList ( Start; End; $MyListField )
+           ; [ Separator & "?"; Separator ] )
+
+           )
+           & Let ( [ $MyListField = "" ]; "" )
+
+/*
 Not recursive Function
 
-Careful : Limited => ListFieldsObjects < 18700 values
+Carreful : Limited => ListFieldsObjects < 18700 values
 
 * CombineLists () requires CustomList ( start ; End ; Function )
 http://www.briandunning.com/cf/868
@@ -76,4 +67,5 @@ Result :
 - Chair - black - 10$ - 37 -
 - Chair - Red - 12$ - 22 -
 - armchair - yellow - 35$ - 12 -
-- armchair - blue - 15$ - 18 - */
+- armchair - blue - 15$ - 18 -
+*/

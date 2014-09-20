@@ -27,25 +27,26 @@ Case (
 /* __________________________________________________
 
 NAME:
-	ListSort ( theList )
-	v1.1
+    ListSortDates ( theList )
+    v1.1
 
 PURPOSE:
-	Sort a return-delimited list using the “mergesort” algorithm
+    Sort a return-delimited list using the “mergesort” algorithm
 
 HISTORY:
-	Created by Soliant Consulting (See below or FM 8 Functions p. 228)
-	Modified 2008.06.17 by DChandler for formatting/commenting preference
-	Modified 2010.11.10 by DChandler to trim trailing carriage return
+    Created by Soliant Consulting (See below or FM 8 Functions p. 228)
+    2008-06-17 Donovan Chandler : Formatting and comments
+    2010-11-10 Donovan Chandler : Trim trailing carriage return
+    2014-09-05 Donovan Chandler : Repurpose for sorting dates
 
 INPUT:
-	list:  return-delimited list of values
+    list:  return-delimited list of values
 
 OUTPUT:
-	The same list, sorted ascending
+    The same list, sorted ascending
 
 DEPENDENCIES:
-	Custom Functions: ListSortLoop(), TrimCR()
+    Custom Functions: ListSortLoop(), TrimCR()
 
 Function created by Soliant Consulting
 www.soliantconsulting.com

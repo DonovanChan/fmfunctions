@@ -43,8 +43,9 @@ Let ( [
 )
 
 /* __________________________________________________
+
 NAME:	#Merge ( originalPairs ; newPairs )
-PURPOSE:	Addes newPairs to originalPairs, overriding values of duplicate pairs.
+PURPOSE:	Adds newPairs to originalPairs, overriding values of duplicate pairs.
 EXAMPLES/TESTS:
 	Let ( [
 		~orig = List ( # ( "foo" ; 123 ) ; # ( "fum" ; 456 ) ) ;
@@ -59,5 +60,5 @@ EXAMPLES/TESTS:
 	)
 
 HISTORY:
-	Created: 2010-Oct-25 10h21 PST — Donovan Chandler
+	2010-10-25 10:21 PST - Donovan Chandler
 */

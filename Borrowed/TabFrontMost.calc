@@ -1,0 +1,16 @@
+Let ( [
+	objectList = LayoutObjectNames ( Get ( FileName ) ; Get ( LayoutName ) )
+	] ;
+
+	TrimCR ( TabFrontMostLoop ( objectList ; ValueCount ( objectList ) ) )
+
+)
+
+/* __________________________________________________
+
+NAME:	TabFrontMost ( )
+PURPOSE:	Returns a list of front-most tab panels on the layout, according to FileMaker's definition of 'active' (i.e. that every tab object always has exactly one active tab panel).
+HISTORY:
+	Created:	2010-A08-27 12:00 PT - Will M. Baker
+	Modified:	2012-10-17 10:28 PT - Donovan Chandler : Reformatted.
+*/
