@@ -1,0 +1,77 @@
+/*---------------------------------------------------------------------------------------
+NAME:
+    list.getValueIndexes( valueList; searchValue; matchCase )
+    Version 1.1
+
+PURPOSE:
+    Searches a return-delimited list for every occurrence of the given value
+
+HISTORY:
+    Created 2008.07.29 by Donovan Chandler
+
+INPUT:
+    valueList: the return-delimited list to search
+    searchValue: the string to look for in each item
+    matchCase: Boolean switch - 1/True makes search case sensitive
+ 
+OUTPUT:
+    Return-delimited list of integers indicating list values containing searchValue
+
+METHODOLOGY:
+    Optimized so that it doesn't need to loop through each value.
+    It just finds the first occurrence and then continues from there.
+---------------------------------------------------------------------------------------*/
+
+Let([
+    valueList = valueList;
+    searchValue = searchValue;
+    matchCase = matchCase;
+    
+    _lisOrig = "¶" & valueList & "¶";
+    _lisResult = $$list.getValueIndexes_result;
+    _indexFound = RightValues( _lisResult; 1 );
+    _indexStart = If( _indexFound < 2; 2; _indexFound + 1 ); //ignore added first line
+    
+    _flag = "%!Match!%";
+    _target = If( matchcase; _flag; ¶ & searchValue & ¶ );
+    _lisSearch = If( matchcase; Substitute( _lisOrig; searchValue; _flag ); _lisOrig );
+    _posStart = Position( _lisSearch; ¶; 1; _indexStart );
+    _posMatch = Position( _lisSearch; _target; _posStart; 1 );
+    _posNextMatch = Position( _lisSearch; _target; _posMatch + Length( _target ); 1 );
+
+    //-- Determine index, accounting for extra ¶ added to beginning
+    _indexMatch = If( _posMatch; PatternCount( Left( _lisSearch; _posMatch ); "¶" ); 0 );
+    _result = _lisResult & If( Length( _lisResult ); ¶; "" ) & _indexMatch
+    ];
+    Case(
+        //-- Debugging (Change to True to enable)
+        False;
+            "posStart=" & _posStart & ", posMatch=" & _posMatch & ", indexMatch=" & _indexMatch & ", _posNextMatch=" & _posNextMatch
+            & "¶" & _lisSearch;
+        
+        //-- No match
+        _posMatch = 0;
+            If( _lisResult > 0; _lisResult; 0 );
+
+        //-- Get next match, update variable
+        _posNextMatch > 0;
+            Let([
+                $$list.getValueIndexes_result = _result
+                ];
+                list.getValueIndexes( valueList; searchValue; matchCase )
+            );
+
+        //-- Return result, clear variable
+        Let([
+            $$list.getValueIndexes_result = ""
+            ];
+            _result
+        )
+    )
+)
+
+/*---------------------------------------------------------------------------------------
+EXAMPLE:
+    list.getValueIndexes( "John¶Paul¶George¶Ringo¶George"; "george"; False ) --> 3¶5
+    list.getValueIndexes( "John¶Paul¶George¶Ringo¶George"; "reorge"; True )  --> 0
+---------------------------------------------------------------------------------------*/

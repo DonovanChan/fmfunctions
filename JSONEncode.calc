@@ -13,14 +13,16 @@ Case (
 		; [ Char ( 148 )		; "\\\"" ]	// right curly quote
 		; [ Char ( 8220 )	; "\\\"" ]	// left curly quote
 		; [ Char ( 8221 )	; "\\\"" ]	// right curly quote
+		; [ Char ( 10 )		; "\n" ]	// LF
+		; [ "¶" & Char ( 10 )	; "\n" ]	// CR+LF (Windows)
 
-		; [ "\¶"		; "\\¶" ]
+		; [ "\¶"			; "\\¶" ]
 		; [ "¶"			; "\n" ]
 
 		//-- Collapse lines for efficiency
-	//	; [ "\¶"		; ":‡:" ]
-	//	; [ "¶"		; Char ( 32 ) ]	// CR to space
-	//	; [ ":‡:"		; "¶" ]
+	//	; [ "\¶"			; ":‡:" ]
+	//	; [ "¶"			; Char ( 32 ) ]	// CR to space
+	//	; [ ":‡:"			; "¶" ]
 	)
 	& "\""
 
@@ -37,11 +39,12 @@ TESTS:
 	; JSONEncode ( 8 ) = "8"
 	)
 HISTORY:
-	Created:	2011-07-22 14:14 PT - Donovan Chandler
-	Modified:	2013-11-03 22:07 PT - Donovan Chandler : Escapes front and back slashes.
-	Modified:	2013-11-17 21:46 PT - Donovan Chandler : Fixed escaping of curly quotes.
-	Modified:	2014-03-09 16:02 PT - Donovan Chandler : No longer quotes numbers.
-	Modified:	2014-03-23 17:38 PDT - Donovan Chandler : Quotes empty strings.
+	2011-07-22 14:14 PT - Donovan Chandler
+	2013-11-03 22:07 PT - Donovan Chandler : Escapes front and back slashes.
+	2013-11-17 21:46 PT - Donovan Chandler : Fixed escaping of curly quotes.
+	2014-03-09 16:02 PT - Donovan Chandler : No longer quotes numbers.
+	2014-03-23 17:38 PT - Donovan Chandler : Quotes empty strings.
+	2014-11-20 22:58 ET - Ryan Simms : added LF and CR+LF subs
 NOTES:
 	Code ( "
 	" ) = 32
