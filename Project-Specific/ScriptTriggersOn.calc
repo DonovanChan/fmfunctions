@@ -6,7 +6,7 @@ Let ([
 
 /* __________________________________________________
 
-NAME:		ScriptTriggersOn ( )
+NAME:	ScriptTriggersOn ( )
 PURPOSE:	Sets boolean flag to False, allowing triggered scripts to execute.
 EXAMPLES:
 	ScriptTriggersOn()

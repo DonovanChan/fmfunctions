@@ -2,10 +2,10 @@ $$_script_triggers_disabled
 
 /* __________________________________________________
 
-NAME:		ScriptTriggersAreOff ( )
+NAME:	ScriptTriggersAreOff ( )
 PURPOSE:	Returns True if script triggers are being suppressed.
 EXAMPLES:
-	
+
 HISTORY:
 	Created:	2010-11-23 09:20 PST - Donovan A. Chandler
 */

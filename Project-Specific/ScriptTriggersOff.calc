@@ -6,7 +6,7 @@ Let ([
 
 /* __________________________________________________
 
-NAME:		ScriptTriggersOff ( )
+NAME:	ScriptTriggersOff ( )
 PURPOSE:	Sets boolean flag to True that prevents triggered scripts from executing.
 EXAMPLES:
 	ScriptTriggersOff() = 1
